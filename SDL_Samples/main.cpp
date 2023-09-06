@@ -1,180 +1,130 @@
 #include <SDL.h>
+#include <iostream>
+using namespace std;
 
-SDL_Window* mWindow;
-SDL_Renderer* mRenderer;
-bool mIsRunning = true;
-int mPaddleDir = 0;
-const int thickness = 15;
-const float paddleH = 100.0f;
+bool quit = false;
 
-Uint32 mTicksCount;
-struct Vector2
+void CheckKeyPress()
 {
-	float x, y;
-}mPaddlePos, mBallPos, mBallVel;
+    SDL_Event event;
+    SDL_GameController* myController;   //연결된 조이스틱과 통신
+    myController = SDL_GameControllerOpen(0);
 
-bool Initialize()
-{
-	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
-	if (sdlResult != 0)
-	{
-		SDL_Log("Unable to initialize SDL : %s", SDL_GetError());
-		return false;
-	}
-
-	mWindow = SDL_CreateWindow("SDL Games", 100, 100, 1024, 768, 0);
-	if (!mWindow)
-	{
-		SDL_Log("Failed to create window : %s", SDL_GetError());
-		return false;
-	}
-
-	mRenderer = SDL_CreateRenderer(
-		mWindow, -1,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!mRenderer)
-	{
-		SDL_Log("Failed to create Renderer : %s", SDL_GetError());
-		return false;
-	}
-
-	mPaddlePos.x = 10.0f;
-	mPaddlePos.y = 768.0f / 2.0f;
-	mBallPos.x = 1024.f / 2.f;
-	mBallPos.y = 768.f / 2.f;
-	mBallVel.x = -200.f;
-	mBallVel.y = 235.f;
-
-	return true;
+    
+    while (SDL_PollEvent(&event))
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            quit = true;
+            break;
+        //키보드 입력
+        case SDL_KEYDOWN:
+            if(event.key.keysym.scancode == SDL_SCANCODE_0)
+                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_0) << endl;
+            if(event.key.keysym.scancode == SDL_SCANCODE_W)
+                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_W) << endl;
+            if (event.key.keysym.scancode == SDL_SCANCODE_S)
+                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_S) << endl;
+            if (event.key.keysym.scancode == SDL_SCANCODE_A)
+                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_A) << endl;
+            if (event.key.keysym.scancode == SDL_SCANCODE_D)
+                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_D) << endl;
+            if (event.key.keysym.scancode == SDL_SCANCODE_RETURN)
+                cout << "Enter" << endl;
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+            {
+                cout << "Escape" << endl;
+                quit = true;
+            }
+            break;
+        //마우스 입력
+        case SDL_MOUSEBUTTONDOWN:
+            switch (event.button.button)
+            {
+            case 1:
+                cout << "Left Mouse" << endl;
+                break;
+            case 2:
+                cout << "Middle Mouse" << endl;
+                break;
+            case 3:
+                cout << "Right Mouse" << endl;
+                break;
+            }
+            break;
+        case SDL_MOUSEMOTION:
+            cout << "Mouse moved: (" << event.motion.x << ", " << event.motion.y << ")" << endl;
+            break;
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.y > 0) cout << "Wheel Up" << endl;
+            if (event.wheel.y < 0) cout << "Wheel Down" << endl;
+            break;
+        //컨트롤러 입력
+        case SDL_CONTROLLERBUTTONDOWN:
+            if (myController != NULL)
+            {
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_A)) cout << "Button A" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_B)) cout << "Button B" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_X)) cout << "Button X" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_Y)) cout << "Button Y" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) cout << "Left Button" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) cout << "Right Button" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSTICK)) cout << "Left Stick" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) cout << "Right Stick" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_UP)) cout << "DPAD UP" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_DOWN)) cout << "DPAD DOWN" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) cout << "DPAD LEFT" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) cout << "DPAD RIGHT" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_START)) cout << "Start Button" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_BACK)) cout << "Back Button" << endl;
+            }
+            break;
+        case SDL_CONTROLLERAXISMOTION:
+            if (myController != NULL)
+            {
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX))
+                    cout << "Left Axis X: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX) << endl;
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY))
+                    cout << "Left Axis Y: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY) << endl;
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX))
+                    cout << "Right Axis X: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX) << endl;
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY))
+                    cout << "Right Axis Y: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY) << endl;
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT))
+                    cout << "Left Trigger: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) << endl;
+                if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
+                    cout << "Right Trigger: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) << endl;
+            }
+            break;
+        default:
+            break;
+        }
 }
 
-void ProcessInput()
+void DrawScreen()
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
-		case SDL_QUIT:
-			mIsRunning = false;
-			break;
-		}
-	}
 
-	const Uint8* state = SDL_GetKeyboardState(NULL);
-	if (state[SDL_SCANCODE_ESCAPE])
-	{
-		mIsRunning = false;
-	}
-
-	mPaddleDir = 0;
-	if (state[SDL_SCANCODE_W])
-		mPaddleDir -= 1;
-	if (state[SDL_SCANCODE_S])
-		mPaddleDir += 1;
 }
 
-void UpdateGame()
+int main(int argc, char** argv)
 {
-	while(!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16));
+    SDL_Init(SDL_INIT_EVERYTHING);
 
-	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
-	if (deltaTime > 0.05f)
-		deltaTime = 0.05f;
-	mTicksCount = SDL_GetTicks();
+    SDL_Window* window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-	if (mPaddleDir != 0)
-	{
-		mPaddlePos.y += mPaddleDir * 300.f * deltaTime;
+    while (!quit)
+    {
+        CheckKeyPress();
+        DrawScreen();
 
-		if (mPaddlePos.y < (paddleH / 2.f + thickness))
-			mPaddlePos.y = paddleH / 2.f + thickness;
-		else if (mPaddlePos.y > (768.f - paddleH / 2.f - thickness))
-			mPaddlePos.y = 768.f - paddleH / 2.f - thickness;
-	}
-
-	mBallPos.x += mBallVel.x * deltaTime;
-	mBallPos.y += mBallVel.y * deltaTime;
-
-	float diff = mPaddlePos.y - mBallPos.y;
-	diff = (diff > 0.0f) ? diff : -diff;
-
-	if (diff <= paddleH / 2.0f && mBallPos.x <= 25.0f && mBallPos.x >= 20.0f &&
-		mBallVel.x < 0.0f)
-		mBallVel.x *= -1.0f;
-	else if (mBallPos.x <= 0.f)
-		mIsRunning = false;
-	else if (mBallPos.x >= (1024.f - thickness) && mBallVel.x > 0.0f)
-		mBallVel.x *= -1.f;
-
-	if (mBallPos.y <= thickness && mBallVel.y < 0.0f)
-		mBallVel.y *= -1;
-	else if (mBallPos.y >= (768.f - thickness) && mBallVel.y > 0.f)
-		mBallVel.y *= -1;
-}
-
-void GenerateOutput()
-{
-
-	SDL_SetRenderDrawColor(mRenderer, 0, 0, 255, 255);
-	SDL_RenderClear(mRenderer);
-
-	SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 255);
-	SDL_Rect wall{
-		0,0,1024,thickness
-	};
-	SDL_RenderFillRect(mRenderer, &wall);
-
-	wall.y = 768 - thickness;
-	SDL_RenderFillRect(mRenderer, &wall);
-
-	wall.x = 1024 - thickness;
-	wall.y = 0;
-	wall.w = thickness;
-	wall.h = 1024;
-	SDL_RenderFillRect(mRenderer, &wall);
-
-	SDL_Rect paddle{
-		static_cast<int>(mPaddlePos.x),
-		static_cast<int>(mPaddlePos.y - paddleH / 2),
-		thickness,static_cast<int>(paddleH)
-	};
-	SDL_RenderFillRect(mRenderer, &paddle);
-
-	SDL_Rect ball{
-		static_cast<int>(mBallPos.x - thickness / 2),
-		static_cast<int>(mBallPos.y - thickness / 2),
-		thickness,thickness
-	};
-	SDL_RenderFillRect(mRenderer, &ball);
-	SDL_RenderPresent(mRenderer);
-}
-
-void RunLoop()
-{
-	while (mIsRunning)
-	{
-		ProcessInput();
-		UpdateGame();
-		GenerateOutput();
-	}
-}
-
-void Shutdown()
-{
-	SDL_DestroyRenderer(mRenderer);
-	SDL_DestroyWindow(mWindow);
-	SDL_Quit();
-}
-
-int main(int argc, char* argv[])
-{
-
-    bool success = Initialize();
-	if (success)
-	{
-		RunLoop();
-	}
-	Shutdown();
-    return 0;
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+    }
+    SDL_GameControllerClose(0);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+	return 0;
 }
