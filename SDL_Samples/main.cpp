@@ -2,14 +2,49 @@
 #include <iostream>
 using namespace std;
 
-bool quit = false;
+class Gaming
+{
+private:
+    bool quit = false;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Texture* realScreen;
+public:
+    bool GameInit();
+    void GameRun();
+    void GameOff();
+private:
+    void CheckKeyPress();
+    void DrawScreen();
+    void DrawImage();
+    void DrawParticle();
+    void PlaySound();
+};
 
-void CheckKeyPress()
+bool Gaming::GameInit()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    if (window == NULL)
+    {
+        cout << "Failed Init Window : %s" << SDL_GetError() << endl;
+        return false;
+    }
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    if (renderer == NULL)
+    {
+        cout << "Failed Init Renderer : %s" << SDL_GetError() << endl;
+        return false;
+    }
+    return true;
+}
+
+void Gaming::CheckKeyPress()
 {
     SDL_Event event;
     SDL_GameController* myController;   //연결된 조이스틱과 통신
     myController = SDL_GameControllerOpen(0);
-
     
     while (SDL_PollEvent(&event))
         switch (event.type)
@@ -101,30 +136,61 @@ void CheckKeyPress()
         }
 }
 
-void DrawScreen()
+void Gaming::DrawScreen()
+{
+    SDL_Surface* loadBMP = SDL_LoadBMP("img.bmp");
+    if (loadBMP == NULL)
+    {
+        cout << "BMP not exist : %s" << SDL_GetError() << endl;
+        quit = true;
+    }
+    realScreen = SDL_CreateTextureFromSurface(renderer, loadBMP);  //화면에 나타낼 텍스쳐 BMP를 배경화면으로
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);   //화면을 색상으로 채우기
+    SDL_RenderClear(renderer);  //화면 초기화
+    SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //텍스쳐 그리기
+    SDL_RenderPresent(renderer);    //화면 그리기
+}
+
+void Gaming::DrawImage()
 {
 
 }
 
-int main(int argc, char** argv)
+void Gaming::DrawParticle()
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
 
-    SDL_Window* window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+}
 
+void Gaming::PlaySound()
+{
+    SDL_AudioSpec wav_spec;
+    Uint8* wav_buffer;
+    Uint32* wav_length;
+}
+
+void Gaming::GameRun()
+{
     while (!quit)
     {
         CheckKeyPress();
         DrawScreen();
-
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
     }
+}
+
+void Gaming::GameOff()
+{
     SDL_GameControllerClose(0);
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(realScreen);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+int main(int argc, char** argv)
+{
+    Gaming isGaming;
+    bool gameOK = isGaming.GameInit();
+    isGaming.GameRun();
+    isGaming.GameOff();
 	return 0;
 }
