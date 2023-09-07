@@ -14,11 +14,11 @@ public:
     void GameRun();
     void GameOff();
 private:
-    void CheckKeyPress();
-    void DrawScreen();
-    void DrawImage();
-    void DrawParticle();
-    void PlaySound();
+    void CheckKeyPress();	//í‚¤ ë° ì´ë²¤íŠ¸ í™•ì¸
+    void DrawScreen();		//ë°°ê²½í™”ë©´ ê·¸ë¦¬ê¸°
+    void DrawImage();		//ì´ë¯¸ì§€ ë° ìŠ¤í”„ë¼ì´íŠ¸ ê·¸ë¦¬ê¸°
+    void DrawParticle();	//íŒŒí‹°í´ ê·¸ë¦¬ê¸°
+    void PlaySound();		//ì†Œë¦¬ ì¬ìƒ
 };
 
 bool Gaming::GameInit()
@@ -43,7 +43,7 @@ bool Gaming::GameInit()
 void Gaming::CheckKeyPress()
 {
     SDL_Event event;
-    SDL_GameController* myController;   //¿¬°áµÈ Á¶ÀÌ½ºÆ½°ú Åë½Å
+    SDL_GameController* myController;   //ì—°ê²°ëœ ì¡°ì´ìŠ¤í‹±ê³¼ í†µì‹ 
     myController = SDL_GameControllerOpen(0);
     
     while (SDL_PollEvent(&event))
@@ -52,7 +52,7 @@ void Gaming::CheckKeyPress()
         case SDL_QUIT:
             quit = true;
             break;
-        //Å°º¸µå ÀÔ·Â
+        //í‚¤ë³´ë“œ ì…ë ¥
         case SDL_KEYDOWN:
             if(event.key.keysym.scancode == SDL_SCANCODE_0)
                 cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_0) << endl;
@@ -72,7 +72,7 @@ void Gaming::CheckKeyPress()
                 quit = true;
             }
             break;
-        //¸¶¿ì½º ÀÔ·Â
+        //ë§ˆìš°ìŠ¤ ì…ë ¥
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button)
             {
@@ -94,7 +94,7 @@ void Gaming::CheckKeyPress()
             if (event.wheel.y > 0) cout << "Wheel Up" << endl;
             if (event.wheel.y < 0) cout << "Wheel Down" << endl;
             break;
-        //ÄÁÆ®·Ñ·¯ ÀÔ·Â
+        //ì»¨íŠ¸ë¡¤ëŸ¬ ì…ë ¥
         case SDL_CONTROLLERBUTTONDOWN:
             if (myController != NULL)
             {
@@ -144,12 +144,12 @@ void Gaming::DrawScreen()
         cout << "BMP not exist : %s" << SDL_GetError() << endl;
         quit = true;
     }
-    realScreen = SDL_CreateTextureFromSurface(renderer, loadBMP);  //È­¸é¿¡ ³ªÅ¸³¾ ÅØ½ºÃÄ BMP¸¦ ¹è°æÈ­¸éÀ¸·Î
+    realScreen = SDL_CreateTextureFromSurface(renderer, loadBMP);  //í™”ë©´ì— ë‚˜íƒ€ë‚¼ í…ìŠ¤ì³ BMPë¥¼ ë°°ê²½í™”ë©´ìœ¼ë¡œ
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);   //È­¸éÀ» »ö»óÀ¸·Î Ã¤¿ì±â
-    SDL_RenderClear(renderer);  //È­¸é ÃÊ±âÈ­
-    SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //ÅØ½ºÃÄ ±×¸®±â
-    SDL_RenderPresent(renderer);    //È­¸é ±×¸®±â
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);   //í™”ë©´ì„ ìƒ‰ìƒìœ¼ë¡œ ì±„ìš°ê¸°
+    SDL_RenderClear(renderer);  //í™”ë©´ ì´ˆê¸°í™”
+    SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //í…ìŠ¤ì³ ê·¸ë¦¬ê¸°
+    SDL_RenderPresent(renderer);    //í™”ë©´ ê·¸ë¦¬ê¸°
 }
 
 void Gaming::DrawImage()
