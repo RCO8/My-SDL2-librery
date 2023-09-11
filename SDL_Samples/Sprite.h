@@ -9,11 +9,11 @@ struct Vector2
 class Sprite
 {
 private:
-	SDL_Rect spriteClip;	//½ºÇÁ¶óÀÌÆ® ÆÄÀÏÀÌ ¿©·¯°³°¡ ÀÖÀ»°æ¿ì Àß¶ó¼­ ÀúÀå
-	Vector2 startPos;	//½ºÇÁ¶óÀÌÆ® ±×¸±¶§ ½ÃÀÛÁÂÇ¥
-	Vector2 centerPos;	//½ºÇÁ¶óÀÌÆ® Áß½ÉÁ¡
-	Vector2 length;		//½ºÇÁ¶óÀÌÆ® °¡·Î¼¼·Î ±æÀÌ
-	int frame = 0, maxFrame = 0;	//½ºÇÁ¶óÀÌÆ® ¿òÁ÷ÀÏ¶§ »ç¿ëÇÏ´Â ÇÁ·¹ÀÓ
+	SDL_Rect spriteClip;	//ìŠ¤í”„ë¼ì´íŠ¸ íŒŒì¼ì´ ì—¬ëŸ¬ê°œê°€ ìˆì„ê²½ìš° ì˜ë¼ì„œ ì €ì¥
+	Vector2 startPos;	//ìŠ¤í”„ë¼ì´íŠ¸ ê·¸ë¦´ë•Œ ì‹œì‘ì¢Œí‘œ
+	Vector2 centerPos;	//ìŠ¤í”„ë¼ì´íŠ¸ ì¤‘ì‹¬ì 
+	Vector2 length;		//ìŠ¤í”„ë¼ì´íŠ¸ ê°€ë¡œì„¸ë¡œ ê¸¸ì´
+	int frame = 0, maxFrame = 0;	//ìŠ¤í”„ë¼ì´íŠ¸ ì›€ì§ì¼ë•Œ ì‚¬ìš©í•˜ëŠ” í”„ë ˆì„
 	char filename[30];
 
 	SDL_Texture* spriteTexture;
@@ -24,11 +24,15 @@ public:
 	void AddonSprite();
 	void SetCenterPos(int x, int y);
 	void SetSpriteLength(int width, int height);
-	void DrawSprite(SDL_Renderer* renderer);	//½ÇÁ¦·Î ½ºÇÁ¶óÀÌÆ®¸¦ Ãâ·Â
-	void FrameLoop(int startFrame, int endFrame, int count = 0);	//countµ¿¾È startºÎÅÍ end±îÁö ¹İº¹
-	void FrameSpin(int startFrame, int endFrame, int count = 0);	//startºÎÅÍ end±îÁö µ¹¸é¼­ ¹İº¹
-	void FrameTimeline(int* getFrame, int count = 0);				//getFrameÀÇ ±æÀÌ ¸¸Å­ Ãâ·ÂÇÏ±â
+	void DrawSprite(SDL_Renderer* renderer);	//ì‹¤ì œë¡œ ìŠ¤í”„ë¼ì´íŠ¸ë¥¼ ì¶œë ¥
+	void SetSpriteClip();
 
+	//ìŠ¤í”„ë¼ì´íŠ¸ ì• ë‹ˆë©”ì´ì…˜ ì ìš©
+	void FrameLoop(int startFrame, int endFrame, int count = 0);	//countë™ì•ˆ startë¶€í„° endê¹Œì§€ ë°˜ë³µ
+	void FrameSpin(int startFrame, int endFrame, int count = 0);	//startë¶€í„° endê¹Œì§€ ëŒë©´ì„œ ë°˜ë³µ
+	void FrameTimeline(int* getFrame, int count = 0);				//getFrameì˜ ê¸¸ì´ ë§Œí¼ ì¶œë ¥í•˜ê¸°
+
+	//ìŠ¤í”„ë¼ì´ë“œ ë°ì´í„° ë¡œë”©
 	Vector2 GetPosition() const { return centerPos; }
 	Vector2 GetLength() const { return length; }
 };
