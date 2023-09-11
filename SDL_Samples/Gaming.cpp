@@ -1,6 +1,4 @@
 #include "Gaming.h"
-#include <SDL.h>
-using namespace std;
 
 bool Gaming::GameInit()
 {
@@ -18,7 +16,6 @@ bool Gaming::GameInit()
         cout << "Failed Init Renderer : %s" << SDL_GetError() << endl;
         return false;
     }
-    LoadImage();
     return true;
 }
 
@@ -151,47 +148,25 @@ void Gaming::LoadImage()
     if (loadBMP == NULL)
     {
         cout << "BMP not exist : " << SDL_GetError() << endl;
-        FreeImage();
+        SDL_DestroyTexture(realScreen);
         quit = true;
     }
     realScreen = SDL_CreateTextureFromSurface(renderer, loadBMP);  //화면에 나타낼 텍스쳐 BMP를 배경화면으로
+
+    if (loadBMP != NULL)
+        SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //텍스쳐 그리기
 }
 
 void Gaming::DrawScreen()
 {
     SDL_RenderClear(renderer);  //화면 초기화
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);   //화면을 색상으로 채우기
-    if (loadBMP != NULL)
-        SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //텍스쳐 그리기
+
+    SDL_Rect rct = { 10, 10, 50, 50 };
+    SDL_Color rctColor = { 255,0,255,255 };
+    SDL_RenderFillRect(renderer, &rct);
+
     SDL_RenderPresent(renderer);    //화면 그리기
-}
-
-void Gaming::FreeImage()
-{
-    SDL_DestroyTexture(realScreen);
-}
-
-void Gaming::DrawImage()
-{
-
-}
-
-void Gaming::DrawParticle()
-{
-
-}
-
-void Gaming::PlaySound()
-{
-    SDL_AudioSpec wav_spec;
-    Uint8* wav_buffer;
-    Uint32* wav_length;
-
-    if (SDL_LoadWAV("sound.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
-    {
-        cout << "Failed load Sound : " << SDL_GetError() << endl;
-        quit = true;
-    }
 }
 
 void Gaming::GameRun()
@@ -200,15 +175,12 @@ void Gaming::GameRun()
     {
         CheckKeyPress();
         DrawScreen();
-        PlaySound();
     }
 }
 
 void Gaming::GameOff()
 {
-    FreeImage();
     SDL_GameControllerClose(0);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-
