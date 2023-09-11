@@ -7,13 +7,13 @@ bool Gaming::GameInit()
     window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
-        cout << "Failed Init Window : %s" << SDL_GetError() << endl;
+        SDL_Log("Failed Init Window : %s \n", SDL_GetError());
         return false;
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer == NULL)
     {
-        cout << "Failed Init Renderer : %s" << SDL_GetError() << endl;
+        SDL_Log("Failed Init Renderer : %s \n", SDL_GetError());
         return false;
     }
     return true;
@@ -36,46 +36,46 @@ void Gaming::CheckKeyPress()
             switch (event.key.keysym.scancode)
             {
             case SDL_SCANCODE_UP:
-                cout << "Up" << endl;
+                SDL_Log("Up\n");
                 break;
             case SDL_SCANCODE_DOWN:
-                cout << "Down" << endl;
+                SDL_Log("Down\n");
                 break;
             case SDL_SCANCODE_LEFT:
-                cout << "Left" << endl;
+                SDL_Log("Left\n");
                 break;
             case SDL_SCANCODE_RIGHT:
-                cout << "Right" << endl;
+                SDL_Log("Right\n");
                 break;
             case SDL_SCANCODE_RETURN:
-                cout << "Enter" << endl;
+                SDL_Log("Enter\n");
                 break;
             case SDL_SCANCODE_LSHIFT:
-                cout << "Shift" << endl;
+                SDL_Log("Shift\n");
                 break;
             case SDL_SCANCODE_LCTRL:
-                cout << "Ctrl" << endl;
+                SDL_Log("Ctrl\n");
                 break;
             case SDL_SCANCODE_LALT:
-                cout << "Alt" << endl;
+                SDL_Log("Alt\n");
                 break;
             case SDL_SCANCODE_SPACE:
-                cout << "Space" << endl;
+                SDL_Log("Space\n");
                 break;
             case SDL_SCANCODE_W:
-                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_W) << endl;
+                SDL_Log("%c", SDL_GetKeyFromScancode(SDL_SCANCODE_W));
                 break;
             case SDL_SCANCODE_S:
-                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_S) << endl;
+                SDL_Log("%c", SDL_GetKeyFromScancode(SDL_SCANCODE_S));
                 break;
             case SDL_SCANCODE_A:
-                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_A) << endl;
+                SDL_Log("%c", SDL_GetKeyFromScancode(SDL_SCANCODE_A));
                 break;
             case SDL_SCANCODE_D:
-                cout << (char)SDL_GetKeyFromScancode(SDL_SCANCODE_D) << endl;
+                SDL_Log("%c", SDL_GetKeyFromScancode(SDL_SCANCODE_D));
                 break;
             case SDL_SCANCODE_ESCAPE:
-                cout << "Escape" << endl;
+                SDL_Log("Escape\n");
                 break;
             }
             //마우스 입력
@@ -83,58 +83,58 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1:
-                cout << "Left Mouse" << endl;
+                SDL_Log("Left Mouse\n");
                 break;
             case 2:
-                cout << "Middle Mouse" << endl;
+                SDL_Log("Middle Mouse\n");
                 break;
             case 3:
-                cout << "Right Mouse" << endl;
+                SDL_Log("Right Mouse\n");
                 break;
             }
             break;
         case SDL_MOUSEMOTION:
-            cout << "Mouse moved: (" << event.motion.x << ", " << event.motion.y << ")" << endl;
+            SDL_Log("Mouse : (%d, %d)\n", event.motion.x, event.motion.y);
             break;
         case SDL_MOUSEWHEEL:
-            if (event.wheel.y > 0) cout << "Wheel Up" << endl;
-            if (event.wheel.y < 0) cout << "Wheel Down" << endl;
+            if (event.wheel.y > 0) SDL_Log("Wheel Up\n");
+            if (event.wheel.y < 0) SDL_Log("Wheel Down\n");
             break;
             //컨트롤러 입력
         case SDL_CONTROLLERBUTTONDOWN:
             if (myController != NULL)
             {
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_A)) cout << "Button A" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_B)) cout << "Button B" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_X)) cout << "Button X" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_Y)) cout << "Button Y" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) cout << "Left Button" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) cout << "Right Button" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSTICK)) cout << "Left Stick" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) cout << "Right Stick" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_UP)) cout << "DPAD UP" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_DOWN)) cout << "DPAD DOWN" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) cout << "DPAD LEFT" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) cout << "DPAD RIGHT" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_START)) cout << "Start Button" << endl;
-                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_BACK)) cout << "Back Button" << endl;
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_A)) SDL_Log("Button A\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_B)) SDL_Log("Button B\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_X)) SDL_Log("Button X\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_Y)) SDL_Log("Button Y\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) SDL_Log("Left Button\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) SDL_Log("Right Button\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_LEFTSTICK)) SDL_Log("Left Stick\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_RIGHTSTICK)) SDL_Log("Right Stick\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_UP)) SDL_Log("DPAD UP\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_DOWN)) SDL_Log("DPAD DOWN\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) SDL_Log("DPAD LEFT\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_DPAD_RIGHT)) SDL_Log("DPAD RIGHT\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_START)) SDL_Log("Start Button\n");
+                if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_BACK)) SDL_Log("Back Button\n");
             }
             break;
         case SDL_CONTROLLERAXISMOTION:
             if (myController != NULL)
             {
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX))
-                    cout << "Left Axis X: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX) << endl;
+                    SDL_Log("Left Axis X: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY))
-                    cout << "Left Axis Y: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY) << endl;
+                    SDL_Log("Left Axis Y: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX))
-                    cout << "Right Axis X: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX) << endl;
+                    SDL_Log("Right Axis X: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY))
-                    cout << "Right Axis Y: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY) << endl;
+                    SDL_Log("Right Axis Y: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT))
-                    cout << "Left Trigger: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) << endl;
+                    SDL_Log("Left Trigger: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
-                    cout << "Right Trigger: " << SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) << endl;
+                    SDL_Log("Right Trigger: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
             }
             break;
         default:

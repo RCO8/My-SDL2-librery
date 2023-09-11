@@ -1,14 +1,12 @@
 #pragma once
-#include <iostream>
-using namespace std;
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Gaming
 {
 private:
     bool quit = false;
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    SDL_Window* window; //SDL 창
+    SDL_Renderer* renderer; //창에 그릴 렌더
 
 public:
     bool GameInit();
