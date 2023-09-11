@@ -3,29 +3,35 @@
 #include <fstream>
 using namespace std;
 
-Sprite::Sprite(SDL_Renderer* getRender, const char* fileName)	//½ºÇÁ¶óÀÌÆ® ºÒ·¯¿Í¼­ µ¥ÀÌÅÍ¿¡ ÀúÀå
+Sprite::Sprite(SDL_Renderer* getRender, const char* fileName)	//ìŠ¤í”„ë¼ì´íŠ¸ ë¶ˆëŸ¬ì™€ì„œ ë°ì´í„°ì— ì €ì¥
 {
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 
-	//ÆÄÀÏ¿¡ µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é ºÒ·¯¿À°í ¾øÀ¸¸é »õ·Î ¸¸µé±â
+	//íŒŒì¼ì— ë°ì´í„°ê°€ ìˆìœ¼ë©´ ë¶ˆëŸ¬ì˜¤ê³  ì—†ìœ¼ë©´ ìƒˆë¡œ ë§Œë“¤ê¸°
 	
 	if (fileName == NULL)
+	{
+		~Sprite();
 		return;
+	}
 
 	loadImg = IMG_Load(fileName);
 	if (loadImg == NULL)
+	{
+		~Sprite();
 		return;
+	}
 
-	spriteTexture = SDL_CreateTextureFromSurface(getRender, loadImg);	//ÀÌ¹ÌÁö¸¦ È­¸é¿¡ ±×¸± ÇÔ¼ö
+	spriteTexture = SDL_CreateTextureFromSurface(getRender, loadImg);	//ì´ë¯¸ì§€ë¥¼ í™”ë©´ì— ê·¸ë¦´ í•¨ìˆ˜
 
-	//Ã³À½¿¡ ½ºÇÁ¶óÀÌÆ® ÆÄÀÏÀ» ºÒ·¯¿À°í ÇÁ·¹ÀÓ ¼ö¸¦ 1¾¿ Áõ°¡
+	//ì²˜ìŒì— ìŠ¤í”„ë¼ì´íŠ¸ íŒŒì¼ì„ ë¶ˆëŸ¬ì˜¤ê³  í”„ë ˆì„ ìˆ˜ë¥¼ 1ì”© ì¦ê°€
 	frame++;
 	maxFrame++;
 }
 
 Sprite::~Sprite()
 {
-	//½ºÇÁ¶óÀÌÆ® Á¦°Å
+	//ìŠ¤í”„ë¼ì´íŠ¸ ì œê±°
 	SDL_DestroyTexture(spriteTexture);
 	SDL_FreeSurface(loadImg);
 }
@@ -59,13 +65,13 @@ void Sprite::FrameLoop(int startFrame, int endFrame, int count = 0)
 
 	while (tmp < count)
 	{
-		//ÇÁ·¹ÀÓ ¹İº¹
+		//í”„ë ˆì„ ë°˜ë³µ
 		for (int idx = startFrame; idx = endFrame; idx++)
 		{
-			//Ãâ·Â ½ºÇÁ¶óÀÌÆ®
+			//ì¶œë ¥ ìŠ¤í”„ë¼ì´íŠ¸
 		}
 
-		if (count > 0)	tmp++;	//¹«ÇÑ¹İº¹
+		if (count > 0)	tmp++;	//ë¬´í•œë°˜ë³µ
 	}
 }
 
@@ -97,7 +103,7 @@ void Sprite::FrameSpin(int startFrame, int endFrame, int count = 0)
 void Sprite::FrameTimeline(int* getFrame, int count = 0)
 {
 	int tmp = 0;
-	int frameLength = sizeof(getFrame) / sizeof(int);	//getFrameÀÇ ÀÎµ¦½º ¼ö¸¸Å­ Ãâ·Â
+	int frameLength = sizeof(getFrame) / sizeof(int);	//getFrameì˜ ì¸ë±ìŠ¤ ìˆ˜ë§Œí¼ ì¶œë ¥
 
 	while (tmp < count)
 	{
