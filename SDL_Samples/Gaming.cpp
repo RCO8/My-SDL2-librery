@@ -142,30 +142,10 @@ void Gaming::CheckKeyPress()
         }
 }
 
-void Gaming::LoadImage()
-{
-    loadBMP = SDL_LoadBMP("img.bmp");
-    if (loadBMP == NULL)
-    {
-        cout << "BMP not exist : " << SDL_GetError() << endl;
-        SDL_DestroyTexture(realScreen);
-        quit = true;
-    }
-    realScreen = SDL_CreateTextureFromSurface(renderer, loadBMP);  //화면에 나타낼 텍스쳐 BMP를 배경화면으로
-
-    if (loadBMP != NULL)
-        SDL_RenderCopy(renderer, realScreen, NULL, NULL);   //텍스쳐 그리기
-}
-
 void Gaming::DrawScreen()
 {
     SDL_RenderClear(renderer);  //화면 초기화
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);   //화면을 색상으로 채우기
-
-    SDL_Rect rct = { 10, 10, 50, 50 };
-    SDL_Color rctColor = { 255,0,255,255 };
-    SDL_RenderFillRect(renderer, &rct);
-
     SDL_RenderPresent(renderer);    //화면 그리기
 }
 
