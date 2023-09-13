@@ -1,123 +1,61 @@
 #include "Sprite.h"
-#include <SDL_image.h>
 #include <fstream>
 using namespace std;
 
-Sprite::Sprite(SDL_Renderer* getRender, const char* fileName)	//스프라이트 불러와서 데이터에 저장
+Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이트 불러와서 데이터에 저장
 {
-	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+	sprRenderer = getRenderer;
 
-	//파일에 데이터가 있으면 불러오고 없으면 새로 만들기
-	
-	if (fileName == NULL)
+	imageBMP = SDL_LoadBMP(fileName);
+	if (imageBMP == NULL)
 	{
-		~Sprite();
-		return;
+		SDL_Log("SDL Load BMP Error : %s\n", SDL_GetError());
+		this->~Sprite();
 	}
 
-	loadImg = IMG_Load(fileName);
-	if (loadImg == NULL)
+	sprTexture= SDL_CreateTextureFromSurface(sprRenderer, imageBMP);	//이미지를 텍스쳐로
+
+	if (sprTexture == NULL)
 	{
-		~Sprite();
-		return;
+		SDL_Log("SDL Texture Error : %s\n", SDL_GetError());
+		this->~Sprite();
 	}
 
-	spriteTexture = SDL_CreateTextureFromSurface(getRender, loadImg);	//이미지를 화면에 그릴 함수
-
-	//처음에 스프라이트 파일을 불러오고 프레임 수를 1씩 증가
-	frame++;
-	maxFrame++;
 }
 
 Sprite::~Sprite()
 {
 	//스프라이트 제거
-	SDL_DestroyTexture(spriteTexture);
-	SDL_FreeSurface(loadImg);
-}
-
-void Sprite::SetCenterPos(int x, int y)
-{
-	centerPos.x = x;
-	centerPos.y = y;
-}
-
-void Sprite::SetSpriteLength(int width, int height)
-{
-	length.x = width;
-	length.y = height;
-}
-
-void Sprite::AddonSprite()
-{
+	SDL_DestroyTexture(sprTexture);
+	SDL_FreeSurface(imageBMP);
 
 }
 
-void Sprite::FrameLoop(int startFrame, int endFrame, int count = 0)
+void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 {
-	int tmp = 0;
-
-	if (startFrame > maxFrame || endFrame > maxFrame || startFrame > endFrame)
-	{
-		SDL_Log("Set Frame Error!!\n");
-		return;
-	}
-
-	while (tmp < count)
-	{
-		//프레임 반복
-		for (int idx = startFrame; idx = endFrame; idx++)
-		{
-			//출력 스프라이트
-		}
-
-		if (count > 0)	tmp++;	//무한반복
-	}
+	//SDL_SetColorKey(imageBMP, SDL_TRUE, SDL_MapRGB(imageBMP->format, 255, 255, 255));
 }
 
-void Sprite::FrameSpin(int startFrame, int endFrame, int count = 0)
+void Sprite::Drawing()
 {
-	int tmp = 0;
-	int idx;
+	SDL_Rect sprRct;
+	sprRct.x = 0;
+	sprRct.y = 0;
+	sprRct.w = 20;
+	sprRct.h = 80;
 
-	if (startFrame > maxFrame || endFrame > maxFrame || startFrame > endFrame)
-	{
-		SDL_Log("Set Frame Error!!\n");
-		return;
-	}
+	SDL_Rect sprEnd;
+	sprEnd.x = 30;
+	sprEnd.y = 50;
+	sprEnd.w = 30;
+	sprEnd.h = 100;
 
-	while (tmp < count)
-	{
-		for (idx = startFrame; idx < endFrame; idx++)
-		{
+	/*
+	텍스쳐화된 스프라이트를 그린다
+	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
+	지정된 사각형에서 표시될 항목, 실제 좌표에 표시될 항목
+	*/
+	SDL_RenderCopy(sprRenderer, sprTexture, NULL, &sprEnd);
+	//SDL_RenderCopyEx(sprRenderer, sprTexture,nullptr, &sprRct, NULL, nullptr, SDL_FLIP_NONE);
 
-		}
-		for (idx = endFrame; idx > startFrame; idx--)
-		{
-
-		}
-		if (count > 0) tmp++;
-	}
-}
-
-void Sprite::FrameTimeline(int* getFrame, int count = 0)
-{
-	int tmp = 0;
-	int frameLength = sizeof(getFrame) / sizeof(int);	//getFrame의 인덱스 수만큼 출력
-
-	while (tmp < count)
-	{
-		for (int idx = 0; idx < frameLength; idx++)
-		{
-
-		}
-		if(count > 0) tmp++;
-	}
-}
-
-void Sprite::DrawSprite(SDL_Renderer* renderer)
-{
-	SDL_Rect rct;
-	//rct.w = static_cast<int>(length.x * );
-	//rct.h = static_cast<int>(length.y * );
 }
