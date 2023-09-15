@@ -49,6 +49,8 @@ void Sprite::Drawing(int x, int y)
 	scrnRct.w = sprRct.w;
 	scrnRct.h = sprRct.h;
 
+	SDL_Point rotatePoint;	//회전 중심점
+
 	/*
 	텍스쳐화된 스프라이트를 그린다
 	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
