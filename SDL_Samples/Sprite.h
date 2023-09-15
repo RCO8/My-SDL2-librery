@@ -10,7 +10,7 @@ class Sprite
 {
 private:
 	SDL_Renderer* sprRenderer;
-	SDL_Texture* sprTexture;	//
+	SDL_Texture* sprTexture;	//스프라이트 텍스쳐
 	SDL_Surface* imageBMP;	//이미지 리소스
 	Uint32 Color;
 public:
@@ -19,5 +19,8 @@ public:
 
 	void SetColorHide(Uint8 r, Uint8 g, Uint8 b);	//투명색 설정
 
-	void Drawing();
+	void SetPosition();
+	void MoveToPosition();
+
+	void Drawing(int x, int y);
 };

@@ -20,7 +20,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 		SDL_Log("SDL Texture Error : %s\n", SDL_GetError());
 		this->~Sprite();
 	}
-
+	SDL_SetColorKey(imageBMP, SDL_TRUE, SDL_MapRGB(imageBMP->format, 0, 0, 0));
 }
 
 Sprite::~Sprite()
@@ -33,29 +33,28 @@ Sprite::~Sprite()
 
 void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 {
-	//SDL_SetColorKey(imageBMP, SDL_TRUE, SDL_MapRGB(imageBMP->format, 255, 255, 255));
 }
 
-void Sprite::Drawing()
+void Sprite::Drawing(int x, int y)
 {
-	SDL_Rect sprClip;
+	SDL_Rect sprRct;	//파일 내에서 출력될 Rect
 	sprRct.x = 0;
 	sprRct.y = 0;
-	sprRct.w = 20;
-	sprRct.h = 80;
+	sprRct.w = 32;
+	sprRct.h = 32;
 
-	SDL_Rect sprPos;
-	sprEnd.x = 30;
-	sprEnd.y = 50;
-	sprEnd.w = sprRct.w;
-	sprEnd.h = sprRct.h;
+	SDL_Rect scrnRct;	//실제 화면에 출력될 Rect
+	scrnRct.x = x;
+	scrnRct.y = y;
+	scrnRct.w = sprRct.w;
+	scrnRct.h = sprRct.h;
 
 	/*
 	텍스쳐화된 스프라이트를 그린다
 	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
-	지정된 사각형에서 표시될 항목, 실제 좌표에 표시될 항목
+	파일 내에서 사각형으로 표시될 항목, 실제 좌표에 표시될 항목
 	*/
-	SDL_RenderCopy(sprRenderer, sprTexture, &sprClip, &sprPos);
-	//SDL_RenderCopyEx(sprRenderer, sprTexture, nullptr, &sprClip, &sprPos, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopy(sprRenderer, sprTexture, &sprRct, &scrnRct);
+	//SDL_RenderCopyEx(sprRenderer,sprTexture,&sprRct,&scrnRct,)
 
 }
