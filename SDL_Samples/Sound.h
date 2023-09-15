@@ -1,12 +1,16 @@
 #pragma once
-#include <fstream>
-using namespace std;
+#include <SDL.h>
 
 class Sound
 {
 private:
 	char* fileName;	//파일 이름
 	float nowVolume;
+
+	SDL_AudioSpec wav_spec;
+	SDL_AudioDeviceID dev;
+	Uint8* wav_buffer;
+	Uint32 wav_length;
 public:
 	bool mute = true;
 
@@ -19,18 +23,3 @@ public:
 
 	float GetVolume() const { return nowVolume; };
 };
-
-Sound::Sound()
-{
-	//사운드 불러오기 및 생성
-}
-
-Sound::~Sound()
-{
-	//사운드 제거
-}
-
-void Sound::Play() {};
-void Sound::Pause() {};
-void Sound::Stop() {};
-void Sound::SetVolume() {};
