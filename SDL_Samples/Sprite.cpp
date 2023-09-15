@@ -52,7 +52,6 @@ void Sprite::Drawing(int x, int y)
 	/*
 	텍스쳐화된 스프라이트를 그린다
 	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
-	파일 내에서 사각형으로 표시될 항목, 실제 좌표에 표시될 항목
 	*/
 	SDL_RenderCopy(sprRenderer, sprTexture, &sprRct, &scrnRct);
 	//SDL_RenderCopyEx(sprRenderer,sprTexture,&sprRct,&scrnRct,)
