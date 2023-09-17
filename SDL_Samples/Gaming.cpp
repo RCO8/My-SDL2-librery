@@ -91,6 +91,11 @@ void Gaming::CheckKeyPress()
             break;
         case SDL_MOUSEMOTION:
             SDL_Log("Mouse : (%d, %d)\n", event.motion.x, event.motion.y);
+            if (event.button.button == 1)
+            {
+                x = event.motion.x - 16;
+                y = event.motion.y - 16;
+            }
             break;
         case SDL_MOUSEWHEEL:
             switch (event.wheel.y)
@@ -153,9 +158,15 @@ void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
     SDL_RenderClear(renderer);  //화면 초기화
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //화면을 색상으로 채우기
 
-    bgImg->Drawing(x,y);   //이미지 그리기
+    bgImg->SetColorHide(0, 0, 0);
+    bgImg->Drawing(x,y,0);   //이미지 그리기
 
     SDL_RenderPresent(renderer);    //화면 그리기
+}
+
+void Gaming::PlayAudio()
+{
+
 }
 
 void Gaming::GameRun()
@@ -164,6 +175,7 @@ void Gaming::GameRun()
     {
         CheckKeyPress();
         DrawScreen();
+        PlayAudio();
     }
 }
 

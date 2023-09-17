@@ -4,7 +4,7 @@
 Sound::Sound()
 {
 	//사운드 불러오기 및 생성
-	if (SDL_LoadWAV("example.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
+	if (SDL_LoadWAV("P_MarcoDeath_old.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
 	{
 		SDL_Log("Failed to load WAV file : %s\n", SDL_GetError());
 		this->~Sound();
@@ -22,6 +22,7 @@ Sound::Sound()
 		SDL_Log("Failed to queue audio: %s\n", SDL_GetError());
 		this->~Sound();
 	}
+	SDL_PauseAudioDevice(dev, 0);
 }
 
 Sound::~Sound()
@@ -37,7 +38,6 @@ void Sound::Play()
 }
 void Sound::Pause()
 {
-	SDL_PauseAudioDevice(dev, 0);
 }
 void Sound::Stop() {}
 void Sound::SetVolume() {}

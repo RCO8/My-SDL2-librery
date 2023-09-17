@@ -20,7 +20,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 		SDL_Log("SDL Texture Error : %s\n", SDL_GetError());
 		this->~Sprite();
 	}
-	SDL_SetColorKey(imageBMP, SDL_TRUE, SDL_MapRGB(imageBMP->format, 0, 0, 0));
+
 }
 
 Sprite::~Sprite()
@@ -33,9 +33,11 @@ Sprite::~Sprite()
 
 void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 {
+	Color = SDL_MapRGB(imageBMP->format, r, g, b);
+	SDL_SetColorKey(imageBMP, SDL_RLEACCEL, Color);
 }
 
-void Sprite::Drawing(int x, int y)
+void Sprite::Drawing(int x, int y, int dir)
 {
 	SDL_Rect sprRct;	//파일 내에서 출력될 Rect
 	sprRct.x = 0;
@@ -49,13 +51,15 @@ void Sprite::Drawing(int x, int y)
 	scrnRct.w = sprRct.w;
 	scrnRct.h = sprRct.h;
 
-	SDL_Point rotatePoint;	//회전 중심점
+	SDL_Point rotatePoint;	//회전 중심점 (각 높이, 너비가 중앙값이면 중심회전 가능)
+	rotatePoint.x = 16;
+	rotatePoint.y = 16;
 
 	/*
 	텍스쳐화된 스프라이트를 그린다
 	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
 	*/
-	SDL_RenderCopy(sprRenderer, sprTexture, &sprRct, &scrnRct);
-	//SDL_RenderCopyEx(sprRenderer,sprTexture,&sprRct,&scrnRct,)
+	//SDL_RenderCopy(sprRenderer, sprTexture, &sprRct, &scrnRct);
+	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct, dir, &rotatePoint, SDL_FLIP_NONE);
 
 }
