@@ -32,6 +32,12 @@ Sprite::~Sprite()
 	SDL_DestroyRenderer(sprRenderer);
 }
 
+void Sprite::SetRotatePoint(int x, int y)
+{
+	rotatePoint.x = x;
+	rotatePoint.y = y;
+}
+
 void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 {
 	Color = SDL_MapRGB(imageBMP->format, r, g, b);
