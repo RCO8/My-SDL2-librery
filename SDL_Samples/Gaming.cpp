@@ -16,9 +16,14 @@ bool Gaming::GameInit()
         SDL_Log("Failed Init Renderer : %s \n", SDL_GetError());
         return false;
     }
+    surface = SDL_GetWindowSurface(window);
+    if (surface == NULL)
+    {
+        SDL_Log("Failed Init Surface : %s \n", SDL_GetError());
+        return false;
+    }
 
     bgImg = new Sprite(renderer, "goblin.bmp");
-
 
     return true;
 }
@@ -30,7 +35,9 @@ void Gaming::CheckKeyPress()
     SDL_Joystick* myJoystick;           //연결된 조이스틱과 통신
 
     myController = SDL_GameControllerOpen(0);
+    const int controllerMaxAxis = 32768;
     myJoystick = SDL_JoystickOpen(0);
+    const int joystickFixAxis = 256;
     
     while (SDL_PollEvent(&event))
         switch (event.type)
@@ -77,6 +84,7 @@ void Gaming::CheckKeyPress()
             case SDL_SCANCODE_ESCAPE:   SDL_Log("Escape\n");
                 break;
             }
+
         //마우스 입력
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button)
@@ -91,11 +99,6 @@ void Gaming::CheckKeyPress()
             break;
         case SDL_MOUSEMOTION:
             SDL_Log("Mouse : (%d, %d)\n", event.motion.x, event.motion.y);
-            if (event.button.button == 1)
-            {
-                x = event.motion.x - 16;
-                y = event.motion.y - 16;
-            }
             break;
         case SDL_MOUSEWHEEL:
             switch (event.wheel.y)
@@ -106,9 +109,10 @@ void Gaming::CheckKeyPress()
                 break;
             }
             break;
-        //컨트롤러 입력
+
+        //컨트롤러 입력(콘솔)
         case SDL_CONTROLLERBUTTONDOWN:
-            if (myController != NULL)
+            if (myController)
             {
                 if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_A)) SDL_Log("Button A\n");
                 if (SDL_GameControllerGetButton(myController, SDL_CONTROLLER_BUTTON_B)) SDL_Log("Button B\n");
@@ -127,27 +131,41 @@ void Gaming::CheckKeyPress()
             }
             break;
         case SDL_CONTROLLERAXISMOTION:
-            if (myController != NULL)
+            if (myController)
             {
+                //최대 값 : 32768
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX))
-                    SDL_Log("Left Axis X: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
+                    SDL_Log("Left Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY))
-                    SDL_Log("Left Axis Y: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
+                    SDL_Log("Left Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX))
-                    SDL_Log("Right Axis X: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
+                    SDL_Log("Right Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY))
-                    SDL_Log("Right Axis Y: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
+                    SDL_Log("Right Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT))
-                    SDL_Log("Left Trigger: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
+                    SDL_Log("Left Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
                 if (SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
-                    SDL_Log("Right Trigger: %f\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
+                    SDL_Log("Right Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
             }
             break;
-        case SDL_JOYSTICK_TYPE_ARCADE_PAD:
+
+        //조이스틱 입력(아케이드)
+        case SDL_JOYBUTTONDOWN:
+            if (myJoystick)
+            {
+                for (int i = 0; i < 12; i++)
+                    if (SDL_JoystickGetButton(myJoystick, i))
+                           SDL_Log("Joystick Button %d\n", i);
+            }
             break;
-        case SDL_JOYSTICK_TYPE_ARCADE_STICK:
-            break;
-        default:
+        case SDL_JOYAXISMOTION:
+            if (myJoystick)
+            {
+                if (SDL_JoystickGetAxis(myJoystick, 0) < -joystickFixAxis) SDL_Log("Joystick Left\n");
+                if (SDL_JoystickGetAxis(myJoystick, 0) > joystickFixAxis) SDL_Log("Joystick Right\n");
+                if (SDL_JoystickGetAxis(myJoystick, 1) < -joystickFixAxis) SDL_Log("Joystick Up\n");
+                if (SDL_JoystickGetAxis(myJoystick, 1) > joystickFixAxis) SDL_Log("Joystick Down\n");
+            }
             break;
         }
 }
@@ -157,10 +175,10 @@ void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
 
     SDL_RenderClear(renderer);  //화면 초기화
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //화면을 색상으로 채우기
-
-    bgImg->SetColorHide(0, 0, 0);
-    bgImg->Drawing(x,y,0);   //이미지 그리기
-
+    
+    //이미지 그리기
+    bgImg->SetColorHide(0, 0, 255);
+    bgImg->Drawing(x, y, dir);
     SDL_RenderPresent(renderer);    //화면 그리기
 }
 

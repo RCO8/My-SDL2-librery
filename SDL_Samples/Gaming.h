@@ -9,13 +9,12 @@ private:
     bool quit = false;
     SDL_Window* window; //SDL 창
     SDL_Renderer* renderer; //창에 그릴 렌더
+    SDL_Surface* surface;
 
     Sprite* bgImg;
-
     int x = 30;
     int y = 50;
-
-    Sound* soundEffect;
+    int dir = 0;
 
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
