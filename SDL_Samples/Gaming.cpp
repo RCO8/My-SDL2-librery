@@ -188,7 +188,7 @@ void Gaming::CheckKeyPress()
                 {
                     case 0:
                         SDL_Log("Joystick Button 0\n");
-                    break;
+                    break; //... 최대 버튼 개수를 지정하면서 위의 코드처럼 작성
                 }
             }
             break;
