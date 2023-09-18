@@ -180,15 +180,20 @@ void Gaming::CheckKeyPress()
         case SDL_JOYBUTTONDOWN:
             if (myJoystick)
             {
-                for (int i = 0; i < 12; i++)
-                    if (SDL_JoystickGetButton(myJoystick, i))
-                           SDL_Log("Joystick Button %d\n", i);
-                //or
                 switch(event.jbutton.button)
                 {
                     case 0:
                         SDL_Log("Joystick Button 0\n");
-                    break; //... 최대 버튼 개수를 지정하면서 위의 코드처럼 작성
+                    break; 
+                    case 1:
+                        SDL_Log("Joystick Button 1\n");
+                    break;
+                    case 2:
+                        SDL_Log("Joystick Button 2\n");
+                    break;
+                    case 3:
+                        SDL_Log("Joystick Button 3\n");
+                    break;//... 최대 버튼 개수를 지정하면서 위의 코드처럼 작성
                 }
             }
             break;
