@@ -1,10 +1,11 @@
 #include "Sound.h"
+#include <cstring>
 #include <SDL_audio.h>
 
-Sound::Sound()
+Sound::Sound(const char* filename)
 {
 	//사운드 불러오기 및 생성
-	if (SDL_LoadWAV("P_MarcoDeath_old.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
+	if (SDL_LoadWAV(filename, &wav_spec, &wav_buffer, &wav_length) == NULL)
 	{
 		SDL_Log("Failed to load WAV file : %s\n", SDL_GetError());
 		this->~Sound();
@@ -22,7 +23,6 @@ Sound::Sound()
 		SDL_Log("Failed to queue audio: %s\n", SDL_GetError());
 		this->~Sound();
 	}
-	SDL_PauseAudioDevice(dev, 0);
 }
 
 Sound::~Sound()
@@ -34,10 +34,20 @@ Sound::~Sound()
 
 void Sound::Play() 
 {
-	
+	SDL_PauseAudioDevice(dev, 0);	//사운드 한번만 재생
+	SDL_Delay(2000);	//2초간 대기
+	SDL_CloseAudioDevice(dev);	//대기 후 사운드 해제
 }
+
 void Sound::Pause()
 {
+	SDL_PauseAudioDevice(dev, 1);
 }
-void Sound::Stop() {}
-void Sound::SetVolume() {}
+void Sound::Stop()
+{
+
+}
+void Sound::SetVolume() 
+{
+	
+}

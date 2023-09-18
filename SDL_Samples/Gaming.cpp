@@ -70,6 +70,7 @@ void Gaming::CheckKeyPress()
             case SDL_SCANCODE_LALT:     SDL_Log("Alt\n");
                 break;
             case SDL_SCANCODE_SPACE:    SDL_Log("Space\n");
+                soundEffect->Play();
                 break;
             case SDL_SCANCODE_F1:       SDL_Log("F1\n");
                 break;
@@ -207,19 +208,23 @@ void Gaming::CheckKeyPress()
 
 void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
 {
-
     SDL_RenderClear(renderer);  //화면 초기화
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //화면을 색상으로 채우기
     
     //이미지 그리기
     bgImg->SetColorHide(0, 0, 255);
     bgImg->Drawing(30, 50, 0);
+
     SDL_RenderPresent(renderer);    //화면 그리기
+}
+
+void Gaming::DrawParticle()
+{
+
 }
 
 void Gaming::PlayAudio()
 {
-
 }
 
 void Gaming::GameRun()
@@ -228,6 +233,7 @@ void Gaming::GameRun()
     {
         CheckKeyPress();
         DrawScreen();
+        DrawParticle();
         PlayAudio();
     }
 }
