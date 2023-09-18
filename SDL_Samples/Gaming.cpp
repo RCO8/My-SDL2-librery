@@ -33,15 +33,15 @@ void Gaming::CheckKeyPress()
 {
     SDL_Event event;
 
-    //ÄÁÆ®·Ñ·¯¿Í Á¶ÀÌ½ºÆ½ ÀÔ·ÂÃ³¸® Ãæµ¹ÇÏÁö ¾Êµµ·Ï
-    SDL_GameController* myController;   //¿¬°áµÈ ÄÁÆ®·Ñ·¯¿Í Åë½Å
-    SDL_Joystick* myJoystick;           //¿¬°áµÈ Á¶ÀÌ½ºÆ½°ú Åë½Å
+    //ì»¨íŠ¸ë¡¤ëŸ¬ì™€ ì¡°ì´ìŠ¤í‹± ì…ë ¥ì²˜ë¦¬ ì¶©ëŒí•˜ì§€ ì•Šë„ë¡
+    SDL_GameController* myController;   //ì—°ê²°ëœ ì»¨íŠ¸ë¡¤ëŸ¬ì™€ í†µì‹ 
+    SDL_Joystick* myJoystick;           //ì—°ê²°ëœ ì¡°ì´ìŠ¤í‹±ê³¼ í†µì‹ 
 
     myController = SDL_GameControllerOpen(0);
-    const int controllerMaxAxis = 32768;    //ÃÖ´ë ½ºÆ½ µ¥µå°ª
+    const int controllerMaxAxis = 32768;    //ìµœëŒ€ ìŠ¤í‹± ë°ë“œê°’
 
     myJoystick = SDL_JoystickOpen(0);
-    const int joystickFixAxis = 256;    //½ºÆ½ ¹ÌÀÔ·Â½Ã 256ÀÌ ÁöÁ¤µÇ¹ö¸®´Â°ÍÀ» ¹æÁö
+    const int joystickFixAxis = 256;    //ìŠ¤í‹± ë¯¸ì…ë ¥ì‹œ 256ì´ ì§€ì •ë˜ë²„ë¦¬ëŠ”ê²ƒì„ ë°©ì§€
     
     while (SDL_PollEvent(&event))
         switch (event.type)
@@ -49,7 +49,7 @@ void Gaming::CheckKeyPress()
         case SDL_QUIT:
             quit = true;
             break;
-        //Å°º¸µå ÀÔ·Â
+        //í‚¤ë³´ë“œ ì…ë ¥
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
@@ -92,7 +92,7 @@ void Gaming::CheckKeyPress()
                 break;
             }
 
-        //¸¶¿ì½º ÀÔ·Â
+        //ë§ˆìš°ìŠ¤ ì…ë ¥
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button)
             {
@@ -116,7 +116,7 @@ void Gaming::CheckKeyPress()
             }
             break;
 
-        //ÄÁÆ®·Ñ·¯ ÀÔ·Â(ÄÜ¼Ö)
+        //ì»¨íŠ¸ë¡¤ëŸ¬ ì…ë ¥(ì½˜ì†”)
         case SDL_CONTROLLERBUTTONDOWN:
             if (myController)
                 switch (event.cbutton.button)
@@ -176,12 +176,21 @@ void Gaming::CheckKeyPress()
                 }
             break;
 
-        //Á¶ÀÌ½ºÆ½ ÀÔ·Â(¾ÆÄÉÀÌµå)
+        //ì¡°ì´ìŠ¤í‹± ì…ë ¥(ì•„ì¼€ì´ë“œ)
         case SDL_JOYBUTTONDOWN:
             if (myJoystick)
+            {
                 for (int i = 0; i < 12; i++)
                     if (SDL_JoystickGetButton(myJoystick, i))
                            SDL_Log("Joystick Button %d\n", i);
+                //or
+                switch(event.jbutton.button)
+                {
+                    case 0:
+                        SDL_Log("Joystick Button 0\n");
+                    break;
+                }
+            }
             break;
         case SDL_JOYHATMOTION:
             if (myJoystick)
@@ -206,16 +215,16 @@ void Gaming::CheckKeyPress()
         }
 }
 
-void Gaming::DrawScreen()   //½ÇÁ¦ È­¸é¿¡ ½ºÇÁ¶óÀÌÆ® ¹× ÀÌ¹ÌÁö¸¦ ±×¸®´Â ¸Ş¼­µå
+void Gaming::DrawScreen()   //ì‹¤ì œ í™”ë©´ì— ìŠ¤í”„ë¼ì´íŠ¸ ë° ì´ë¯¸ì§€ë¥¼ ê·¸ë¦¬ëŠ” ë©”ì„œë“œ
 {
-    SDL_RenderClear(renderer);  //È­¸é ÃÊ±âÈ­
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //È­¸éÀ» »ö»óÀ¸·Î Ã¤¿ì±â
+    SDL_RenderClear(renderer);  //í™”ë©´ ì´ˆê¸°í™”
+    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //í™”ë©´ì„ ìƒ‰ìƒìœ¼ë¡œ ì±„ìš°ê¸°
     
-    //ÀÌ¹ÌÁö ±×¸®±â
+    //ì´ë¯¸ì§€ ê·¸ë¦¬ê¸°
     bgImg->SetColorHide(0, 0, 255);
     bgImg->Drawing(30, 50, 0);
 
-    SDL_RenderPresent(renderer);    //È­¸é ±×¸®±â
+    SDL_RenderPresent(renderer);    //í™”ë©´ ê·¸ë¦¬ê¸°
 }
 
 void Gaming::DrawParticle()
