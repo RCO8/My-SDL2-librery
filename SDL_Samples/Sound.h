@@ -4,22 +4,18 @@
 class Sound
 {
 private:
-	char* fileName;	//파일 이름
-	float nowVolume;
+	float nowVolume = 0.f;
 
 	SDL_AudioSpec wav_spec;
 	SDL_AudioDeviceID dev;
 	Uint8* wav_buffer;
 	Uint32 wav_length;
+	int recallAudio;
 public:
-	bool mute = true;
-
-	Sound();
+	Sound(const char * filename);
 	~Sound();
 	void Play();
 	void Pause();
 	void Stop();
-	void SetVolume();
-
-	float GetVolume() const { return nowVolume; };
+	void SetInputMode(int reStart);
 };

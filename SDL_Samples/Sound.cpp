@@ -1,6 +1,4 @@
 #include "Sound.h"
-#include <cstring>
-#include <SDL_audio.h>
 
 Sound::Sound(const char* filename)
 {
@@ -17,8 +15,8 @@ Sound::Sound(const char* filename)
 		this->~Sound();
 	}
 
-	int success = SDL_QueueAudio(dev, wav_buffer, wav_length);
-	if (success != 0)
+	recallAudio = SDL_QueueAudio(dev, wav_buffer, wav_length);
+	if (recallAudio != 0)
 	{
 		SDL_Log("Failed to queue audio: %s\n", SDL_GetError());
 		this->~Sound();
@@ -32,11 +30,12 @@ Sound::~Sound()
 	SDL_FreeWAV(wav_buffer);
 }
 
-void Sound::Play() 
+void Sound::Play()
 {
+	//소리가 재생상태가 아니라면 실행
+
+	recallAudio = SDL_QueueAudio(dev, wav_buffer, wav_length);
 	SDL_PauseAudioDevice(dev, 0);	//사운드 한번만 재생
-	SDL_Delay(2000);	//2초간 대기
-	SDL_CloseAudioDevice(dev);	//대기 후 사운드 해제
 }
 
 void Sound::Pause()
@@ -47,7 +46,7 @@ void Sound::Stop()
 {
 
 }
-void Sound::SetVolume() 
+void Sound::SetInputMode(int reStart)
 {
-	
+	//입력을 받을 때 다시 재생할 것인가 아님 재생이 끝나면 할 것인가
 }
