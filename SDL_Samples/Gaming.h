@@ -12,9 +12,7 @@ private:
     SDL_Surface* surface;
 
     Sprite* bgImg;
-    int x = 30;
-    int y = 50;
-    int dir = 0;
+    Sound* soundEffect;
 
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
@@ -23,5 +21,6 @@ public:
 private:
     void CheckKeyPress();	//키 및 이벤트 확인
     void DrawScreen();		//배경화면 그리기
+    void DrawParticle();    //파티클 그리기
     void PlayAudio();       //소리 재생
 };

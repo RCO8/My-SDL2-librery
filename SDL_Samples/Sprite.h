@@ -8,17 +8,22 @@ struct Vector2
 
 class Sprite
 {
-private:
+protected:
 	SDL_Renderer* sprRenderer;
-	SDL_Texture* sprTexture;	//ìŠ¤í”„ë¼ì´íŠ¸ í…ìŠ¤ì³
-	SDL_Surface* imageBMP;	//ì´ë¯¸ì§€ ë¦¬ì†ŒìŠ¤
-	Uint32 Color = 0;	//íˆ¬ëª…í•œ ë°°ê²½ìƒ‰ìœ¼ë¡œ ì„¤ì •í•˜ê¸° ìœ„í•œ ì†ì„±
-	SDL_Point rotatePoint;	//ìŠ¤í”„ë¼ì´íŠ¸ íšŒì „ì¤‘ì‹¬ì 
+	SDL_Texture* sprTexture;	//½ºÇÁ¶óÀÌÆ® ÅØ½ºÃÄ
+	SDL_Surface* imageFile;		//ÀÌ¹ÌÁö ¸®¼Ò½º
+
+	SDL_Rect sprRct;	//ÆÄÀÏ ³»¿¡¼­ Ãâ·ÂµÉ Rect
+	SDL_Rect scrnRct;	//½ÇÁ¦ È­¸é¿¡ Ãâ·ÂµÉ Rect
+
+	Uint32 Color = 0;			//Åõ¸íÇÑ ¹è°æ»öÀ¸·Î ¼³Á¤ÇÏ±â À§ÇÑ ¼Ó¼º
+	SDL_Point rotatePoint;		//½ºÇÁ¶óÀÌÆ® È¸ÀüÁß½ÉÁ¡
 public:
 	Sprite(SDL_Renderer* getRenderer, const char* fileName);
 	~Sprite();
 
-	void SetRotatePoint(int x, int y);	//ì¤‘ì‹¬ì  ì§€ì •
-	void SetColorHide(Uint8 r, Uint8 g, Uint8 b);	//íˆ¬ëª…ìƒ‰ ì„¤ì •
-	void Drawing(int x, int y, int dir);	//ìŠ¤í”„ë¼ì´íŠ¸ ê·¸ë¦¬ê¸°
+	void SetRotatePoint(int x, int y);				//Áß½ÉÁ¡ ÁöÁ¤
+	void SetColorHide(Uint8 r, Uint8 g, Uint8 b);	//Åõ¸í»ö ¼³Á¤
+	void Drawing(int x, int y, int dir);			//½ºÇÁ¶óÀÌÆ® ±×¸®±â
+	void DrawFill();	//ÀüÃ¼È­¸éÀ¸·Î Ã¤¿ì±â
 };
