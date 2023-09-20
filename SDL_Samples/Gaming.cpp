@@ -33,15 +33,12 @@ void Gaming::CheckKeyPress()
 {
     SDL_Event event;
 
-    //ì»¨íŠ¸ë¡¤ëŸ¬ì™€ ì¡°ì´ìŠ¤í‹± ì…ë ¥ì²˜ë¦¬ ì¶©ëŒí•˜ì§€ ì•Šë„ë¡
-    SDL_GameController* myController;   //ì—°ê²°ëœ ì»¨íŠ¸ë¡¤ëŸ¬ì™€ í†µì‹ 
-    SDL_Joystick* myJoystick;           //ì—°ê²°ëœ ì¡°ì´ìŠ¤í‹±ê³¼ í†µì‹ 
+    //ÄÁÆ®·Ñ·¯¿Í Á¶ÀÌ½ºÆ½ ÀÔ·ÂÃ³¸® Ãæµ¹ÇÏÁö ¾Êµµ·Ï
+    SDL_GameController* myController;   //¿¬°áµÈ ÄÁÆ®·Ñ·¯¿Í Åë½Å
+    SDL_Joystick* myJoystick;           //¿¬°áµÈ Á¶ÀÌ½ºÆ½°ú Åë½Å
 
     myController = SDL_GameControllerOpen(0);
-    const int controllerMaxAxis = 32768;    //ìµœëŒ€ ìŠ¤í‹± ë°ë“œê°’
-
-    myJoystick = SDL_JoystickOpen(0);
-    const int joystickFixAxis = 256;    //ìŠ¤í‹± ë¯¸ì…ë ¥ì‹œ 256ì´ ì§€ì •ë˜ë²„ë¦¬ëŠ”ê²ƒì„ ë°©ì§€
+    const int controllerMaxAxis = 32768;    //ÃÖ´ë ½ºÆ½ µ¥µå°ª
     
     while (SDL_PollEvent(&event))
         switch (event.type)
@@ -49,7 +46,7 @@ void Gaming::CheckKeyPress()
         case SDL_QUIT:
             quit = true;
             break;
-        //í‚¤ë³´ë“œ ì…ë ¥
+        //Å°º¸µå ÀÔ·Â
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
@@ -63,14 +60,13 @@ void Gaming::CheckKeyPress()
                 break;
             case SDL_SCANCODE_RETURN:   SDL_Log("Enter\n");
                 break;
+            case SDL_SCANCODE_SPACE:    SDL_Log("Space\n");
+                break;
             case SDL_SCANCODE_LSHIFT:   SDL_Log("Shift\n");
                 break;
             case SDL_SCANCODE_LCTRL:    SDL_Log("Ctrl\n");
                 break;
             case SDL_SCANCODE_LALT:     SDL_Log("Alt\n");
-                break;
-            case SDL_SCANCODE_SPACE:    SDL_Log("Space\n");
-                soundEffect->Play();
                 break;
             case SDL_SCANCODE_F1:       SDL_Log("F1\n");
                 break;
@@ -92,7 +88,7 @@ void Gaming::CheckKeyPress()
                 break;
             }
 
-        //ë§ˆìš°ìŠ¤ ì…ë ¥
+        //¸¶¿ì½º ÀÔ·Â
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button)
             {
@@ -116,7 +112,7 @@ void Gaming::CheckKeyPress()
             }
             break;
 
-        //ì»¨íŠ¸ë¡¤ëŸ¬ ì…ë ¥(ì½˜ì†”)
+        //ÄÁÆ®·Ñ·¯ ÀÔ·Â(ÄÜ¼Ö)
         case SDL_CONTROLLERBUTTONDOWN:
             if (myController)
                 switch (event.cbutton.button)
@@ -175,61 +171,19 @@ void Gaming::CheckKeyPress()
                     break;
                 }
             break;
-
-        //ì¡°ì´ìŠ¤í‹± ì…ë ¥(ì•„ì¼€ì´ë“œ)
-        case SDL_JOYBUTTONDOWN:
-            if (myJoystick)
-            {
-                switch(event.jbutton.button)
-                {
-                    case 0:
-                        SDL_Log("Joystick Button 0\n");
-                    break; 
-                    case 1:
-                        SDL_Log("Joystick Button 1\n");
-                    break;
-                    case 2:
-                        SDL_Log("Joystick Button 2\n");
-                    break;
-                    case 3:
-                        SDL_Log("Joystick Button 3\n");
-                    break;//... ìµœëŒ€ ë²„íŠ¼ ê°œìˆ˜ë¥¼ ì§€ì •í•˜ë©´ì„œ ìœ„ì˜ ì½”ë“œì²˜ëŸ¼ ì‘ì„±
-                }
-            }
-            break;
-        case SDL_JOYHATMOTION:
-            if (myJoystick)
-            {
-                if (SDL_JoystickGetHat(myJoystick, 0) == SDL_HAT_UP)        SDL_Log("Hat Up\n");
-                else if (SDL_JoystickGetHat(myJoystick, 0) == SDL_HAT_DOWN) SDL_Log("Hat Down\n");
-                
-                if (SDL_JoystickGetHat(myJoystick, 0) == SDL_HAT_LEFT)      SDL_Log("Hat Left\n");
-                else if (SDL_JoystickGetHat(myJoystick, 0) == SDL_HAT_RIGHT)SDL_Log("Hat Right\n");
-            }
-            break;
-        case SDL_JOYAXISMOTION:
-            if (myJoystick)
-            {
-                if (SDL_JoystickGetAxis(myJoystick, 0) < -joystickFixAxis)   SDL_Log("Joystick Left\n");
-                else if (SDL_JoystickGetAxis(myJoystick, 0) >  joystickFixAxis)   SDL_Log("Joystick Right\n");
-                
-                if (SDL_JoystickGetAxis(myJoystick, 1) < -joystickFixAxis)   SDL_Log("Joystick Up\n");
-                else if (SDL_JoystickGetAxis(myJoystick, 1) >  joystickFixAxis)   SDL_Log("Joystick Down\n");
-            }
-            break;
         }
 }
 
-void Gaming::DrawScreen()   //ì‹¤ì œ í™”ë©´ì— ìŠ¤í”„ë¼ì´íŠ¸ ë° ì´ë¯¸ì§€ë¥¼ ê·¸ë¦¬ëŠ” ë©”ì„œë“œ
+void Gaming::DrawScreen()   //½ÇÁ¦ È­¸é¿¡ ½ºÇÁ¶óÀÌÆ® ¹× ÀÌ¹ÌÁö¸¦ ±×¸®´Â ¸Ş¼­µå
 {
-    SDL_RenderClear(renderer);  //í™”ë©´ ì´ˆê¸°í™”
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //í™”ë©´ì„ ìƒ‰ìƒìœ¼ë¡œ ì±„ìš°ê¸°
+    SDL_RenderClear(renderer);  //È­¸é ÃÊ±âÈ­
+    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //È­¸éÀ» »ö»óÀ¸·Î Ã¤¿ì±â
     
-    //ì´ë¯¸ì§€ ê·¸ë¦¬ê¸°
+    //ÀÌ¹ÌÁö ±×¸®±â
     bgImg->SetColorHide(0, 0, 255);
     bgImg->Drawing(30, 50, 0);
 
-    SDL_RenderPresent(renderer);    //í™”ë©´ ê·¸ë¦¬ê¸°
+    SDL_RenderPresent(renderer);    //È­¸é ±×¸®±â
 }
 
 void Gaming::DrawParticle()
