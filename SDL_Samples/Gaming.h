@@ -1,26 +1,26 @@
 #pragma once
-#include <SDL.h>
 #include "Sprite.h"
 #include "Sound.h"
+#include <SDL.h>
 
 class Gaming
 {
 private:
     bool quit = false;
-    SDL_Window* window; //SDL Ã¢
-    SDL_Renderer* renderer; //Ã¢¿¡ ±×¸± ·»´õ
+    SDL_Window* window; //SDL ì°½
+    SDL_Renderer* renderer; //ì°½ì— ê·¸ë¦´ ë Œë”
     SDL_Surface* surface;
 
     Sprite* bgImg;
     Sound* soundEffect;
 
 public:
-    bool GameInit();    //°ÔÀÓ ½ÃÀÛ½Ã ±âº»»çÇ× Á¤ÀÇ
-    void GameRun();     //°ÔÀÓ ÁøÇàÁß
-    void GameOff();     //°ÔÀÓ Á¾·á
+    bool GameInit();    //ê²Œì„ ì‹œì‘ì‹œ ê¸°ë³¸ì‚¬í•­ ì •ì˜
+    void GameRun();     //ê²Œì„ ì§„í–‰ì¤‘
+    void GameOff();     //ê²Œì„ ì¢…ë£Œ
 private:
-    void CheckKeyPress();	//Å° ¹× ÀÌº¥Æ® È®ÀÎ
-    void DrawScreen();		//¹è°æÈ­¸é ±×¸®±â
-    void DrawParticle();    //ÆÄÆ¼Å¬ ±×¸®±â
-    void PlayAudio();       //¼Ò¸® Àç»ı
+    void CheckKeyPress();	//í‚¤ ë° ì´ë²¤íŠ¸ í™•ì¸
+    void DrawScreen();		//ë°°ê²½í™”ë©´ ê·¸ë¦¬ê¸°
+    void DrawParticle();    //íŒŒí‹°í´ ê·¸ë¦¬ê¸°
+    void PlayAudio();       //ì†Œë¦¬ ì¬ìƒ
 };
