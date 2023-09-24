@@ -30,7 +30,7 @@ public:
                 hour++;
                 minute = 0;
             }
-            SDL_Log("Timer %2d:%2d", minute, second);
+            SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
         }
     }
     void StopCount(bool tickOff)
@@ -45,7 +45,7 @@ public:
         hour = 0;
     }
 
-    int GetSecond() const { return second; }
-    int GetMinute() const { return minute; }
-    int GetHour() const { return hour; }
+    int GetSecond() { return second; }
+    int GetMinute() { return minute; }
+    int GetHour() { return hour; }
 };

@@ -1,8 +1,8 @@
 #include "Joystick.h"
 
-Joystick::Joystick(int index = 0)
+Joystick::Joystick()
 {
-	myJoystick = SDL_JoystickOpen(index);
+	myJoystick = SDL_JoystickOpen(0);
 	if (myJoystick == NULL)
 	{
 		SDL_Log("Set Joystick Error!! %s\n", SDL_GetError());
@@ -52,29 +52,46 @@ void Joystick::CheckJoystickEvent()
 			}
 			break;
 		case SDL_JOYAXISMOTION:
-			if (SDL_JoystickGetAxis(myJoystick, 0) < -joystickFixAxis)   SDL_Log("Joystick Left\n");
-			else if (SDL_JoystickGetAxis(myJoystick, 0) > joystickFixAxis)   SDL_Log("Joystick Right\n");
-
-			if (SDL_JoystickGetAxis(myJoystick, 1) < -joystickFixAxis)   SDL_Log("Joystick Up\n");
-			else if (SDL_JoystickGetAxis(myJoystick, 1) > joystickFixAxis)   SDL_Log("Joystick Down\n");
-
 			switch (event.jaxis.axis)
 			{
-
+			case 0:
+				switch (event.jaxis.value)
+				{
+				case SDL_JOYSTICK_AXIS_MIN:	//SDL_Log("Joystick Left");
+					break;
+				case SDL_JOYSTICK_AXIS_MAX:	//SDL_Log("Joystick Right");
+					break;
+				}
+				break;
+			case 1:
+				switch (event.jaxis.value)
+				{
+				case SDL_JOYSTICK_AXIS_MIN:	//SDL_Log("Joystick Up");
+					break;
+				case SDL_JOYSTICK_AXIS_MAX:	//SDL_Log("Joystick Down");
+					break;
+				}
 			}
 			break;
 		case SDL_JOYHATMOTION:
-			switch (event.jhat.hat)
+			switch (event.jhat.value)
 			{
-			case SDL_HAT_UP:	SDL_Log("Hat Up\n");
+			case SDL_HAT_UP:	SDL_Log("Hat ¡è\n");
 				break;
-			case SDL_HAT_DOWN:	SDL_Log("Hat Down\n");
+			case SDL_HAT_DOWN:	SDL_Log("Hat ¡é\n");
 				break;
-			case SDL_HAT_LEFT:	SDL_Log("Hat Left\n");
+			case SDL_HAT_LEFT:	SDL_Log("Hat ¡ç\n");
 				break;
-			case SDL_HAT_RIGHT:	SDL_Log("Hat Right\n");
+			case SDL_HAT_RIGHT:	SDL_Log("Hat ¡æ\n");
+				break;
+			case SDL_HAT_LEFTDOWN:	SDL_Log("Hat ¢×\n");
+				break;
+			case SDL_HAT_LEFTUP:	SDL_Log("Hat ¢Ø\n");
+				break;
+			case SDL_HAT_RIGHTDOWN:	SDL_Log("Hat ¢Ù\n");
+				break;
+			case SDL_HAT_RIGHTUP:	SDL_Log("Hat ¢Ö\n");
 				break;
 			}
-			break;
 		}
 }

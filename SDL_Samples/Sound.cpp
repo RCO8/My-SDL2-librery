@@ -33,7 +33,6 @@ Sound::~Sound()
 void Sound::Play()
 {
 	//소리가 재생상태가 아니라면 실행
-
 	recallAudio = SDL_QueueAudio(dev, wav_buffer, wav_length);
 	SDL_PauseAudioDevice(dev, 0);	//사운드 한번만 재생
 }

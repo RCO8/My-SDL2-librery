@@ -11,6 +11,7 @@ private:
 	Uint8* wav_buffer;
 	Uint32 wav_length;
 	int recallAudio;
+
 public:
 	Sound(const char * filename);
 	~Sound();

@@ -32,6 +32,14 @@ Sprite::~Sprite()
 	SDL_DestroyRenderer(sprRenderer);
 }
 
+void Sprite::SetSpriteClip(int x, int y, int w, int h)
+{
+	sprRct.x = x;
+	sprRct.y = y;
+	sprRct.w = w;
+	sprRct.h = h;
+}
+
 void Sprite::SetRotatePoint(int x, int y)
 {
 	rotatePoint.x = x;
@@ -47,26 +55,19 @@ void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 
 void Sprite::Drawing(int x, int y, int dir)
 {
-	sprRct.x = 0;
-	sprRct.y = 0;
-	sprRct.w = 32;
-	sprRct.h = 32;
 
 	scrnRct.x = x;
 	scrnRct.y = y;
 	scrnRct.w = sprRct.w;
 	scrnRct.h = sprRct.h;
 
-	if (dir == 360 || dir == -360) dir = 0;
+	if (dir >= 360) dir -= 360;
+	if (dir <= -360) dir -= 360;
 
-	/*
-	텍스쳐화된 스프라이트를 그린다
-	두 매개변수 SDL_Rect가 NULL이면 화면 전체 출력
-	*/
 	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct, dir, &rotatePoint, SDL_FLIP_NONE);
 }
 
-void Sprite::DrawFill()
+void Sprite::DrawFill() const
 {
 	SDL_RenderCopy(sprRenderer, sprTexture, NULL, NULL);
 }
