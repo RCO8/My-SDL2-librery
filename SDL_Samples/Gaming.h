@@ -1,9 +1,9 @@
 #pragma once
+#include <SDL.h>
 #include "Sprite.h"
 #include "Sound.h"
 #include "Timer.h"
 #include "Joystick.h"
-#include <SDL.h>
 
 class Gaming
 {
@@ -12,15 +12,16 @@ private:
     SDL_Window* window; //SDL 창
     SDL_Renderer* renderer; //창에 그릴 렌더
     SDL_Surface* surface;
-    Timer mTimer;
+    SDL_Event event;    //입력 이벤트
 
+    //Timer mTimer;
     Sprite* bgImg;
     Sound* soundEffect;
-
-    Joystick* mJoystick;
+    //Joystick* mJoystick;
 
     int x = 30;
     int y = 50;
+    bool isClick = false;
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
     void GameRun();     //게임 진행중

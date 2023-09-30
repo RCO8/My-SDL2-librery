@@ -27,4 +27,7 @@ public:
 	void SetColorHide(Uint8 r, Uint8 g, Uint8 b);	//투명색 설정
 	void Drawing(int x, int y, int dir);			//스프라이트 그리기
 	void DrawFill() const;	//전체화면으로 채우기
+
+	int GetImageWidth() const { return imageFile->w; };
+	int GetImageHeight() const { return imageFile->h; };
 };

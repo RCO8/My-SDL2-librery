@@ -23,21 +23,32 @@ bool Gaming::GameInit()
         return false;
     }
 
+    
+
     bgImg = new Sprite(renderer, "goblin.bmp");
+    bgImg->SetColorHide(0, 0, 255);
     soundEffect = new Sound("P_MarcoDeath_old.wav");
-    mJoystick = new Joystick();
+    //mJoystick = new Joystick();
     return true;
 }
 
 void Gaming::CheckKeyPress()
 {
-    SDL_Event event;
+    char PlayerIndex;
 
-    SDL_GameController* myController;   //연결된 컨트롤러와 통신
-
-    myController = SDL_GameControllerOpen(0);
     const int controllerMaxAxis = 32768;    //최대 스틱 데드값
-    
+    SDL_GameController* myController = NULL;   //연결된 컨트롤러와 통신
+
+    int joystickIndex = SDL_NumJoysticks();
+
+    for (int i = 0; i < joystickIndex; i++)
+    {
+        if (SDL_IsGameController(i))
+        {
+            myController = SDL_GameControllerOpen(i);
+        }
+    }
+
     while (SDL_PollEvent(&event))
         switch (event.type)
         {
@@ -48,39 +59,35 @@ void Gaming::CheckKeyPress()
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
-            case SDL_SCANCODE_UP:       //SDL_Log("Up\n");
-                y -= 2;
+            case SDL_SCANCODE_UP:       //SDL_Log("Up");
                 break;
-            case SDL_SCANCODE_DOWN:     //SDL_Log("Down\n");
-                y += 2;
+            case SDL_SCANCODE_DOWN:     //SDL_Log("Down");
                 break;
-            case SDL_SCANCODE_LEFT:     //SDL_Log("Left\n");
-                x -= 2;
+            case SDL_SCANCODE_LEFT:     //SDL_Log("Left");
                 break;
-            case SDL_SCANCODE_RIGHT:    //SDL_Log("Right\n");
-                x += 2;
+            case SDL_SCANCODE_RIGHT:    //SDL_Log("Right");
                 break;
-            case SDL_SCANCODE_RETURN:   SDL_Log("Enter\n");
+            case SDL_SCANCODE_RETURN:   //SDL_Log("Enter");
                 break;
-            case SDL_SCANCODE_SPACE:    SDL_Log("Space\n");
+            case SDL_SCANCODE_SPACE:    //SDL_Log("Space");
                 break;
-            case SDL_SCANCODE_LSHIFT:   SDL_Log("Shift\n");
+            case SDL_SCANCODE_LSHIFT:   //SDL_Log("Shift");
                 break;
-            case SDL_SCANCODE_LCTRL:    SDL_Log("Ctrl\n");
+            case SDL_SCANCODE_LCTRL:    //SDL_Log("Ctrl");
                 break;
-            case SDL_SCANCODE_LALT:     SDL_Log("Alt\n");
+            case SDL_SCANCODE_LALT:     //SDL_Log("Alt");
                 break;
-            case SDL_SCANCODE_F1:       SDL_Log("F1\n");
+            case SDL_SCANCODE_F1:       //SDL_Log("F1");
                 break;
-            case SDL_SCANCODE_W:        SDL_Log("W\n");
+            case SDL_SCANCODE_W:        //SDL_Log("W");
                 break;
-            case SDL_SCANCODE_S:        SDL_Log("S\n");
+            case SDL_SCANCODE_S:        //SDL_Log("S");
                 break;
-            case SDL_SCANCODE_A:        SDL_Log("A\n");
+            case SDL_SCANCODE_A:        //SDL_Log("A");
                 break;
-            case SDL_SCANCODE_D:        SDL_Log("D\n");
+            case SDL_SCANCODE_D:        //SDL_Log("D");
                 break;
-            case SDL_SCANCODE_ESCAPE:   SDL_Log("Escape\n");
+            case SDL_SCANCODE_ESCAPE:   //SDL_Log("Escape");
                 break;
             }
             break;
@@ -96,13 +103,11 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse\n");
-                mTimer.StopCount(false);
                 break;
             case 2: //SDL_Log("Middle Mouse\n");
-                mTimer.ResetCount();
                 break;
             case 3: //SDL_Log("Right Mouse\n");
-                mTimer.StopCount(true);
+                soundEffect->Play();
                 break;
             }
             break;
@@ -110,6 +115,11 @@ void Gaming::CheckKeyPress()
             switch (event.button.button) //BUTTONDOWN 이벤트와 똑같음
             break;
         case SDL_MOUSEMOTION: //SDL_Log("Mouse : (%d, %d)\n", event.motion.x, event.motion.y);
+            if (event.button.button == 1)
+            {
+                x = event.motion.x - 16;
+                y = event.motion.y - 16;
+            }
             break;
         case SDL_MOUSEWHEEL:
             switch (event.wheel.y)
@@ -123,10 +133,9 @@ void Gaming::CheckKeyPress()
 
         //컨트롤러 입력(콘솔)
         case SDL_CONTROLLERBUTTONDOWN:
-            if (myController)
                 switch (event.cbutton.button)
                 {
-                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A\n");
+                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("%c Button A\n", PlayerIndex);
                     break;
                 case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B\n");
                     break;
@@ -189,7 +198,6 @@ void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);   //화면을 색상으로 채우기
     
     //이미지 그리기
-    bgImg->SetColorHide(0, 0, 255);
     bgImg->SetSpriteClip(0, 0, 32, 32);
     bgImg->Drawing(x, y, 0);
 
@@ -205,8 +213,8 @@ void Gaming::GameRun()
 {
     while (!quit)
     {
-        //CheckKeyPress();
-        mJoystick->CheckJoystickEvent();
+        CheckKeyPress();
+        //mJoystick->CheckJoystickEvent();
         DrawScreen();
         PlayAudio();
     }

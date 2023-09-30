@@ -1,6 +1,4 @@
 #include "Sprite.h"
-#include <fstream>
-using namespace std;
 
 Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이트 불러와서 데이터에 저장
 {
@@ -20,6 +18,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 		this->~Sprite();
 	}
 
+	
 	rotatePoint.x = 0;
 	rotatePoint.y = 0;
 }
@@ -27,8 +26,8 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 Sprite::~Sprite()
 {
 	//스프라이트 제거
-	SDL_DestroyTexture(sprTexture);
 	SDL_FreeSurface(imageFile);
+	SDL_DestroyTexture(sprTexture);
 	SDL_DestroyRenderer(sprRenderer);
 }
 
