@@ -22,10 +22,11 @@ public:
 	Sprite(SDL_Renderer* getRenderer, const char* fileName);
 	~Sprite();
 
-	void SetSpriteClip(int x, int y, int w, int h);
+	void SetSpriteClip(int x, int y, int w, int h);	//일부로 나타낼 설정
+	void SetSpriteScale(int w, int h);				//크기 설정
 	void SetRotatePoint(int x, int y);				//중심점 지정
 	void SetColorHide(Uint8 r, Uint8 g, Uint8 b);	//투명색 설정
-	void Drawing(int x, int y, int dir);			//스프라이트 그리기
+	void Drawing(int x, int y, int dir, int mirror = 0);			//스프라이트 그리기
 	void DrawFill() const;	//전체화면으로 채우기
 
 	int GetImageWidth() const { return imageFile->w; };

@@ -17,7 +17,6 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 		SDL_Log("SDL Texture Error : %s\n", SDL_GetError());
 		this->~Sprite();
 	}
-
 	
 	rotatePoint.x = 0;
 	rotatePoint.y = 0;
@@ -39,6 +38,13 @@ void Sprite::SetSpriteClip(int x, int y, int w, int h)
 	sprRct.h = h;
 }
 
+void Sprite::SetSpriteScale(int w, int h)
+{
+	SDL_ScaleMode scaleMode;
+
+	SDL_SetTextureScaleMode(sprTexture, scaleMode);
+}
+
 void Sprite::SetRotatePoint(int x, int y)
 {
 	rotatePoint.x = x;
@@ -52,7 +58,7 @@ void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);	//다시 파일을 Renderer로 갱신
 }
 
-void Sprite::Drawing(int x, int y, int dir)
+void Sprite::Drawing(int x, int y, int dir, int mirror)
 {
 
 	scrnRct.x = x;
@@ -62,8 +68,9 @@ void Sprite::Drawing(int x, int y, int dir)
 
 	if (dir >= 360) dir -= 360;
 	if (dir <= -360) dir -= 360;
-
-	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct, dir, &rotatePoint, SDL_FLIP_NONE);
+	
+	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct,
+		dir, &rotatePoint, mirror ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 void Sprite::DrawFill() const
