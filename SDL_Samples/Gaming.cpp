@@ -1,10 +1,14 @@
 #include "Gaming.h"
 
+const int windowWidth = 1280;
+const int windowHeight = 720;
+
 bool Gaming::GameInit()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("SDL Sample", SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
         SDL_Log("Failed Init Window : %s \n", SDL_GetError());
@@ -26,29 +30,29 @@ bool Gaming::GameInit()
     
 
     bgImg = new Sprite(renderer, "goblin.bmp");
-    bgImg->SetColorHide(0, 0, 255);
-    soundEffect = new Sound("P_MarcoDeath_old.wav");
-    //mJoystick = new Joystick();
+    bgImg->SetColorHide(0, 0, 0);
+    //soundEffect = new Sound("P_MarcoDeath_old.wav");
+    mJoystick = new Joystick();
     return true;
 }
 
-void Gaming::CheckKeyPress()
+void Gaming::CheckInputEvent()
 {
     char PlayerIndex;
 
     const int controllerMaxAxis = 32768;    //최대 스틱 데드값
     SDL_GameController* myController = NULL;   //연결된 컨트롤러와 통신
 
-    int joystickIndex = SDL_NumJoysticks();
+    int joystickIndex = SDL_GameControllerNumMappings();
 
     for (int i = 0; i < joystickIndex; i++)
     {
         if (SDL_IsGameController(i))
         {
             myController = SDL_GameControllerOpen(i);
+            SDL_Log("your Device is %s", SDL_GameControllerName(myController));
         }
     }
-
     while (SDL_PollEvent(&event))
         switch (event.type)
         {
@@ -107,12 +111,16 @@ void Gaming::CheckKeyPress()
             case 2: //SDL_Log("Middle Mouse\n");
                 break;
             case 3: //SDL_Log("Right Mouse\n");
-                soundEffect->Play();
                 break;
             }
             break;
         case SDL_MOUSEBUTTONUP:
             switch (event.button.button) //BUTTONDOWN 이벤트와 똑같음
+            {
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            }
             break;
         case SDL_MOUSEMOTION: //SDL_Log("Mouse : (%d, %d)\n", event.motion.x, event.motion.y);
             if (event.button.button == 1)
@@ -133,35 +141,36 @@ void Gaming::CheckKeyPress()
 
         //컨트롤러 입력(콘솔)
         case SDL_CONTROLLERBUTTONDOWN:
+            if (myController)
                 switch (event.cbutton.button)
                 {
-                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("%c Button A\n", PlayerIndex);
+                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A");
                     break;
-                case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B\n");
+                case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B");
                     break;
-                case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X\n");
+                case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X");
                     break;
-                case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y\n");
+                case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y");
                     break;
-                case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button\n");
+                case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button");
                     break;
-                case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button\n");
+                case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button");
                     break;
-                case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick\n");
+                case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick");
                     break;
-                case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick\n");
+                case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick");
                     break;
-                case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP\n");
+                case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP");
                     break;
-                case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN\n");
+                case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN");
                     break;
-                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT\n");
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT");
                     break;
-                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT\n");
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT");
                     break;
-                case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button\n");
+                case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button");
                     break;
-                case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button\n");
+                case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button");
                     break;
                 }
             break;
@@ -170,22 +179,22 @@ void Gaming::CheckKeyPress()
                 switch (event.caxis.axis)
                 {
                 case SDL_CONTROLLER_AXIS_LEFTX:
-                    SDL_Log("Left Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
+                    //SDL_Log("Left Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
                     break;
                 case SDL_CONTROLLER_AXIS_LEFTY:
-                    SDL_Log("Left Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
+                    //SDL_Log("Left Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
                     break;
                 case SDL_CONTROLLER_AXIS_RIGHTX:
-                    SDL_Log("Right Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
+                    //SDL_Log("Right Axis X: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
                     break;
                 case SDL_CONTROLLER_AXIS_RIGHTY:
-                    SDL_Log("Right Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
+                    //SDL_Log("Right Axis Y: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
                     break;
                 case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-                    SDL_Log("Left Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
+                    //SDL_Log("Left Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
                     break;
                 case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-                    SDL_Log("Right Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
+                    //SDL_Log("Right Trigger: %d\n", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
                     break;
                 }
             break;
@@ -213,7 +222,7 @@ void Gaming::GameRun()
 {
     while (!quit)
     {
-        CheckKeyPress();
+        CheckInputEvent();
         //mJoystick->CheckJoystickEvent();
         DrawScreen();
         PlayAudio();
@@ -222,6 +231,7 @@ void Gaming::GameRun()
 
 void Gaming::GameOff()
 {
+    delete mJoystick;
     SDL_GameControllerClose(0);
     SDL_DestroyWindow(window);
     SDL_Quit();
