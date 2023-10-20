@@ -1,9 +1,8 @@
 #include "Sprite.h"
 
-Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이트 불러와서 데이터에 저장
+//스프라이트 불러와서 데이터에 저장
+Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(getRenderer)
 {
-	sprRenderer = getRenderer;
-
 	imageFile = SDL_LoadBMP(fileName);	//이미지파일 로드
 	if (imageFile == NULL)
 	{
@@ -18,8 +17,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName)	//스프라이�
 		this->~Sprite();
 	}
 	
-	rotatePoint.x = 0;
-	rotatePoint.y = 0;
+	SetRotatePoint(0, 0);
 }
 
 Sprite::~Sprite()
@@ -40,9 +38,8 @@ void Sprite::SetSpriteClip(int x, int y, int w, int h)
 
 void Sprite::SetSpriteScale(int w, int h)
 {
-	SDL_ScaleMode scaleMode;
-
-	SDL_SetTextureScaleMode(sprTexture, scaleMode);
+	scaleWidth = w;
+	scaleHeight = h;
 }
 
 void Sprite::SetRotatePoint(int x, int y)
@@ -60,15 +57,14 @@ void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b)
 
 void Sprite::Drawing(int x, int y, int dir, int mirror)
 {
-
 	scrnRct.x = x;
 	scrnRct.y = y;
-	scrnRct.w = sprRct.w;
-	scrnRct.h = sprRct.h;
+	scrnRct.w = sprRct.w * scaleWidth;
+	scrnRct.h = sprRct.h * scaleHeight;
 
 	if (dir >= 360) dir -= 360;
 	if (dir <= -360) dir -= 360;
-	
+
 	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct,
 		dir, &rotatePoint, mirror ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
