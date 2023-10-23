@@ -21,15 +21,16 @@ bool Gaming::GameInit()
         return false;
     }
 
-    //리소스 설정
+    //Resouce Setting
     SDL_Color bgImgColor = { 0x00,0x00,0xff };
     bgImg = new Sprite(renderer, "goblin.bmp");
     bgImg->SetColorHide(bgImgColor);
-    bgImg->SetSpriteClip(63, 32, 32, 32);
-    bgImg->SetSpriteScale(1.2, 1.2);
+    bgImg->SetSpriteClip(0, 0, 32, 32);
+    bgImg->SetSpriteScale(2, 2);
     bgImg->SetRotatePoint(bgImg->GetClipWidth() / 2, bgImg->GetClipHeight() / 2);
+    bgImg->SetImageAlpha(128);
+    bgImg->SetColorBlend(bgImgColor);
     soundEffect = new Sound("P_MarcoDeath_old.wav");
-    //mJoystick = new Joystick();
 
     return true;
 }
@@ -38,8 +39,8 @@ void Gaming::CheckKeyPress()
 {
     char PlayerIndex;
 
-    const int controllerMaxAxis = 32768;    //최대 스틱 데드값
-    SDL_GameController* myController = NULL;   //연결된 컨트롤러와 통신
+    const int controllerMaxAxis = 32768;    //Controller Max Axis
+    SDL_GameController* myController = NULL;   //is Controller Check
 
     int joystickIndex = SDL_NumJoysticks();
 
@@ -53,10 +54,25 @@ void Gaming::CheckKeyPress()
         case SDL_QUIT:
             quit = true;
             break;
-        case SDL_WINDOWEVENT:
-            break;
+        case SDL_WINDOWEVENT:   //윈도우 창이 감지되면 어떻게 할까?
+            switch (event.window.event)
+            {
+            case SDL_WINDOWEVENT_MINIMIZED: //SDL_Log("윈도우 최소화");
+                break;
+            case SDL_WINDOWEVENT_ENTER:     //SDL_Log("윈도우 안");
+                break;
+            case SDL_WINDOWEVENT_LEAVE:     //SDL_Log("윈도우 밖");
+                break;
+            case SDL_WINDOWEVENT_MOVED:     //SDL_Log("윈도우 이동");
+                //이동된 창을 좌표로 얻기
+                break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:  //SDL_Log("윈도우 활성");
+                break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:    //SDL_Log("윈도우 비활성");
+                break;
+            }
 
-        //키보드 입력
+        //Keyboard Check
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
@@ -96,13 +112,13 @@ void Gaming::CheckKeyPress()
                 break;
             }
         case SDL_KEYUP:
-            switch (event.key.keysym.scancode)
+            switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
             {
-                //KEYDOWN 이벤트와 똑같음
+                
             }
             break;
 
-        //마우스 입력
+        //Mouse Check
         case SDL_MOUSEBUTTONDOWN:
             switch (event.button.button)
             {
@@ -111,11 +127,10 @@ void Gaming::CheckKeyPress()
             case 2: //SDL_Log("Middle Mouse");
                 break;
             case 3: //SDL_Log("Right Mouse");
-                soundEffect->Play();
                 break;
             }
         case SDL_MOUSEBUTTONUP:
-            switch (event.button.button) //BUTTONDOWN 이벤트와 똑같음
+            switch (event.button.button) //Same to SDL_MOUSEBUTTONDOWN
             {
             case 1:
             case 2:
@@ -137,10 +152,9 @@ void Gaming::CheckKeyPress()
             case -1:    //SDL_Log("Wheel Down");
                 break;
             }
-            break;
 
-        //컨트롤러 입력(콘솔)
-        case SDL_CONTROLLERDEVICEADDED:
+        //Controller Check (Console version)
+        case SDL_CONTROLLERDEVICEADDED: //if Controller is connected
             break;
         case SDL_CONTROLLERBUTTONDOWN:
                 switch (event.cbutton.button)
@@ -180,6 +194,7 @@ void Gaming::CheckKeyPress()
                 switch (event.caxis.axis)
                 {
                 case SDL_CONTROLLER_AXIS_LEFTX:
+                    //switch (event.caxis.value)
                     SDL_Log("Left Axis X: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
                     break;
                 case SDL_CONTROLLER_AXIS_LEFTY:
@@ -199,7 +214,13 @@ void Gaming::CheckKeyPress()
                     break;
                 }
             break;
-        case SDL_CONTROLLERDEVICEREMOVED:
+        case SDL_CONTROLLERTOUCHPADDOWN:
+            break;
+        case SDL_CONTROLLERTOUCHPADUP:
+            break;
+        case SDL_CONTROLLERTOUCHPADMOTION:
+            break;
+        case SDL_CONTROLLERDEVICEREMOVED:   //if Controller is disconnected
             break;
         }
 }
@@ -222,11 +243,6 @@ void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
 
 
     SDL_RenderPresent(renderer);    //화면 그리기
-}
-
-void Gaming::PlayAudio()
-{
-    //mTimer.StartCount();
 }
 
 void Gaming::GameRun()

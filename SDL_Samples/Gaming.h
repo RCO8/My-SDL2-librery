@@ -30,6 +30,5 @@ public:
 private:
     void CheckKeyPress();	//키 이벤트 확인
     void DrawScreen();		//배경화면 그리기
-    void PlayAudio();       //소리 재생
     void UpdateData();      //게임 데이터 및 변수 갱신
 };
