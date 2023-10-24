@@ -44,16 +44,10 @@ void Gaming::CheckKeyPress()
 
     int joystickIndex = SDL_NumJoysticks();
 
-    for (int i = 0; i < joystickIndex; i++)
-        if (SDL_IsGameController(i))
-            myController = SDL_GameControllerOpen(i);
-
     while (SDL_PollEvent(&event))
         switch (event.type)
         {
-        case SDL_QUIT:
-            quit = true;
-            break;
+        case SDL_QUIT: quit = true; break;
         case SDL_WINDOWEVENT:   //윈도우 창이 감지되면 어떻게 할까?
             switch (event.window.event)
             {
@@ -155,72 +149,70 @@ void Gaming::CheckKeyPress()
 
         //Controller Check (Console version)
         case SDL_CONTROLLERDEVICEADDED: //if Controller is connected
+            SDL_Log("Controller Connected");
+            myController = SDL_GameControllerOpen(0);
             break;
+        if (myController) {
         case SDL_CONTROLLERBUTTONDOWN:
-                switch (event.cbutton.button)
-                {
-                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A");
-                    break;
-                case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B");
-                    break;
-                case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X");
-                    break;
-                case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y");
-                    break;
-                case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button");
-                    break;
-                case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button");
-                    break;
-                case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick");
-                    break;
-                case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick");
-                    break;
-                case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP");
-                    break;
-                case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN");
-                    break;
-                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT");
-                    break;
-                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT");
-                    break;
-                case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button");
-                    break;
-                case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button");
-                    break;
-                }
+            switch (event.cbutton.button)
+            {
+            case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A");
+                break;
+            case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B");
+                break;
+            case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X");
+                break;
+            case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y");
+                break;
+            case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button");
+                break;
+            case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button");
+                break;
+            case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick");
+                break;
+            case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick");
+                break;
+            case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP");
+                break;
+            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN");
+                break;
+            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT");
+                break;
+            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT");
+                break;
+            case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button");
+                break;
+            case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button");
+                break;
+            }
             break;
         case SDL_CONTROLLERAXISMOTION:
-            if (myController)
-                switch (event.caxis.axis)
-                {
-                case SDL_CONTROLLER_AXIS_LEFTX:
-                    //switch (event.caxis.value)
-                    SDL_Log("Left Axis X: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTX));
-                    break;
-                case SDL_CONTROLLER_AXIS_LEFTY:
-                    SDL_Log("Left Axis Y: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_LEFTY));
-                    break;
-                case SDL_CONTROLLER_AXIS_RIGHTX:
-                    SDL_Log("Right Axis X: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTX));
-                    break;
-                case SDL_CONTROLLER_AXIS_RIGHTY:
-                    SDL_Log("Right Axis Y: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_RIGHTY));
-                    break;
-                case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-                    SDL_Log("Left Trigger: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERLEFT));
-                    break;
-                case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-                    SDL_Log("Right Trigger: %d", SDL_GameControllerGetAxis(myController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
-                    break;
-                }
+            switch (event.caxis.axis)
+            {
+            case SDL_CONTROLLER_AXIS_LEFTX:
+                SDL_Log("Left Axis X: %d", event.caxis.value);
+                break;
+            case SDL_CONTROLLER_AXIS_LEFTY:
+                SDL_Log("Left Axis Y: %d", event.caxis.value);
+                break;
+            case SDL_CONTROLLER_AXIS_RIGHTX:
+                SDL_Log("Right Axis X: %d", event.caxis.value);
+                break;
+            case SDL_CONTROLLER_AXIS_RIGHTY:
+                SDL_Log("Right Axis Y: %d", event.caxis.value);
+                break;
+            case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+                SDL_Log("Left Trigger: %d", event.caxis.value);
+                break;
+            case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+                SDL_Log("Right Trigger: %d", event.caxis.value);
+                break;
+            }
             break;
-        case SDL_CONTROLLERTOUCHPADDOWN:
-            break;
-        case SDL_CONTROLLERTOUCHPADUP:
-            break;
-        case SDL_CONTROLLERTOUCHPADMOTION:
-            break;
+        }
         case SDL_CONTROLLERDEVICEREMOVED:   //if Controller is disconnected
+            SDL_Log("Controller Removed");
+            SDL_GameControllerClose(0);
             break;
         }
 }
@@ -252,7 +244,6 @@ void Gaming::GameRun()
         CheckKeyPress();
         UpdateData();
         DrawScreen();
-        PlayAudio();
     }
 }
 
