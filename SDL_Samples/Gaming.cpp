@@ -22,33 +22,28 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    SDL_Color bgImgColor = { 0x00,0x00,0xff };
-    bgImg = new Sprite(renderer, "goblin.bmp");
+    SDL_Color bgImgColor = { 34,177,76 };
+    bgImg = new Sprite(renderer, "blue_bobby.bmp");
     bgImg->SetColorHide(bgImgColor);
     bgImg->SetSpriteClip(0, 0, 32, 32);
-    bgImg->SetSpriteScale(2, 2);
     bgImg->SetRotatePoint(bgImg->GetClipWidth() / 2, bgImg->GetClipHeight() / 2);
-    bgImg->SetImageAlpha(128);
-    bgImg->SetColorBlend(bgImgColor);
+    
     soundEffect = new Sound("P_MarcoDeath_old.wav");
+    soundEffect->SetInputMode(1);
 
     return true;
 }
 
 void Gaming::CheckKeyPress()
 {
-    char PlayerIndex;
-
     const int controllerMaxAxis = 32768;    //Controller Max Axis
     SDL_GameController* myController = NULL;   //is Controller Check
-
-    int joystickIndex = SDL_NumJoysticks();
 
     while (SDL_PollEvent(&event))
         switch (event.type)
         {
         case SDL_QUIT: quit = true; break;
-        case SDL_WINDOWEVENT:   //윈도우 창이 감지되면 어떻게 할까?
+        case SDL_WINDOWEVENT:
             switch (event.window.event)
             {
             case SDL_WINDOWEVENT_MINIMIZED: //SDL_Log("윈도우 최소화");
@@ -75,10 +70,8 @@ void Gaming::CheckKeyPress()
             case SDL_SCANCODE_DOWN:     //SDL_Log("Down");
                 break;
             case SDL_SCANCODE_LEFT:     //SDL_Log("Left");
-                mirror = false;
                 break;
             case SDL_SCANCODE_RIGHT:    //SDL_Log("Right");
-                mirror = true;
                 break;
             case SDL_SCANCODE_RETURN:   //SDL_Log("Enter");
                 break;
@@ -97,19 +90,15 @@ void Gaming::CheckKeyPress()
             case SDL_SCANCODE_S:        //SDL_Log("S");
                 break;
             case SDL_SCANCODE_A:        //SDL_Log("A");
-                dir--;
                 break;
             case SDL_SCANCODE_D:        //SDL_Log("D");
-                dir++;
                 break;
             case SDL_SCANCODE_ESCAPE:   //SDL_Log("Escape");
                 break;
             }
         case SDL_KEYUP:
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
-            {
-                
-            }
+            { }
             break;
 
         //Mouse Check
@@ -117,10 +106,13 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
+                soundEffect->SetPlayLoop(2);
+                soundEffect->Play();
                 break;
             case 2: //SDL_Log("Middle Mouse");
                 break;
             case 3: //SDL_Log("Right Mouse");
+                soundEffect->Stop();
                 break;
             }
         case SDL_MOUSEBUTTONUP:
@@ -149,64 +141,58 @@ void Gaming::CheckKeyPress()
 
         //Controller Check (Console version)
         case SDL_CONTROLLERDEVICEADDED: //if Controller is connected
-            SDL_Log("Controller Connected");
             myController = SDL_GameControllerOpen(0);
+            SDL_Log("Controller Connected \nName is %s", SDL_GameControllerName(myController));
             break;
         if (myController) {
         case SDL_CONTROLLERBUTTONDOWN:
             switch (event.cbutton.button)
             {
-            case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A");
-                break;
-            case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B");
-                break;
-            case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X");
-                break;
-            case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y");
-                break;
-            case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button");
-                break;
-            case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button");
-                break;
-            case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick");
-                break;
-            case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick");
-                break;
-            case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP");
-                break;
-            case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN");
-                break;
-            case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT");
-                break;
-            case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT");
-                break;
-            case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button");
-                break;
-            case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button");
-                break;
+                case SDL_CONTROLLER_BUTTON_A:   //SDL_Log("Button A");
+                    break;
+                case SDL_CONTROLLER_BUTTON_B:   //SDL_Log("Button B");
+                    break;
+                case SDL_CONTROLLER_BUTTON_X:   //SDL_Log("Button X");
+                    break;
+                case SDL_CONTROLLER_BUTTON_Y:   //SDL_Log("Button Y");
+                    break;
+                case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    //SDL_Log("Left Button");
+                    break;
+                case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   //SDL_Log("Right Button");
+                    break;
+                case SDL_CONTROLLER_BUTTON_LEFTSTICK:   //SDL_Log("Left Stick");
+                    break;
+                case SDL_CONTROLLER_BUTTON_RIGHTSTICK:  //SDL_Log("Right Stick");
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_UP:     //SDL_Log("DPAD UP");
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_DOWN:   //SDL_Log("DPAD DOWN");
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:   //SDL_Log("DPAD LEFT");
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:  //SDL_Log("DPAD RIGHT");
+                    break;
+                case SDL_CONTROLLER_BUTTON_START:       //SDL_Log("Start Button");
+                    break;
+                case SDL_CONTROLLER_BUTTON_BACK:        //SDL_Log("Back Button");
+                    break;
             }
             break;
         case SDL_CONTROLLERAXISMOTION:
             switch (event.caxis.axis)
             {
-            case SDL_CONTROLLER_AXIS_LEFTX:
-                SDL_Log("Left Axis X: %d", event.caxis.value);
-                break;
-            case SDL_CONTROLLER_AXIS_LEFTY:
-                SDL_Log("Left Axis Y: %d", event.caxis.value);
-                break;
-            case SDL_CONTROLLER_AXIS_RIGHTX:
-                SDL_Log("Right Axis X: %d", event.caxis.value);
-                break;
-            case SDL_CONTROLLER_AXIS_RIGHTY:
-                SDL_Log("Right Axis Y: %d", event.caxis.value);
-                break;
-            case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-                SDL_Log("Left Trigger: %d", event.caxis.value);
-                break;
-            case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-                SDL_Log("Right Trigger: %d", event.caxis.value);
-                break;
+                case SDL_CONTROLLER_AXIS_LEFTX:     //SDL_Log("Left Axis X: %d", event.caxis.value);
+                    break;
+                case SDL_CONTROLLER_AXIS_LEFTY:     //SDL_Log("Left Axis Y: %d", event.caxis.value);
+                    break;
+                case SDL_CONTROLLER_AXIS_RIGHTX:    //SDL_Log("Right Axis X: %d", event.caxis.value);
+                    break;
+                case SDL_CONTROLLER_AXIS_RIGHTY:    //SDL_Log("Right Axis Y: %d", event.caxis.value);
+                    break;
+                case SDL_CONTROLLER_AXIS_TRIGGERLEFT:   //SDL_Log("Left Trigger: %d", event.caxis.value);
+                    break;
+                case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:  //SDL_Log("Right Trigger: %d", event.caxis.value);
+                    break;
             }
             break;
         }
@@ -221,20 +207,21 @@ void Gaming::UpdateData()
 {
     //게임 내 변형된 데이터를 여기에 갱신
     //만약에 이벤트에 적용을 하지 않는다면
+    //mTimer.StartCount();
 }
 
-void Gaming::DrawScreen()   //실제 화면에 스프라이트 및 이미지를 그리는 메서드
+void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
-    SDL_RenderClear(renderer);  //화면 초기화
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);   //화면을 색상으로 채우기
+    SDL_RenderClear(renderer);  //Screen Clear
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);   //Fill Color in Screen
     
-    //이미지 그리기
-    bgImg->Drawing(x, y, dir, mirror);
+    //Draw Image
+    bgImg->Drawing(x, y, 0);
 
-    //폰트
+    //Draw UI
 
 
-    SDL_RenderPresent(renderer);    //화면 그리기
+    SDL_RenderPresent(renderer);    //Redraw at Screen
 }
 
 void Gaming::GameRun()

@@ -77,14 +77,22 @@ void Sprite::SetColorBlend(SDL_Color setColor)
 {
 	SDL_SetTextureColorMod(sprTexture, setColor.r, setColor.g, setColor.b);
 }
+//스프라이트 투명화
+void Sprite::SetImageAlpha(Uint8 a)
+{
+	SDL_SetTextureAlphaMod(sprTexture, a);
+}
+/*여기서 확장 및 필요한 요소*/
+//다른 확장자 파일(생성자에서 수정 필요)
+//흑백, 반전
 //이미지 흑백화
 void Sprite::SetImageGrey()
 {
 
 }
-
-/*여기서 확장 및 필요한 요소*/
-//다른 확장자 파일(생성자에서 수정 필요)
-//흑백, 반전
-//Rect 한쪽을 조정
+//이미지 색상반전
+void Sprite::SetImageNegative()
+{
+	
+}
 //컬러 팔레트 스왑 (픽셀에 색을 선택하면 다른색으로 변환)
