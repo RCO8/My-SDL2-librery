@@ -1,25 +1,36 @@
 #pragma once
 #include <SDL.h>
-#include <SDL_ttf.h>
-
-struct Vector2D {
-	int x, y;
-};
 
 class UI
 {
 protected:
-	char* text;
-	TTF_Font *font;
+	char* text;	//텍스트
+	bool isDisable = false;	//활성상태
+
+	SDL_Renderer *UIrenderer;
 
 	SDL_Color defaultColor;
-	SDL_Color backgroundColor;
-	SDL_Color overMouseColor;	//마우스 위에 올려놓을 때
+	SDL_Color backgroundColor;	//배경색
 	SDL_Color disableColor;		//비활성
+	SDL_Color overlineColor;	//바깥선
+
+	SDL_Texture *UItexture;
+	SDL_Rect drawing;
 public:
+	UI(SDL_Renderer *getRend) : UIrenderer(getRend) {}
+	~UI() { SDL_DestroyRenderer(UIrenderer); }
+	
+	//Setting properties color
 	void SetBackgroundColor(SDL_Color color);
+	void SetBackgroundColor(Uint8 r, Uint8 g, Uint8 b);
+	void SetOverlineColor(SDL_Color color);
+	void SetOverlineColor(Uint8 r, Uint8 g, Uint8 b);
+	void SetDisableColor(SDL_Color color);
+	void SetDisableColor(Uint8 r, Uint8 g, Uint8 b);
 	void SetUIText(char* str);
-	virtual void DrawUI(Vector2D startPos, Vector2D endPos);
+	virtual void DrawUI(int x, int y, int w, int h);
+
+	void SetDisableUI(bool b) { isDisable = b; }
 };
 
 class Text : UI
@@ -27,28 +38,32 @@ class Text : UI
 public:
 	char* getString() const { return text; }
 };
-class Button : UI
+class Button : public UI
 {
 private:
-	bool isClick = false;
-	bool enable = true;
-
+	SDL_Color overMouseColor;	//마우스 위에 올려놓을 때
 	SDL_Color clickColor;		//클릭되었을 때
+
+	bool isClick = false;
+	bool isInMouse = false;
+
 public:
+	Button(SDL_Renderer* getRend) : UI(getRend) {}
 	void SetOverMouseColor(SDL_Color color);
+	void SetOverMouseColor(Uint8 r, Uint8 g, Uint8 b);
 	void SetClickColor(SDL_Color color);
-	void SetDisableColor(SDL_Color color);
-	void SetEnable(bool b);
+	void SetClickColor(Uint8 r, Uint8 g, Uint8 b);
 
-	void OverMouseAction();
-	void ClickMouseAction();
+	void OverMouseAction(int mouseX, int mouseY);
+	void ClickMouseAction(int getAction);
 
-	void DrawUI(Vector2D startPos, Vector2D endPos);
+	void DrawUI(int x, int y, int w, int h);
 };
 class Toggle : UI
 {
 private:
 	bool isToggle = false;
+	//checking Icon or bgColor
 public:
 };
 class List : UI

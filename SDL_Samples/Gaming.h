@@ -4,6 +4,7 @@
 #include "Sound.h"
 #include "Timer.h"
 #include "Joystick.h"
+#include "UI.h"
 
 class Gaming
 {
@@ -16,6 +17,8 @@ private:
     Timer mTimer;
     Sprite* bgImg;
     Sound* soundEffect;
+    UI* userInterface;
+    Button* buttonInterface;
 
     int x = 30;
     int y = 50;

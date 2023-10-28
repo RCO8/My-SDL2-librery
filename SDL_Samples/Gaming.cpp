@@ -31,6 +31,16 @@ bool Gaming::GameInit()
     soundEffect = new Sound("P_MarcoDeath_old.wav");
     soundEffect->SetInputMode(1);
 
+    userInterface = new UI(renderer);
+    userInterface->SetBackgroundColor(255, 0, 0);
+    userInterface->SetDisableColor(128, 128, 128);
+    userInterface->SetOverlineColor(0, 255, 0);
+    userInterface->SetDisableUI(true);
+
+    buttonInterface = new Button(renderer);
+    buttonInterface->SetBackgroundColor(255, 255, 0);
+    buttonInterface->SetOverMouseColor(0, 255, 0);
+    buttonInterface->SetClickColor(0, 255, 255);
     return true;
 }
 
@@ -106,13 +116,11 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
-                soundEffect->SetPlayLoop(2);
-                soundEffect->Play();
+                buttonInterface->ClickMouseAction(event.button.button);
                 break;
             case 2: //SDL_Log("Middle Mouse");
                 break;
             case 3: //SDL_Log("Right Mouse");
-                soundEffect->Stop();
                 break;
             }
         case SDL_MOUSEBUTTONUP:
@@ -129,6 +137,7 @@ void Gaming::CheckKeyPress()
                 x = event.motion.x - bgImg->GetClipWidth() / 2;
                 y = event.motion.y - bgImg->GetClipHeight() / 2;
             }
+            buttonInterface->OverMouseAction(event.motion.x, event.motion.y);
             break;
         case SDL_MOUSEWHEEL:
             switch (event.wheel.y)
@@ -212,14 +221,15 @@ void Gaming::UpdateData()
 
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
-    SDL_RenderClear(renderer);  //Screen Clear
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);   //Fill Color in Screen
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);
+    SDL_RenderClear(renderer);  //Screen Clear   //Fill Color in Screen
     
     //Draw Image
     bgImg->Drawing(x, y, 0);
 
     //Draw UI
-
+    userInterface->DrawUI(30, 30, 100, 50);
+    buttonInterface->DrawUI(30, 80, 100, 50);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
 }
