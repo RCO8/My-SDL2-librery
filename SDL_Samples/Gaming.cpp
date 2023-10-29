@@ -27,18 +27,13 @@ bool Gaming::GameInit()
     bgImg->SetColorHide(bgImgColor);
     bgImg->SetSpriteClip(0, 0, 32, 32);
     bgImg->SetRotatePoint(bgImg->GetClipWidth() / 2, bgImg->GetClipHeight() / 2);
-    
-    soundEffect = new Sound("P_MarcoDeath_old.wav");
-    soundEffect->SetInputMode(1);
 
     userInterface = new UI(renderer);
-    userInterface->SetBackgroundColor(255, 0, 0);
-    userInterface->SetDisableColor(128, 128, 128);
-    userInterface->SetOverlineColor(0, 255, 0);
-    userInterface->SetDisableUI(true);
+    userInterface->SetBackgroundColor(0, 128, 255, 128);
+    userInterface->SetOverlineColor(255, 0, 0);
 
     buttonInterface = new Button(renderer);
-    buttonInterface->SetBackgroundColor(255, 255, 0);
+    buttonInterface->SetBackgroundColor(255, 255, 0,25);
     buttonInterface->SetOverMouseColor(0, 255, 0);
     buttonInterface->SetClickColor(0, 255, 255);
     return true;
@@ -63,12 +58,13 @@ void Gaming::CheckKeyPress()
             case SDL_WINDOWEVENT_LEAVE:     //SDL_Log("윈도우 밖");
                 break;
             case SDL_WINDOWEVENT_MOVED:     //SDL_Log("윈도우 이동");
-                //이동된 창을 좌표로 얻기
+                //SDL_Log("좌표 : (%d, %d)", event.window.data1, event.window.data2 - 31);  //이동된 창을 좌표로 얻기
                 break;
             case SDL_WINDOWEVENT_FOCUS_GAINED:  //SDL_Log("윈도우 활성");
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:    //SDL_Log("윈도우 비활성");
                 break;
+            case SDL_WINDOWEVENT_CLOSE: quit = true; break;
             }
 
         //Keyboard Check
@@ -116,7 +112,7 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
-                buttonInterface->ClickMouseAction(event.button.button);
+                buttonInterface->ClickMouseAction(SDL_MOUSEBUTTONDOWN);
                 break;
             case 2: //SDL_Log("Middle Mouse");
                 break;
@@ -211,14 +207,12 @@ void Gaming::CheckKeyPress()
             break;
         }
 }
-
 void Gaming::UpdateData()
 {
     //게임 내 변형된 데이터를 여기에 갱신
     //만약에 이벤트에 적용을 하지 않는다면
     //mTimer.StartCount();
 }
-
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);

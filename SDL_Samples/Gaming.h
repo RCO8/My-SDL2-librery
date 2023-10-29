@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL.h>
 #include "Sprite.h"
-#include "Sound.h"
 #include "Timer.h"
 #include "Joystick.h"
 #include "UI.h"
@@ -16,7 +15,6 @@ private:
 
     Timer mTimer;
     Sprite* bgImg;
-    Sound* soundEffect;
     UI* userInterface;
     Button* buttonInterface;
 
