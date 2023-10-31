@@ -36,12 +36,26 @@ void UI::SetFontColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	fontColor.b = b;
 	fontColor.a = a;
 }
-void UI::SetUIText(char* str) 
+
+void UI::SetFontStyle(const char* style, int size)
+{
+	fontSize = size;
+	font = TTF_OpenFont(style, fontSize);
+}
+void UI::SetFontDistance(int left, int top, int right, int bottom)
+{
+	fontRct.x = left;
+	fontRct.y = top;
+	fontRct.w = right;
+	fontRct.h = bottom;
+}
+void UI::SetUIText(const char* str) 
 {
 	*text = *str; 
 	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 }
+
 void UI::DrawUI(int x, int y, int w, int h)
 {
 	drawing.x = x;
@@ -63,7 +77,13 @@ void UI::DrawUI(int x, int y, int w, int h)
 	SDL_RenderDrawRect(UIrenderer, &drawing);
 
 	//drawing text
-	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);
+	drawing.x += fontRct.x;
+	drawing.y += fontRct.y;
+	drawing.w -= fontRct.w + fontRct.x;
+	drawing.h -= fontRct.h + fontRct.y;
+	fontSurface = TTF_RenderText_Blended(font, "ABCDE", fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
+	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
 
 //Button
@@ -116,27 +136,23 @@ void Button::DrawUI(int x, int y, int w, int h)
 		overlineColor.r, overlineColor.g,
 		overlineColor.b, overlineColor.a);
 	SDL_RenderDrawRect(UIrenderer, &drawing);
+
+	//drawing text
+	drawing.x += fontRct.x;
+	drawing.y += fontRct.y;
+	drawing.w -= fontRct.w + fontRct.x;
+	drawing.h -= fontRct.h + fontRct.y;
+	fontSurface = TTF_RenderText_Blended(font, "Button", fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
+	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
 void Button::OverMouseAction(int mouseX, int mouseY)
 {
 	isInMouse = ((drawing.x <= mouseX && drawing.x + drawing.w >= mouseX)
 		&& (drawing.y <= mouseY && drawing.y + drawing.h >= mouseY)) ? true : false;
 }
-void Button::ClickMouseAction(SDL_EventType getButtonCheck)
+bool Button::ClickMouseAction(SDL_Event getButtonCheck)
 {
-	if (isInMouse)
-	{
-		if (getButtonCheck == SDL_MOUSEBUTTONDOWN)
-		{
-			SDL_Log("Clicked");
-			isClick = true;
-		}
-		else
-		{
-			SDL_Log("Not Click");
-			isClick = false;
-		}
-	}
-	
-	//isClick이 참이 되었다면 실행할 메서드를 실행
+	isClick = getButtonCheck.button.state;
+	return isClick;
 }

@@ -31,6 +31,7 @@ bool Gaming::GameInit()
     userInterface = new UI(renderer);
     userInterface->SetBackgroundColor(0, 128, 255, 128);
     userInterface->SetOverlineColor(255, 0, 0);
+    userInterface->SetFontColor(0, 128, 0);
 
     buttonInterface = new Button(renderer);
     buttonInterface->SetBackgroundColor(255, 255, 0,25);
@@ -112,7 +113,8 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
-                buttonInterface->ClickMouseAction(SDL_MOUSEBUTTONDOWN);
+                if (buttonInterface->ClickMouseAction(event))
+                    SDL_Log("Button Event");
                 break;
             case 2: //SDL_Log("Middle Mouse");
                 break;
@@ -123,17 +125,19 @@ void Gaming::CheckKeyPress()
             switch (event.button.button) //Same to SDL_MOUSEBUTTONDOWN
             {
             case 1:
+                buttonInterface->ClickMouseAction(event);
+                break;
             case 2:
             case 3:
                 break;
             }
         case SDL_MOUSEMOTION: //SDL_Log("Mouse : (%d, %d)", event.motion.x, event.motion.y);
-            if (event.button.button == 1)
+            buttonInterface->OverMouseAction(event.motion.x, event.motion.y);
+            if (event.button.clicks == 1)
             {
                 x = event.motion.x - bgImg->GetClipWidth() / 2;
                 y = event.motion.y - bgImg->GetClipHeight() / 2;
             }
-            buttonInterface->OverMouseAction(event.motion.x, event.motion.y);
             break;
         case SDL_MOUSEWHEEL:
             switch (event.wheel.y)
@@ -223,7 +227,9 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 
     //Draw UI
     userInterface->DrawUI(30, 30, 100, 50);
+    userInterface->SetFontDistance(10, 5, 10, 5);
     buttonInterface->DrawUI(30, 80, 100, 50);
+    buttonInterface->SetFontDistance(10, 5, 10, 5);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
 }
