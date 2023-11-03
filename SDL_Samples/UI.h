@@ -7,7 +7,7 @@
 class UI
 {
 protected:
-	char* text = nullptr;	//텍스트
+	char text[100];	//텍스트
 	bool isDisable = false;	//활성상태
 
 	SDL_Renderer *UIrenderer;
@@ -31,8 +31,7 @@ protected:
 public:
 	UI(SDL_Renderer *getRend) : UIrenderer(getRend) 
 	{
-		if (TTF_Init() == -1)
-			this->~UI();
+		if (TTF_Init() == -1) this->~UI();
 		font = TTF_OpenFont("HanSantteutDotum-Bold.ttf", fontSize);
 	}
 	~UI()

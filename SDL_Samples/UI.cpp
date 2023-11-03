@@ -1,4 +1,5 @@
 #include "UI.h"
+#include <cstring>
 
 void UI::SetBackgroundColor(SDL_Color color)
 { backgroundColor = color; }
@@ -50,9 +51,9 @@ void UI::SetFontDistance(int left, int top, int right, int bottom)
 }
 void UI::SetUIText(const char* str) 
 {
-	*text = *str; 
-	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
-	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
+	int getStrLength = strlen(str);
+	for(int i=0;i<getStrLength;i++)
+		text[i] = str[i];
 }
 void UI::DrawUI(int x, int y, int w, int h)
 {
@@ -79,7 +80,7 @@ void UI::DrawUI(int x, int y, int w, int h)
 	drawing.y += fontRct.y;
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
-	fontSurface = TTF_RenderText_Blended(font, "ABCDE", fontColor);
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
@@ -140,7 +141,8 @@ void Button::DrawUI(int x, int y, int w, int h)
 	drawing.y += fontRct.y;
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
-	fontSurface = TTF_RenderText_Blended(font, "Button", fontColor);
+
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
@@ -219,7 +221,7 @@ void Toggle::DrawUI(int x, int y, int l)
 	textRect.y += fontRct.y;
 	textRect.w -= fontRct.w - drawing.w;
 	textRect.h -= fontRct.h;
-	fontSurface = TTF_RenderText_Blended(font, "Toggle", fontColor);
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &textRect);	//폰트를 사각형 안에 그리기
 }
