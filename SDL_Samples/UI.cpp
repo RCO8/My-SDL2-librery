@@ -36,7 +36,6 @@ void UI::SetFontColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	fontColor.b = b;
 	fontColor.a = a;
 }
-
 void UI::SetFontStyle(const char* style, int size)
 {
 	fontSize = size;
@@ -55,7 +54,6 @@ void UI::SetUIText(const char* str)
 	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 }
-
 void UI::DrawUI(int x, int y, int w, int h)
 {
 	drawing.x = x;
@@ -153,6 +151,78 @@ void Button::OverMouseAction(int mouseX, int mouseY)
 }
 bool Button::ClickMouseAction(SDL_Event getButtonCheck)
 {
+	if (isInMouse)
+	{
+		//SDL_Log("Button Click");
+		isClick = getButtonCheck.button.state;
+	}
+	return isClick;
+}
+
+//Toggle
+void Toggle::ClickToggle()
+{
+	isToggle = !isToggle;
+}
+
+void Toggle::SetToggleOnType() {}
+
+bool Toggle::ClickMouseAction(SDL_Event getButtonCheck)
+{
+	if (!isToggle)
+	{
+		isToggle = true;
+		SDL_Log("토글 활성");
+	}
+	else
+	{
+		isToggle = false;
+		SDL_Log("토글 비활성");
+	}
+
 	isClick = getButtonCheck.button.state;
 	return isClick;
 }
+
+void Toggle::DrawUI(int x, int y, int l)
+{
+	drawing.x = x;
+	drawing.y = y;
+	drawing.w = l;
+	drawing.h = l;
+
+	//checking Button Action
+	if (isDisable) defaultColor = disableColor;
+	else
+	{
+		if (isInMouse)
+			defaultColor = isClick ? clickColor : overMouseColor;
+		else
+			defaultColor = backgroundColor;
+	}
+
+	//background color
+	SDL_SetRenderDrawColor(UIrenderer,
+		defaultColor.r, defaultColor.g,
+		defaultColor.b, defaultColor.a);
+	SDL_RenderFillRect(UIrenderer, &drawing);
+	//overline color
+	SDL_SetRenderDrawColor(UIrenderer,
+		overlineColor.r, overlineColor.g,
+		overlineColor.b, overlineColor.a);
+	SDL_RenderDrawRect(UIrenderer, &drawing);
+
+	//drawing text (사각형 밖으로 나오게)
+	SDL_Rect textRect = drawing;	//drawing으로 텍스트 위치로 지정하면 마우스를 올릴때 텍스트에 적용되기 때문에 새로운 Rect형 생성하고 복사
+	textRect.x += fontRct.x + drawing.x;
+	textRect.y += fontRct.y;
+	textRect.w -= fontRct.w - drawing.w;
+	textRect.h -= fontRct.h;
+	fontSurface = TTF_RenderText_Blended(font, "Toggle", fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
+	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &textRect);	//폰트를 사각형 안에 그리기
+}
+
+//CheckBox or Radio
+
+//Bar

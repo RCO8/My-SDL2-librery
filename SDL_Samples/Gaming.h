@@ -13,11 +13,11 @@ private:
     SDL_Renderer* renderer; //창에 그릴 렌더
     SDL_Event event;    //입력 이벤트
 
+    Joystick* joystick;
     Timer mTimer;
     Sprite* bgImg;
-    UI* userInterface;
     Button* buttonInterface;
-
+    Toggle* toggleInterface;
     int x = 30;
     int y = 50;
     bool isClick = false;

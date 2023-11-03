@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <cstring>
+#include "Sprite.h"
 
 class UI
 {
@@ -18,16 +19,15 @@ protected:
 	SDL_Rect drawing;		//좌표, 크기에 그릴 사각형
 
 	//추가할것 : 이미지, 그라데이션
+	Sprite* imageUI = NULL;
+	
 	//Font
-	/*수정사항
-	* 글꼴스타일, 정렬, 채우기 및 맞추기, 색상 지정
-	*/
 	TTF_Font *font;
 	SDL_Color fontColor = { 0,0,0 };
 	SDL_Surface* fontSurface;
 	SDL_Texture* fontTexture;
 	int fontSize = 30;	//폰트 크기
-	SDL_Rect fontRct;	//폰트 크기 및 위치를 맞출 사각형
+	SDL_Rect fontRct = { 0,0,0,0 };	//폰트 크기 및 위치를 맞출 사각형
 public:
 	UI(SDL_Renderer *getRend) : UIrenderer(getRend) 
 	{
@@ -49,6 +49,8 @@ public:
 	void SetDisableColor(SDL_Color color);
 	void SetDisableColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
+	//initialize Image
+
 	//font controll
 	void SetFontColor(SDL_Color color);
 	void SetFontColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
@@ -63,15 +65,12 @@ public:
 
 class Button : public UI
 {
-private:
+protected:
 	SDL_Color overMouseColor;	//마우스 위에 올려놓을 때
 	SDL_Color clickColor;		//클릭되었을 때
-
 	bool isInMouse = false;
 	bool isClick = false;
-
 public:
-
 	Button(SDL_Renderer* getRend) : UI(getRend) {}
 	~Button() { SDL_DestroyRenderer(UIrenderer); }
 	void SetOverMouseColor(SDL_Color color);
@@ -80,10 +79,11 @@ public:
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	void OverMouseAction(int mouseX, int mouseY);
-	bool ClickMouseAction(SDL_Event getButtonCheck);
+	virtual bool ClickMouseAction(SDL_Event getButtonCheck);
 
 	void DrawUI(int x, int y, int w, int h);
 };
+
 class Toggle : public Button
 {
 private:
@@ -93,22 +93,25 @@ private:
 public:
 	Toggle(SDL_Renderer* getRend) : Button(getRend) {}
 	~Toggle() { SDL_DestroyRenderer(UIrenderer); }
+
+	//눌렀을 때 활성 또는 비활성으로 변환
+	void ClickToggle();	//클릭할 때 토클 활성
+	void SetToggleOnType();		//토글 활성시 표시할 마크
+	bool GetToggleState() { return isToggle; }	//현재 토글 상태
+
+	bool ClickMouseAction(SDL_Event getButtonCheck);
+
+	void DrawUI(int x, int y, int l);
 };
-class List : UI
-{
-private:
-	char** ItemText;
-	int indexLength = 3;
-public:
-	void SetIndexLength(int idx);
-};
+
 class Bar : UI
 {
 private:
 	//정수와 실수 필요
-	SDL_Color foreground;
-	float minimum = 0, maximum = 10;
+	float minimum = 0, maximum = 10; 
 	float nowProgress;
+
+	SDL_Color progressingColor;
 public:
 	template <typename T>
 	void SetMaximum(T i)
@@ -131,9 +134,20 @@ public:
 	T GetNowProgress() const { return nowProgress; }
 	template <typename T>
 	T GetMaximun() const { return maximum; }
+
+	void DrawUI(int x, int y, int w, int h);
 };
 class Scroll : UI
 {
+	int length;
 public:
-	static enum Axis { Horizontal = 0, Vertical };
+	static enum Type { Horizontal = 0, Vertical };
+};
+class List : UI
+{
+private:
+	char** ItemText;
+	int indexLength = 3;
+public:
+	void SetIndexLength(int idx);
 };
