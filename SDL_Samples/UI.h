@@ -90,6 +90,11 @@ private:
 	bool isToggle = false;
 	//checking Icon or bgColor
 	SDL_Color checkedColor;
+
+	//추가할것 2개 이미지로 판별
+	//이미지 하나로만 판별
+	Sprite* checkedImage;
+	Sprite* nonCheckedImage;
 public:
 	Toggle(SDL_Renderer* getRend) : Button(getRend) {}
 	~Toggle() { SDL_DestroyRenderer(UIrenderer); }
@@ -102,14 +107,25 @@ public:
 	bool ClickMouseAction(SDL_Event getButtonCheck);
 
 	void DrawUI(int x, int y, int l);
+
+private:	//완성 안한거
+	void SetCheckedImage(Sprite& getSprite);
+	void SetNonCheckedImage(Sprite& getSprite);
 };
 
 class Bar : UI
 {
 private:
 	//정수와 실수 필요
-	float minimum = 0, maximum = 10; 
-	float nowProgress;
+	//float minimum = 0, maximum = 10; 
+	//float nowProgress;
+
+	/*아래 값들을 정수나 실수로 사용할건지
+	일단 공용체로 때려박았음*/
+	union {
+		int intValue;
+		float floatValue;
+	} minimum, maximum, nowProgress;
 
 	SDL_Color progressingColor;
 public:
@@ -124,7 +140,7 @@ public:
 	template <typename T>
 	void SetNowProgress(T i)
 	{
-		if (minimum > i || maximum < i)	//최소값보다 작거나 최대값보다 크면
+		if (minimum > i || maximum < i)	//최소값과 최대값 사이가 아니면
 			return;
 		else
 			nowProgress = i;
@@ -135,6 +151,7 @@ public:
 	template <typename T>
 	T GetMaximun() const { return maximum; }
 
+private:
 	void DrawUI(int x, int y, int w, int h);
 };
 class Scroll : UI

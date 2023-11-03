@@ -169,19 +169,20 @@ void Toggle::SetToggleOnType() {}
 
 bool Toggle::ClickMouseAction(SDL_Event getButtonCheck)
 {
-	if (!isToggle)
-	{
-		isToggle = true;
-		SDL_Log("토글 활성");
-	}
-	else
-	{
-		isToggle = false;
-		SDL_Log("토글 비활성");
-	}
+	if (isInMouse)
+		if (!isToggle)
+		{
+			isToggle = true;
+			SDL_Log("토글 활성");
+		}
+		else
+		{
+			isToggle = false;
+			SDL_Log("토글 비활성");
+		}
 
 	isClick = getButtonCheck.button.state;
-	return isClick;
+	return isToggle;
 }
 
 void Toggle::DrawUI(int x, int y, int l)

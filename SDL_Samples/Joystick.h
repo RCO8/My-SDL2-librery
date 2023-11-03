@@ -10,8 +10,9 @@ private:
 	char* joystickName;					//현재 조이스틱 디바이스 이름
 
 	/*만약 조이스틱이 무선이라면 배터리 체크 필요*/
+	float checkBattery[8];
 public:
 	Joystick();
 	~Joystick();
-	void CheckJoystickEvent();
+	void CheckJoystickEvent(SDL_Event event);
 };
