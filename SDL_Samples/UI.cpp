@@ -1,5 +1,4 @@
 #include "UI.h"
-#include <cstring>
 
 void UI::SetBackgroundColor(SDL_Color color)
 { backgroundColor = color; }
@@ -51,7 +50,7 @@ void UI::SetFontDistance(int left, int top, int right, int bottom)
 }
 void UI::SetUIText(const char* str) 
 {
-	int getStrLength = strlen(str);
+	int getStrLength = SDL_strlen(str);
 	for(int i=0;i<getStrLength;i++)
 		text[i] = str[i];
 }
@@ -69,6 +68,7 @@ void UI::DrawUI(int x, int y, int w, int h)
 		defaultColor.r, defaultColor.g,
 		defaultColor.b, defaultColor.a);
 	SDL_RenderFillRect(UIrenderer, &drawing);
+	
 	//overline color
 	SDL_SetRenderDrawColor(UIrenderer,
 		overlineColor.r, overlineColor.g,
@@ -119,10 +119,9 @@ void Button::DrawUI(int x, int y, int w, int h)
 	if (isDisable) defaultColor = disableColor;
 	else
 	{
+		defaultColor = backgroundColor;
 		if (isInMouse)
 			defaultColor = isClick ? clickColor : overMouseColor;
-		else
-			defaultColor = backgroundColor;
 	}
 
 	//background color
@@ -141,7 +140,6 @@ void Button::DrawUI(int x, int y, int w, int h)
 	drawing.y += fontRct.y;
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
-
 	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
@@ -162,28 +160,31 @@ bool Button::ClickMouseAction(SDL_Event getButtonCheck)
 }
 
 //Toggle
-void Toggle::ClickToggle()
+
+void Toggle::SetCheckedColor(SDL_Color color)
+{ checkedColor = color; }
+void Toggle::SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	isToggle = !isToggle;
+	checkedColor.r = r;
+	checkedColor.g = g;
+	checkedColor.b = b;
+	checkedColor.a = a;
 }
-
-void Toggle::SetToggleOnType() {}
-
 bool Toggle::ClickMouseAction(SDL_Event getButtonCheck)
 {
+	isClick = getButtonCheck.button.state;
 	if (isInMouse)
 		if (!isToggle)
 		{
 			isToggle = true;
-			SDL_Log("토글 활성");
+			SDL_Log("Toggle Checked");
 		}
 		else
 		{
 			isToggle = false;
-			SDL_Log("토글 비활성");
+			SDL_Log("Toggle Unchecked");
 		}
 
-	isClick = getButtonCheck.button.state;
 	return isToggle;
 }
 
@@ -201,7 +202,7 @@ void Toggle::DrawUI(int x, int y, int l)
 		if (isInMouse)
 			defaultColor = isClick ? clickColor : overMouseColor;
 		else
-			defaultColor = backgroundColor;
+			defaultColor = isToggle ? checkedColor : backgroundColor;
 	}
 
 	//background color

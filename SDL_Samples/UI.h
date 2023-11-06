@@ -60,6 +60,10 @@ public:
 	virtual void DrawUI(int x, int y, int w, int h);
 
 	void SetDisableUI(bool b) { isDisable = b; }
+
+private:
+	void SetBackgroundImage();
+	void SetDisableImage();
 };
 
 class Button : public UI
@@ -98,10 +102,11 @@ public:
 	Toggle(SDL_Renderer* getRend) : Button(getRend) {}
 	~Toggle() { SDL_DestroyRenderer(UIrenderer); }
 
-	//눌렀을 때 활성 또는 비활성으로 변환
-	void ClickToggle();	//클릭할 때 토클 활성
-	void SetToggleOnType();		//토글 활성시 표시할 마크
 	bool GetToggleState() { return isToggle; }	//현재 토글 상태
+
+	//눌렀을 때 활성 또는 비활성으로 변환
+	void SetCheckedColor(SDL_Color color);
+	void SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	bool ClickMouseAction(SDL_Event getButtonCheck);
 
@@ -109,7 +114,6 @@ public:
 
 private:	//완성 안한거
 	void SetCheckedImage(Sprite& getSprite);
-	void SetNonCheckedImage(Sprite& getSprite);
 };
 
 class Bar : UI

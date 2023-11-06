@@ -30,20 +30,14 @@ bool Gaming::GameInit()
 
     greenRichard = new Sprite(renderer, "green_richard.png");
     greenRichard->SetSpriteClip(0, 0, 32, 32);
-
-    buttonInterface = new Button(renderer);
-    buttonInterface->SetBackgroundColor(255, 255, 0, 25);
-    buttonInterface->SetOverMouseColor(0, 255, 0, 25);
-    buttonInterface->SetClickColor(0, 255, 255);
-    buttonInterface->SetFontDistance(5, 5, 5, 5);
-    buttonInterface->SetUIText("abc");
+    greenRichard->SetRotatePoint(greenRichard->GetClipWidth() / 2, greenRichard->GetClipHeight() / 2);
 
     toggleInterface = new Toggle(renderer);
     toggleInterface->SetBackgroundColor(0, 255, 255);
     toggleInterface->SetOverMouseColor(0, 0, 255);
     toggleInterface->SetClickColor(255, 0, 255);
+    toggleInterface->SetCheckedColor(128,0,255);
     toggleInterface->SetUIText("Toggle Test");
-
     joystick = new Joystick();
     return true;
 }
@@ -122,7 +116,6 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
-                buttonInterface->ClickMouseAction(event);
                 toggleInterface->ClickMouseAction(event);
                 break;
             case 2: //SDL_Log("Middle Mouse");
@@ -134,7 +127,6 @@ void Gaming::CheckKeyPress()
             switch (event.button.button) //Same to SDL_MOUSEBUTTONDOWN
             {
             case 1:
-                buttonInterface->ClickMouseAction(event);
                 toggleInterface->ClickMouseAction(event);
                 break;
             case 2:
@@ -142,7 +134,6 @@ void Gaming::CheckKeyPress()
                 break;
             }
         case SDL_MOUSEMOTION: //SDL_Log("Mouse : (%d, %d)", event.motion.x, event.motion.y);
-            buttonInterface->OverMouseAction(event.motion.x, event.motion.y);
             toggleInterface->OverMouseAction(event.motion.x, event.motion.y);
             break;
         case SDL_MOUSEWHEEL:
@@ -234,10 +225,9 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     
     //Draw Image
     blueBobby->Drawing(x, y, 0);
-    greenRichard->Drawing(50, 50, 0);
+    greenRichard->Drawing(80, 50, 0);
 
     //Draw UI
-    buttonInterface->DrawUI(30, 80, 100, 50);
     toggleInterface->DrawUI(30, 150, 20);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
