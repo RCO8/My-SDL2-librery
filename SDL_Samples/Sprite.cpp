@@ -3,7 +3,9 @@
 //스프라이트 불러와서 데이터에 저장
 Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(getRenderer)
 {
-	imageFile = SDL_LoadBMP(fileName);	//이미지파일 로드
+	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+
+	imageFile = IMG_Load(fileName);	//이미지파일 로드
 	if (imageFile == NULL)
 	{
 		SDL_Log("SDL Load BMP Error : %s\n", SDL_GetError());
@@ -22,6 +24,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 //스프라이트 제거
 Sprite::~Sprite()
 {
+	IMG_Quit();
 	SDL_FreeSurface(imageFile);
 	SDL_DestroyTexture(sprTexture);
 	SDL_DestroyRenderer(sprRenderer);
@@ -88,7 +91,7 @@ void Sprite::SetImageAlpha(Uint8 a)
 //이미지 흑백화
 void Sprite::SetImageGrey()
 {
-
+	
 }
 //이미지 색상반전
 void Sprite::SetImageNegative()

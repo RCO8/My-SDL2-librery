@@ -19,7 +19,6 @@ Joystick::~Joystick()
 
 void Joystick::CheckJoystickEvent(SDL_Event event)
 {
-	while (SDL_PollEvent(&event))
 		switch (event.type)
 		{
 		case SDL_JOYBUTTONDOWN:
@@ -27,7 +26,7 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 				if (i == event.jbutton.which)
 					switch (event.jbutton.button)
 					{
-					case 0:		//SDL_Log("Play %d Button 0", i + 1);
+					case 0:		SDL_Log("Play %d Button 0", i + 1);
 						break;
 					case 1:		//SDL_Log("Play %d Button 1", i + 1);
 						break;

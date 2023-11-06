@@ -15,7 +15,8 @@ private:
 
     Joystick* joystick;
     Timer mTimer;
-    Sprite* bgImg;
+    Sprite* blueBobby;
+    Sprite* greenRichard;
     Button* buttonInterface;
     Toggle* toggleInterface;
     int x = 30;
