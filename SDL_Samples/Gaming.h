@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include "Sprite.h"
 #include "Timer.h"
-#include "Joystick.h"
 #include "UI.h"
+#include "Sound.h"
 
 class Gaming
 {
@@ -13,13 +13,12 @@ private:
     SDL_Renderer* renderer; //창에 그릴 렌더
     SDL_Event event;    //입력 이벤트
 
-    Joystick* joystick;
-    GamePad* console;
     Timer mTimer;
     Sprite* blueBobby;
     Sprite* greenRichard;
-    UI* userInterface;
     Bar* barInterface;
+    Sound* soundEffect;
+
     int x = 30;
     int y = 50;
     bool isClick = false;

@@ -92,10 +92,10 @@ class Toggle : public Button
 {
 private:
 	bool isToggle = false;
+
 	//checking Icon or bgColor
 	SDL_Color checkedColor;
 
-	//추가할것 2개 이미지로 판별
 	//이미지 하나로만 판별
 	Sprite* checkedImage;
 	Sprite* nonCheckedImage;
@@ -117,17 +117,13 @@ private:	//완성 안한거
 	void SetCheckedImage(Sprite& getSprite);
 };
 
+enum BAR_DIRECTION { BAR_HORIZONTAL = 0, BAR_VERTICAL };
 class Bar : public UI
 {
 private:
-	//정수와 실수 필요
-	//float minimum = 0, maximum = 10; 
-	//float nowProgress;
+	int minimum, maximum, nowProgress;
 
-	/*아래 값들을 정수나 실수로 사용할건지
-	일단 공용체로 때려박았음*/
-	float minimum, maximum, nowProgress;
-
+	BAR_DIRECTION direction;
 	SDL_Color progressingColor;
 	SDL_Rect prog;
 public:
@@ -135,39 +131,45 @@ public:
 	{
 		minimum = 0;
 		maximum = 100;
+		direction = BAR_HORIZONTAL;
 	}
-
-	template <typename T>
-	void SetMaximum(T i)
+	~Bar() { SDL_DestroyRenderer(UIrenderer); }
+	void SetMaximum(int i)
 	{
-		if (minimum >= i)
-			return;
-		else
-			maximum = i;
+		if (minimum >= i) return;
+		else maximum = i;
 	}
-	template <typename T>
-	void SetNowProgress(T i)
-	{
-		if (minimum > i || maximum < i)	//최소값과 최대값 사이가 아니면
-			return;
-		else
-			nowProgress = i;
+	void SetNowProgress(int i)
+	{	//최소값과 최대값 사이가 아니면
+		if (minimum > i || maximum < i) return;
+		else nowProgress = i;
 	}
 
-	template <typename T>
-	T GetNowProgress() const { return nowProgress; }
-	template <typename T>
-	T GetMaximun() const { return maximum; }
+	int GetNowProgress() { return nowProgress; }
+	int GetMaximun() const { return maximum; }
 
+	void SetDirection(BAR_DIRECTION dir) { direction = dir; };
 	void SetNowProgressColor(SDL_Color color);
 	void SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	void DrawUI(int x, int y, int w, int h);
 };
 
-class Scroll : UI
+class Scroll : public UI
 {
 	int length;
+
+	Button *cursor;
 public:
+	Scroll(SDL_Renderer* getRend) : UI(getRend) 
+	{ cursor = new Button(getRend); }
+	~Scroll() 
+	{ 
+		cursor->~Button();
+		SDL_DestroyRenderer(UIrenderer);
+	}
+
 	static enum Type { Horizontal = 0, Vertical };
+
+	void DrawUI(int x, int y, int w, int h);
 };

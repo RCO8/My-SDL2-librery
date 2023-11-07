@@ -29,28 +29,22 @@ bool Gaming::GameInit()
     blueBobby->SetRotatePoint(blueBobby->GetClipWidth() / 2, blueBobby->GetClipHeight() / 2);
 
     greenRichard = new Sprite(renderer, "green_richard.png");
-    greenRichard->SetSpriteClip(0, 0, 32, 32);
+    greenRichard->SetSpriteClip(32, 0, 32, 32);
     greenRichard->SetRotatePoint(greenRichard->GetClipWidth() / 2, greenRichard->GetClipHeight() / 2);
 
-    userInterface = new UI(renderer);
-    userInterface->SetFontColor(255, 255, 0);
-    //userInterface->SetBackgroundColor(0, 0, 255);
-    userInterface->SetUIText("text");
+    soundEffect = new Sound("Die.wav");
 
     barInterface = new Bar(renderer);
     barInterface->SetBackgroundColor(0, 0, 255);
     barInterface->SetNowProgressColor(255, 0, 0);
     barInterface->SetNowProgress(65);
+    barInterface->SetDirection(BAR_VERTICAL);
 
-    joystick = new Joystick();
-    console = new GamePad(0);
     return true;
 }
 
 void Gaming::CheckKeyPress()
 {
-    SDL_GameController* myController = NULL;   //is Controller Check
-
     while (SDL_PollEvent(&event))
     {
         switch (event.type)
@@ -111,8 +105,7 @@ void Gaming::CheckKeyPress()
             }
         case SDL_KEYUP:
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
-            {
-            }
+            { }
             break;
 
             //Mouse Check
@@ -120,10 +113,13 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
+                soundEffect->Play();
                 break;
             case 2: //SDL_Log("Middle Mouse");
+                soundEffect->Pause();
                 break;
             case 3: //SDL_Log("Right Mouse");
+                soundEffect->Stop();
                 break;
             }
         case SDL_MOUSEBUTTONUP:
@@ -147,13 +143,11 @@ void Gaming::CheckKeyPress()
 
             //Controller Check (Console version)
         case SDL_CONTROLLERDEVICEADDED: //if Controller is connected
-            console = new GamePad(0);
+            // Joystick 생성자 호출
             break;
         }
 
         //추가적인 입력 디바이스가 있다면 여기로 메서드 호출
-        //joystick->CheckJoystickEvent(event);
-        console->CheckGamepadEvent(event);
     }
 }
 void Gaming::UpdateData()
@@ -172,8 +166,7 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     greenRichard->Drawing(80, 50, 0);
 
     //Draw UI
-    userInterface->DrawText(0, 0, 30, 20);
-    barInterface->DrawUI(30, 180, 100, 30);
+    barInterface->DrawUI(30, 180, 130, 30);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
 }
@@ -190,7 +183,6 @@ void Gaming::GameRun()
 
 void Gaming::GameOff()
 {
-    SDL_GameControllerClose(0);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

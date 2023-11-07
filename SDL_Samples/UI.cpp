@@ -149,13 +149,7 @@ void Button::DrawUI(int x, int y, int w, int h)
 		overlineColor.r, overlineColor.g,
 		overlineColor.b, overlineColor.a);
 	SDL_RenderDrawRect(UIrenderer, &drawing);
-
-	//drawing text
-	drawing.x += fontRct.x;
-	drawing.y += fontRct.y;
-	drawing.w -= fontRct.w + fontRct.x;
-	drawing.h -= fontRct.h + fontRct.y;
-	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
+	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 }
 void Button::OverMouseAction(int mouseX, int mouseY)
 {
@@ -227,6 +221,7 @@ void Toggle::DrawUI(int x, int y, int l)
 		overlineColor.b, overlineColor.a);
 	SDL_RenderDrawRect(UIrenderer, &drawing);
 
+	//DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 	//drawing text (사각형 밖으로 나오게)
 	SDL_Rect textRect = drawing;	//drawing으로 텍스트 위치로 지정하면 마우스를 올릴때 텍스트에 적용되기 때문에 새로운 Rect형 생성하고 복사
 	textRect.x += fontRct.x + drawing.x;
@@ -262,12 +257,21 @@ void Bar::DrawUI(int x, int y, int w, int h)
 	SDL_RenderFillRect(UIrenderer, &drawing);
 
 	//progress color
-	prog = drawing;
-	float percent = (drawing.w / maximum) * nowProgress;
-	prog.w = percent;
 	SDL_SetRenderDrawColor(UIrenderer,
 		progressingColor.r, progressingColor.g,
 		progressingColor.b, progressingColor.a);
+	prog = drawing;
+	float percent;
+	if (direction == BAR_HORIZONTAL)
+	{
+		percent = (drawing.w / maximum) * nowProgress;
+		prog.w = percent;
+	}
+	else if (direction == BAR_VERTICAL)
+	{
+		percent = (drawing.h / maximum) * nowProgress;
+		prog.h = percent;
+	}
 	SDL_RenderFillRect(UIrenderer, &prog);
 
 	//overline color
@@ -276,3 +280,5 @@ void Bar::DrawUI(int x, int y, int w, int h)
 		overlineColor.b, overlineColor.a);
 	SDL_RenderDrawRect(UIrenderer, &drawing);
 }
+
+//Scroll

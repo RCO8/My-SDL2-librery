@@ -4,13 +4,14 @@
 const int maxJoystickIndex = 8;
 
 //Arcade ver
+//Multi Device in class
 class Joystick
 {
 private:
 	SDL_Joystick* myJoystick;           //연결된 조이스틱과 통신
 	char* joystickName;					//현재 조이스틱 디바이스 이름
 
-	/*만약 조이스틱이 무선이라면 배터리 체크 필요*/
+	/* Need checking batter what joystick is wiress*/
 	float checkBattery[8];
 public:
 	Joystick();
@@ -19,6 +20,7 @@ public:
 };
 
 //Console ver
+//Single Device in class
 class GamePad
 {
 private:
@@ -34,6 +36,6 @@ public:
 
 	char getControllerName() { return *gamePadName; }
 	void CheckGamepadEvent(SDL_Event event);
-
-	void SetControllerWave();	//게임 컨트롤러 진동설정
+	void SetAxisDead(int deadzone);
+	void SetControllerWave(int ms,int level = 1);	//Game Controller Wave Level while ms
 };

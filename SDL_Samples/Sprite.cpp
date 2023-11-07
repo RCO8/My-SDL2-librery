@@ -8,7 +8,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 	imageFile = IMG_Load(fileName);	//이미지파일 로드
 	if (imageFile == NULL)
 	{
-		SDL_Log("SDL Load BMP Error : %s\n", SDL_GetError());
+		SDL_Log("SDL Load Image Error : %s\n", SDL_GetError());
 		this->~Sprite();
 	}
 	//만약에 파일이 png, jpg, wepb라면 함수로 형태 교체

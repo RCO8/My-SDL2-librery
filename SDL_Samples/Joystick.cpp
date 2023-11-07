@@ -229,14 +229,49 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 				SDL_Log("Sensor");
 			}
 			break;
-
 		case SDL_CONTROLLERDEVICEREMOVED:
 			this->~GamePad();
 			break;
 	}
 }
-
-void GamePad::SetControllerWave()
+void GamePad::SetAxisDead(int deadzone)
 {
-
+	if (deadzone > maxAxis)
+	{
+		SDL_Log("Dead Zone overflow!!");
+		return;
+	}
+	else
+		stickDead = deadzone;
+}
+void GamePad::SetControllerWave(int ms, int level)
+{
+	int minWave, maxWave;
+	switch (level)
+	{
+	case 1:	//Weakest
+		minWave = 1000;
+		maxWave = 3000;
+		break;
+	case 2:	//Weak
+		minWave = 5000;
+		maxWave = 10000;
+		break;
+	case 3:	//Middle
+		minWave = 15000;
+		maxWave = 30000;
+		break;
+	case 4:	//Strong
+		minWave = 50000;
+		maxWave = 75000;
+		break;
+	case 5:	//Strongest
+		minWave = 50000;
+		maxWave = 100000;
+		break;
+	default:
+		SDL_Log("Wave Level Unlimited!!");
+		return;
+	}
+	SDL_GameControllerRumble(this->gameController, minWave, maxWave, ms);
 }

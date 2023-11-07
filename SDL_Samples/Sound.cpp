@@ -28,6 +28,8 @@ Sound::Sound(const char* filename)
 Sound::~Sound()
 {
 	//사운드 제거
+	//Mix_FreeMusic();
+	//Mix_CloseAudio();
 	SDL_CloseAudioDevice(dev);
 	SDL_FreeWAV(wav_buffer);
 	SDL_AudioQuit();
@@ -51,9 +53,34 @@ void Sound::Pause()
 void Sound::Stop()
 {
 	SDL_PauseAudioDevice(dev, 1);
-	recallAudio = SDL_QueueAudio(dev, wav_buffer, wav_length);
+	recallAudio = SDL_QueueAudio(audioPlaySize, wav_buffer, wav_length);
 }
 void Sound::SetInputMode(int reStart)
 {
 	//재생이 끝나면 다시 재생할수 있도록, 이벤트를 받으면 다시 처음부터
+}
+
+Music::Music(const char* filename)
+{
+	SDL_Init(SDL_INIT_AUDIO);
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		SDL_Log("Failed to initialize SDL_mixer: %s", Mix_GetError());
+		this->~Music();
+	}
+	music = Mix_LoadMUS(filename);
+}
+Music::~Music()
+{
+	Mix_FreeMusic(music);
+	Mix_CloseAudio();
+}
+void Music::Play(int loop)
+{
+	Mix_PlayMusic(music, loop);
+}
+void Music::Pause()
+{
+	Mix_PauseMusic();
 }
