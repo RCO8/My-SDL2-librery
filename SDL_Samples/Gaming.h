@@ -14,11 +14,12 @@ private:
     SDL_Event event;    //입력 이벤트
 
     Joystick* joystick;
+    GamePad* console;
     Timer mTimer;
     Sprite* blueBobby;
     Sprite* greenRichard;
-    Button* buttonInterface;
-    Toggle* toggleInterface;
+    UI* userInterface;
+    Bar* barInterface;
     int x = 30;
     int y = 50;
     bool isClick = false;

@@ -58,6 +58,7 @@ public:
 
 	void SetUIText(const char* str);
 	virtual void DrawUI(int x, int y, int w, int h);
+	void DrawText(int x, int y, int w, int h);
 
 	void SetDisableUI(bool b) { isDisable = b; }
 
@@ -116,7 +117,7 @@ private:	//완성 안한거
 	void SetCheckedImage(Sprite& getSprite);
 };
 
-class Bar : UI
+class Bar : public UI
 {
 private:
 	//정수와 실수 필요
@@ -125,13 +126,17 @@ private:
 
 	/*아래 값들을 정수나 실수로 사용할건지
 	일단 공용체로 때려박았음*/
-	union {
-		int intValue;
-		float floatValue;
-	} minimum, maximum, nowProgress;
+	float minimum, maximum, nowProgress;
 
 	SDL_Color progressingColor;
+	SDL_Rect prog;
 public:
+	Bar(SDL_Renderer* getRend) : UI(getRend)
+	{
+		minimum = 0;
+		maximum = 100;
+	}
+
 	template <typename T>
 	void SetMaximum(T i)
 	{
@@ -154,20 +159,15 @@ public:
 	template <typename T>
 	T GetMaximun() const { return maximum; }
 
-private:
+	void SetNowProgressColor(SDL_Color color);
+	void SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+
 	void DrawUI(int x, int y, int w, int h);
 };
+
 class Scroll : UI
 {
 	int length;
 public:
 	static enum Type { Horizontal = 0, Vertical };
-};
-class List : UI
-{
-private:
-	char** ItemText;
-	int indexLength = 3;
-public:
-	void SetIndexLength(int idx);
 };

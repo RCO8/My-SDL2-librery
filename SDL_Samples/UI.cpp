@@ -28,13 +28,19 @@ void UI::SetDisableColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	disableColor.a = a;
 }
 void UI::SetFontColor(SDL_Color color)
-{ fontColor = color; }
+{ 
+	fontColor = color;
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
+}
 void UI::SetFontColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	fontColor.r = r;
 	fontColor.g = g;
 	fontColor.b = b;
 	fontColor.a = a;
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 }
 void UI::SetFontStyle(const char* style, int size)
 {
@@ -53,6 +59,8 @@ void UI::SetUIText(const char* str)
 	int getStrLength = SDL_strlen(str);
 	for(int i=0;i<getStrLength;i++)
 		text[i] = str[i];
+	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
+	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 }
 void UI::DrawUI(int x, int y, int w, int h)
 {
@@ -63,6 +71,7 @@ void UI::DrawUI(int x, int y, int w, int h)
 
 	//Checking Disable
 	defaultColor = isDisable ? disableColor : backgroundColor;
+	
 	//background color
 	SDL_SetRenderDrawColor(UIrenderer,
 		defaultColor.r, defaultColor.g,
@@ -74,14 +83,20 @@ void UI::DrawUI(int x, int y, int w, int h)
 		overlineColor.r, overlineColor.g,
 		overlineColor.b, overlineColor.a);
 	SDL_RenderDrawRect(UIrenderer, &drawing);
+	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
+}
+void UI::DrawText(int x, int y, int w, int h)
+{
+	drawing.x = x;
+	drawing.y = y;
+	drawing.w = w;
+	drawing.h = h;
 
 	//drawing text
 	drawing.x += fontRct.x;
 	drawing.y += fontRct.y;
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
-	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
-	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
 
@@ -140,8 +155,6 @@ void Button::DrawUI(int x, int y, int w, int h)
 	drawing.y += fontRct.y;
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
-	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
-	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
 }
 void Button::OverMouseAction(int mouseX, int mouseY)
@@ -160,7 +173,6 @@ bool Button::ClickMouseAction(SDL_Event getButtonCheck)
 }
 
 //Toggle
-
 void Toggle::SetCheckedColor(SDL_Color color)
 { checkedColor = color; }
 void Toggle::SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -187,7 +199,6 @@ bool Toggle::ClickMouseAction(SDL_Event getButtonCheck)
 
 	return isToggle;
 }
-
 void Toggle::DrawUI(int x, int y, int l)
 {
 	drawing.x = x;
@@ -222,11 +233,46 @@ void Toggle::DrawUI(int x, int y, int l)
 	textRect.y += fontRct.y;
 	textRect.w -= fontRct.w - drawing.w;
 	textRect.h -= fontRct.h;
-	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
-	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &textRect);	//폰트를 사각형 안에 그리기
 }
 
-//CheckBox or Radio
-
 //Bar
+void Bar::SetNowProgressColor(SDL_Color color)
+{ progressingColor = color; }
+void Bar::SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	progressingColor.r = r;
+	progressingColor.g = g;
+	progressingColor.b = b;
+	progressingColor.a = a;
+}
+void Bar::DrawUI(int x, int y, int w, int h)
+{
+	drawing.x = x;
+	drawing.y = y;
+	drawing.w = w;
+	drawing.h = h;
+
+	//Checking Disable
+	defaultColor = isDisable ? disableColor : backgroundColor;
+	//background color
+	SDL_SetRenderDrawColor(UIrenderer,
+		defaultColor.r, defaultColor.g,
+		defaultColor.b, defaultColor.a);
+	SDL_RenderFillRect(UIrenderer, &drawing);
+
+	//progress color
+	prog = drawing;
+	float percent = (drawing.w / maximum) * nowProgress;
+	prog.w = percent;
+	SDL_SetRenderDrawColor(UIrenderer,
+		progressingColor.r, progressingColor.g,
+		progressingColor.b, progressingColor.a);
+	SDL_RenderFillRect(UIrenderer, &prog);
+
+	//overline color
+	SDL_SetRenderDrawColor(UIrenderer,
+		overlineColor.r, overlineColor.g,
+		overlineColor.b, overlineColor.a);
+	SDL_RenderDrawRect(UIrenderer, &drawing);
+}
