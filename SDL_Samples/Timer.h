@@ -46,31 +46,39 @@ public:
     int GetSecond() { return second; }
     int GetMinute() { return minute; }
     int GetHour() { return hour; }
-
-    int* GetClock()     //현재시간 반환
+    
+    //현재시간 반환
+    int GetClockHour() { return GetNowDateTime().tm_hour; }
+    int GetClockMinute() { return GetNowDateTime().tm_min; }
+    int GetClockSecond() { return GetNowDateTime().tm_sec; }
+    //현재날짜 반환
+    int GetCalenderMonth() { return GetNowDateTime().tm_mon + 1; }
+    int GetCalenderDay() { return GetNowDateTime().tm_mday; }
+    int GetCalenderWeek() { return GetNowDateTime().tm_wday; }
+    char* GetCalenderWeek(int ver)
     {
-        time_t nowTime = time(NULL);
-        struct tm pTimeInfo;
-
-        localtime_s(&pTimeInfo, &nowTime);
-
-        int* dayTime = nullptr;
-        *(dayTime + 1) = pTimeInfo.tm_hour;
-        *(dayTime + 2) = pTimeInfo.tm_min;
-        *(dayTime + 3) = pTimeInfo.tm_sec;
-        return dayTime;
+        char defaulting[7][10] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+        char eng[7][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        char kor[7][3] = { "일", "월", "화", "수", "목", "금", "토" };
+        char jap[7][3] = { "日", "月", "火", "水", "木", "金", "土" };
+        switch (ver)
+        {
+            case 0:
+                return defaulting[GetNowDateTime().tm_wday];
+            case 1:
+                return eng[GetNowDateTime().tm_wday];
+            case 2:
+                return kor[GetNowDateTime().tm_wday];
+            case 3:
+                return jap[GetNowDateTime().tm_wday];
+        }
     }
-    int* GetCalender()  //현재날짜 반환
+private:
+    tm GetNowDateTime()
     {
         time_t nowTime = time(NULL);
         struct tm pTimeInfo;
-
         localtime_s(&pTimeInfo, &nowTime);
-
-        int* nowDate = nullptr;
-        *(nowDate + 1) = pTimeInfo.tm_mon + 1;
-        *(nowDate + 2) = pTimeInfo.tm_mday;
-        *(nowDate + 3) = pTimeInfo.tm_wday;
-        return nowDate;
+        return pTimeInfo;
     }
 };
