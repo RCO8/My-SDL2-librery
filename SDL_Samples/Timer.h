@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <ctime>
-
+#include <iostream>
 class Timer
 {
 private:
@@ -34,10 +34,7 @@ public:
             //SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
         }
     }
-    void StopCount(bool tickOff)
-    {
-        isTick = tickOff;
-    }
+    void StopCount(bool tickOff) { isTick = tickOff; }
     void ResetCount()
     {
         curTick = 0;
@@ -50,5 +47,30 @@ public:
     int GetMinute() { return minute; }
     int GetHour() { return hour; }
 
-    int* GetNowTime() { }    //현재시간 반환
+    int* GetClock()     //현재시간 반환
+    {
+        time_t nowTime = time(NULL);
+        struct tm pTimeInfo;
+
+        localtime_s(&pTimeInfo, &nowTime);
+
+        int* dayTime = nullptr;
+        *(dayTime + 1) = pTimeInfo.tm_hour;
+        *(dayTime + 2) = pTimeInfo.tm_min;
+        *(dayTime + 3) = pTimeInfo.tm_sec;
+        return dayTime;
+    }
+    int* GetCalender()  //현재날짜 반환
+    {
+        time_t nowTime = time(NULL);
+        struct tm pTimeInfo;
+
+        localtime_s(&pTimeInfo, &nowTime);
+
+        int* nowDate = nullptr;
+        *(nowDate + 1) = pTimeInfo.tm_mon + 1;
+        *(nowDate + 2) = pTimeInfo.tm_mday;
+        *(nowDate + 3) = pTimeInfo.tm_wday;
+        return nowDate;
+    }
 };
