@@ -23,16 +23,14 @@ bool Gaming::GameInit()
 
     //Resouce Setting
     SDL_Color bgImgColor = { 34,177,76 };
-    blueBobby = new Sprite(renderer, "blue_bobby.bmp");
-    blueBobby->SetColorHide(bgImgColor);
-    blueBobby->SetSpriteClip(0, 0, 32, 32);
-    blueBobby->SetRotatePoint(blueBobby->GetClipWidth() / 2, blueBobby->GetClipHeight() / 2);
 
     greenRichard = new Sprite(renderer, "green_richard.png");
     greenRichard->SetSpriteClip(32, 0, 32, 32);
     greenRichard->SetRotatePoint(greenRichard->GetClipWidth() / 2, greenRichard->GetClipHeight() / 2);
 
     soundEffect = new Sound("Die.wav");
+
+    soundMusic = new Music("Die.wav");
 
     barInterface = new Bar(renderer);
     barInterface->SetBackgroundColor(0, 0, 255);
@@ -113,13 +111,10 @@ void Gaming::CheckKeyPress()
             switch (event.button.button)
             {
             case 1: //SDL_Log("Left Mouse");
-                soundEffect->Play();
                 break;
             case 2: //SDL_Log("Middle Mouse");
-                soundEffect->Pause();
                 break;
             case 3: //SDL_Log("Right Mouse");
-                soundEffect->Stop();
                 break;
             }
         case SDL_MOUSEBUTTONUP:
@@ -162,7 +157,6 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     SDL_RenderClear(renderer);  //Screen Clear   //Fill Color in Screen
     
     //Draw Image
-    blueBobby->Drawing(x, y, 0);
     greenRichard->Drawing(80, 50, 0);
 
     //Draw UI

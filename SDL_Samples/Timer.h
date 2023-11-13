@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <ctime>
 
 class Timer
 {
@@ -30,7 +31,7 @@ public:
                 hour++;
                 minute = 0;
             }
-            SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
+            //SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
         }
     }
     void StopCount(bool tickOff)
@@ -48,4 +49,6 @@ public:
     int GetSecond() { return second; }
     int GetMinute() { return minute; }
     int GetHour() { return hour; }
+
+    int* GetNowTime() { }    //현재시간 반환
 };

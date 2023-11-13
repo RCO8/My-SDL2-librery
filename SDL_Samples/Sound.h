@@ -19,30 +19,27 @@ public:
 	~Sound();
 	void Play();
 	void Pause();
-	void Stop();
-	void SetInputMode(int reStart);	//소리 재생 모드
-	void SetPlayLoop(int count);	//반복 회수
-
-	/*여기에 필요한 확장 요소*/
-	//배속 증감, 음높이 증감, 다른 확장자, 역재생
 };
 
 class Music
 {
 private:
+	const int Channel = 2;
+	int volume;
 	Mix_Music* music;
 public:
 	Music(const char* filename);
 	~Music();
 
-	void Play(int loop);
-private:
+	void Play(int loop = 1);
 	void Pause();
 	void Stop();
+	void ChangeVolume(int val);
+	void SetVolume(int val);
+private:
+	void SetTone(int val);	//톤 증감
 	void SetMode();
-	void SetVolume();
-	void SetFrame();
-	void SetSpeed();
-	void MovePosition();
-	void Reward();
+	void SetSpeed();	//속도 증감
+	void MovePosition();	//구간 이동
+	void Reward();		//되감기
 };

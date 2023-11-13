@@ -39,25 +39,13 @@ void Sound::Play()
 {
 	//소리가 재생상태가 아니라면 실행
 	if (SDL_GetQueuedAudioSize(dev) <= audioPlaySize)
-	{
 		SDL_PauseAudioDevice(dev, 0);	//사운드 한번만 재생
-	}
 	if(SDL_GetQueuedAudioSize(dev) == 0)
 		recallAudio = SDL_QueueAudio(dev, wav_buffer, wav_length);
 }
-
 void Sound::Pause()
 {
 	SDL_PauseAudioDevice(dev, 1);
-}
-void Sound::Stop()
-{
-	SDL_PauseAudioDevice(dev, 1);
-	recallAudio = SDL_QueueAudio(audioPlaySize, wav_buffer, wav_length);
-}
-void Sound::SetInputMode(int reStart)
-{
-	//재생이 끝나면 다시 재생할수 있도록, 이벤트를 받으면 다시 처음부터
 }
 
 Music::Music(const char* filename)
@@ -70,17 +58,49 @@ Music::Music(const char* filename)
 		this->~Music();
 	}
 	music = Mix_LoadMUS(filename);
+
+	volume = Mix_Volume(2, 128);
+	SDL_Log("Volume : %d", volume);
 }
 Music::~Music()
 {
 	Mix_FreeMusic(music);
 	Mix_CloseAudio();
+	Mix_Quit();
 }
 void Music::Play(int loop)
 {
-	Mix_PlayMusic(music, loop);
+	//일시정지면 다시 이어서
+	if (Mix_PausedMusic())
+		Mix_ResumeMusic();
+	else //다끝날때 까지 처음부터 재생거부
+		if(!Mix_PlayingMusic())
+			Mix_PlayMusic(music, loop);
 }
 void Music::Pause()
 {
 	Mix_PauseMusic();
+}
+void Music::Stop()
+{
+	Mix_HaltMusic();
+}
+
+void Music::ChangeVolume(int val)
+{
+	if(volume <= 128 && volume >= 0)
+		volume += val;
+	Mix_VolumeMusic(volume);
+	//SDL_Log("Volume : %d", volume);
+}
+void Music::SetVolume(int val)
+{
+	if (volume >= 128 && volume < 0)
+		return;
+	Mix_Volume(2, val);
+}
+
+void Music::SetTone(int val)
+{
+
 }

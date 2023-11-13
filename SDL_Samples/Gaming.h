@@ -14,10 +14,10 @@ private:
     SDL_Event event;    //입력 이벤트
 
     Timer mTimer;
-    Sprite* blueBobby;
     Sprite* greenRichard;
     Bar* barInterface;
     Sound* soundEffect;
+    Music* soundMusic;
 
     int x = 30;
     int y = 50;
