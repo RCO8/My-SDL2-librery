@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Gaming.cpp" />
+    <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="Joystick.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -154,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gaming.h" />
+    <ClInclude Include="Graphic.h" />
     <ClInclude Include="Joystick.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
