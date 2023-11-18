@@ -71,18 +71,7 @@ void UI::DrawUI(int x, int y, int w, int h)
 
 	//Checking Disable
 	defaultColor = isDisable ? disableColor : backgroundColor;
-	
-	//background color
-	SDL_SetRenderDrawColor(UIrenderer,
-		defaultColor.r, defaultColor.g,
-		defaultColor.b, defaultColor.a);
-	SDL_RenderFillRect(UIrenderer, &drawing);
-	
-	//overline color
-	SDL_SetRenderDrawColor(UIrenderer,
-		overlineColor.r, overlineColor.g,
-		overlineColor.b, overlineColor.a);
-	SDL_RenderDrawRect(UIrenderer, &drawing);
+	DrawingUI(drawing);
 	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 }
 void UI::DrawText(int x, int y, int w, int h)
@@ -98,6 +87,20 @@ void UI::DrawText(int x, int y, int w, int h)
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
+}
+void UI::DrawingUI(SDL_Rect rect)
+{
+	//background color
+	SDL_SetRenderDrawColor(UIrenderer,
+		defaultColor.r, defaultColor.g,
+		defaultColor.b, defaultColor.a);
+	SDL_RenderFillRect(UIrenderer, &drawing);
+
+	//overline color
+	SDL_SetRenderDrawColor(UIrenderer,
+		overlineColor.r, overlineColor.g,
+		overlineColor.b, overlineColor.a);
+	SDL_RenderDrawRect(UIrenderer, &drawing);
 }
 
 //Button
@@ -138,17 +141,7 @@ void Button::DrawUI(int x, int y, int w, int h)
 		if (isInMouse)
 			defaultColor = isClick ? clickColor : overMouseColor;
 	}
-
-	//background color
-	SDL_SetRenderDrawColor(UIrenderer,
-		defaultColor.r, defaultColor.g,
-		defaultColor.b, defaultColor.a);
-	SDL_RenderFillRect(UIrenderer, &drawing);
-	//overline color
-	SDL_SetRenderDrawColor(UIrenderer,
-		overlineColor.r, overlineColor.g,
-		overlineColor.b, overlineColor.a);
-	SDL_RenderDrawRect(UIrenderer, &drawing);
+	DrawingUI(drawing);
 	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 }
 void Button::OverMouseAction(int mouseX, int mouseY)
@@ -210,16 +203,7 @@ void Toggle::DrawUI(int x, int y, int l)
 			defaultColor = isToggle ? checkedColor : backgroundColor;
 	}
 
-	//background color
-	SDL_SetRenderDrawColor(UIrenderer,
-		defaultColor.r, defaultColor.g,
-		defaultColor.b, defaultColor.a);
-	SDL_RenderFillRect(UIrenderer, &drawing);
-	//overline color
-	SDL_SetRenderDrawColor(UIrenderer,
-		overlineColor.r, overlineColor.g,
-		overlineColor.b, overlineColor.a);
-	SDL_RenderDrawRect(UIrenderer, &drawing);
+	DrawingUI(drawing);
 
 	//DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 	//drawing text (사각형 밖으로 나오게)
@@ -282,3 +266,21 @@ void Bar::DrawUI(int x, int y, int w, int h)
 }
 
 //Scroll
+void Scroll::SetLeftButtonColor(SDL_Color color)
+{
+	left->SetBackgroundColor(color);
+	right->SetBackgroundColor(color);
+}
+void Scroll::DrawUI(int x, int y, int w, int h)
+{
+	drawing.x = x;
+	drawing.y = y;
+	drawing.w = w;
+	drawing.h = h;
+
+	//Checking Disable
+	defaultColor = isDisable ? disableColor : backgroundColor;
+	DrawingUI(drawing);
+
+	//버튼 그리기 양쪽 버튼은 UI길이의 5%
+}

@@ -62,6 +62,8 @@ public:
 
 	void SetDisableUI(bool b) { isDisable = b; }
 
+protected:
+	void DrawingUI(SDL_Rect rect);	//화면에 그려질 메서드
 private:
 	void SetBackgroundImage();
 	void SetDisableImage();
@@ -146,7 +148,7 @@ public:
 	}
 
 	int GetNowProgress() { return nowProgress; }
-	int GetMaximun() const { return maximum; }
+	int GetMaximun() { return maximum; }
 
 	void SetDirection(BAR_DIRECTION dir) { direction = dir; };
 	void SetNowProgressColor(SDL_Color color);
@@ -160,6 +162,7 @@ class Scroll : public UI
 	int length;
 
 	Button *cursor;
+	Button *left, *right;
 public:
 	Scroll(SDL_Renderer* getRend) : UI(getRend) 
 	{ cursor = new Button(getRend); }
@@ -171,5 +174,6 @@ public:
 
 	static enum Type { Horizontal = 0, Vertical };
 
+	void SetLeftButtonColor(SDL_Color color);
 	void DrawUI(int x, int y, int w, int h);
 };
