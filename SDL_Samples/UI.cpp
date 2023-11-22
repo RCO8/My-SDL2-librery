@@ -144,10 +144,10 @@ void Button::DrawUI(int x, int y, int w, int h)
 	DrawingUI(drawing);
 	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 }
-void Button::OverMouseAction(int mouseX, int mouseY)
+void Button::OverMouseAction(SDL_Event getEvent)
 {
-	isInMouse = ((drawing.x <= mouseX && drawing.x + drawing.w >= mouseX)
-		&& (drawing.y <= mouseY && drawing.y + drawing.h >= mouseY)) ? true : false;
+	isInMouse = ((drawing.x <= getEvent.motion.x && drawing.x + drawing.w >= getEvent.motion.x)
+		&& (drawing.y <= getEvent.motion.y && drawing.y + drawing.h >= getEvent.motion.y)) ? true : false;
 }
 bool Button::ClickMouseAction(SDL_Event getButtonCheck)
 {
@@ -266,11 +266,19 @@ void Bar::DrawUI(int x, int y, int w, int h)
 }
 
 //Scroll
-void Scroll::SetLeftButtonColor(SDL_Color color)
-{
-	left->SetBackgroundColor(color);
-	right->SetBackgroundColor(color);
-}
+void Scroll::SetCursorButtonColor(SDL_Color color)
+{ cursor->SetBackgroundColor(color); }
+void Scroll::SetCursorButtonColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{ cursor->SetBackgroundColor(r, g, b, a); }
+void Scroll::SetCursorOverColor(SDL_Color color)
+{ cursor->SetOverMouseColor(color); }
+void Scroll::SetCursorOverColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{ cursor->SetOverMouseColor(r, g, b, a); }
+void Scroll::SetCursorClickedColor(SDL_Color color)
+{ cursor->SetClickColor(color); }
+void Scroll::SetCursorClickedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{ cursor->SetClickColor(r, g, b, a); }
+
 void Scroll::DrawUI(int x, int y, int w, int h)
 {
 	drawing.x = x;
@@ -283,4 +291,5 @@ void Scroll::DrawUI(int x, int y, int w, int h)
 	DrawingUI(drawing);
 
 	//버튼 그리기 양쪽 버튼은 UI길이의 5%
+	cursor->DrawUI(drawing.x, drawing.y, drawing.w / length, drawing.h);
 }

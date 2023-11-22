@@ -84,7 +84,7 @@ public:
 	void SetClickColor(SDL_Color color);
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
-	void OverMouseAction(int mouseX, int mouseY);
+	void OverMouseAction(SDL_Event getEvent);
 	virtual bool ClickMouseAction(SDL_Event getButtonCheck);
 
 	void DrawUI(int x, int y, int w, int h);
@@ -159,7 +159,7 @@ public:
 
 class Scroll : public UI
 {
-	int length;
+	int length = 2;
 
 	Button *cursor;
 	Button *left, *right;
@@ -175,5 +175,15 @@ public:
 	static enum Type { Horizontal = 0, Vertical };
 
 	void SetLeftButtonColor(SDL_Color color);
+	void SetRightButtonColor(SDL_Color color);
+
+	void CheckCursorButton(SDL_Event e) { cursor->OverMouseAction(e); }
+	void SetCursorButtonColor(SDL_Color color);
+	void SetCursorButtonColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+	void SetCursorOverColor(SDL_Color color);
+	void SetCursorOverColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+	void SetCursorClickedColor(SDL_Color color);
+	void SetCursorClickedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+
 	void DrawUI(int x, int y, int w, int h);
 };
