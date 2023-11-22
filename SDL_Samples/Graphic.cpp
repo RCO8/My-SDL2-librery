@@ -1,6 +1,6 @@
 #include "Graphic.h"
 
-Gradation::Gradation()
+Gradation::Gradation(SDL_Renderer* getRend) : renderer(getRend)
 {
 	nowGradientIndex = 2;
 	gradientColors[0] = { 0,0,0 };
@@ -53,4 +53,18 @@ void Gradation::SetColorIndex(int idx, SDL_Color color)
 		return;
 	}
 	gradientColors[idx] = color;
+}
+
+void Gradation::DrawGradation(int x, int y, int w, int h)
+{
+	gradientRect.x = x;
+	gradientRect.y = y;
+	gradientRect.w = w;
+	gradientRect.h = h;
+
+	//SDL_RenderCopy(sprRenderer, sprTexture, NULL, NULL);
+}
+void Gradation::DrawGradation(SDL_Rect rct)
+{
+	gradientRect = rct;
 }
