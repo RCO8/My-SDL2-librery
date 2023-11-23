@@ -1,1 +1,2 @@
 C:\Users\RCO8\source\repos\SDL_Samples\SDL_Samples\Release\SDL_Samples.vcxproj.CopyComplete
+C:\Users\RCO8\source\repos\My-SDL2-librery\SDL_Samples\Release\SDL_Samples.vcxproj.CopyComplete

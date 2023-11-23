@@ -1,0 +1,1 @@
+C:\Users\RCO8\source\repos\My-SDL2-librery\SDL_Samples\Debug\SDL_Samples.vcxproj.CopyComplete

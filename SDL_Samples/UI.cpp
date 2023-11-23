@@ -144,17 +144,14 @@ void Button::DrawUI(int x, int y, int w, int h)
 	DrawingUI(drawing);
 	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
 }
-void Button::OverMouseAction(SDL_Event getEvent)
+bool Button::CheckMouseAction(SDL_Event getEvent)
 {
 	isInMouse = ((drawing.x <= getEvent.motion.x && drawing.x + drawing.w >= getEvent.motion.x)
 		&& (drawing.y <= getEvent.motion.y && drawing.y + drawing.h >= getEvent.motion.y)) ? true : false;
-}
-bool Button::ClickMouseAction(SDL_Event getButtonCheck)
-{
 	if (isInMouse)
 	{
 		//SDL_Log("Button Click");
-		isClick = getButtonCheck.button.state;
+		isClick = getEvent.button.state;
 	}
 	return isClick;
 }
@@ -169,9 +166,11 @@ void Toggle::SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	checkedColor.b = b;
 	checkedColor.a = a;
 }
-bool Toggle::ClickMouseAction(SDL_Event getButtonCheck)
+bool Toggle::CheckMouseAction(SDL_Event getEvent)
 {
-	isClick = getButtonCheck.button.state;
+	isInMouse = ((drawing.x <= getEvent.motion.x && drawing.x + drawing.w >= getEvent.motion.x)
+		&& (drawing.y <= getEvent.motion.y && drawing.y + drawing.h >= getEvent.motion.y)) ? true : false;
+	isClick = getEvent.button.state;
 	if (isInMouse)
 		if (!isToggle)
 		{
@@ -268,9 +267,9 @@ void Bar::DrawUI(int x, int y, int w, int h)
 //Scroll
 void Scroll::CheckCursorButton(SDL_Event e)
 {
-	cursor->OverMouseAction(e);
-	left->OverMouseAction(e);
-	right->OverMouseAction(e);
+	cursor->CheckMouseAction(e);
+	left->CheckMouseAction(e);
+	right->CheckMouseAction(e);
 }
 void Scroll::SetCursorButtonColor(SDL_Color color)
 { 

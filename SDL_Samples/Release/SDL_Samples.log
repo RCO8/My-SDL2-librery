@@ -1,7 +1,9 @@
-﻿  main.cpp
+﻿  Gaming.cpp
+C:\Users\RCO8\source\repos\My-SDL2-librery\SDL_Samples\UI.h(180): warning C4091: 'static ': 변수를 선언하지 않으면 'Scroll::Type' 왼쪽은 무시됩니다.
+C:\Users\RCO8\source\repos\My-SDL2-librery\SDL_Samples\Gaming.cpp(114,15): warning C4060: switch문에 'case' 또는 'default' 레이블이 없습니다.
   코드를 생성하고 있습니다.
-  3 of 7 functions (42.9%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
+  8 of 55 functions (14.5%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  SDL_Samples.vcxproj -> C:\Users\RCO8\source\repos\SDL_Samples\Release\SDL_Samples.exe
+  SDL_Samples.vcxproj -> C:\Users\RCO8\Source\Repos\My-SDL2-librery\Release\SDL_Samples.exe

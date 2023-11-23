@@ -84,8 +84,7 @@ public:
 	void SetClickColor(SDL_Color color);
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
-	void OverMouseAction(SDL_Event getEvent);
-	virtual bool ClickMouseAction(SDL_Event getButtonCheck);
+	virtual bool CheckMouseAction(SDL_Event getButtonCheck);
 
 	void DrawUI(int x, int y, int w, int h);
 };
@@ -111,7 +110,7 @@ public:
 	void SetCheckedColor(SDL_Color color);
 	void SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
-	bool ClickMouseAction(SDL_Event getButtonCheck);
+	bool CheckMouseAction(SDL_Event getEvent);
 
 	void DrawUI(int x, int y, int l);
 
