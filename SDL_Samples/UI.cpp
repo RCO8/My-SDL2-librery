@@ -268,8 +268,12 @@ void Bar::DrawUI(int x, int y, int w, int h)
 void Scroll::CheckCursorButton(SDL_Event e)
 {
 	cursor->CheckMouseAction(e);
-	left->CheckMouseAction(e);
-	right->CheckMouseAction(e);
+	if (left->CheckMouseAction(e))
+		if(page > 1)
+			page--;
+	if (right->CheckMouseAction(e))
+		if (page < length)
+			page++;
 }
 void Scroll::SetCursorButtonColor(SDL_Color color)
 { 
@@ -322,5 +326,5 @@ void Scroll::DrawUI(int x, int y, int w, int h)
 	//버튼 그리기 양쪽 버튼은 UI길이의 5%
 	left->DrawUI(drawing.x - drawing.h, drawing.y, drawing.h, drawing.h);
 	right->DrawUI(drawing.x + drawing.w, drawing.y, drawing.h, drawing.h);
-	cursor->DrawUI(drawing.x, drawing.y, drawing.w / length, drawing.h);
+	cursor->DrawUI(drawing.x + (page-1) * drawing.w / length, drawing.y, drawing.w / length, drawing.h);
 }

@@ -158,8 +158,8 @@ public:
 
 class Scroll : public UI
 {
-	int length = 2;
-
+	int length = 3;
+	int page = 1;
 	Button *cursor;
 	Button *left, *right;
 public:
