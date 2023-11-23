@@ -165,19 +165,22 @@ class Scroll : public UI
 	Button *left, *right;
 public:
 	Scroll(SDL_Renderer* getRend) : UI(getRend) 
-	{ cursor = new Button(getRend); }
+	{ 
+		cursor = new Button(getRend);
+		left = new Button(getRend);
+		right = new Button(getRend);
+	}
 	~Scroll() 
 	{ 
 		cursor->~Button();
+		left->~Button();
+		right->~Button();
 		SDL_DestroyRenderer(UIrenderer);
 	}
 
 	static enum Type { Horizontal = 0, Vertical };
 
-	void SetLeftButtonColor(SDL_Color color);
-	void SetRightButtonColor(SDL_Color color);
-
-	void CheckCursorButton(SDL_Event e) { cursor->OverMouseAction(e); }
+	void CheckCursorButton(SDL_Event e);
 	void SetCursorButtonColor(SDL_Color color);
 	void SetCursorButtonColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 	void SetCursorOverColor(SDL_Color color);

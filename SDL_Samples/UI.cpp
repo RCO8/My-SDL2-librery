@@ -266,18 +266,48 @@ void Bar::DrawUI(int x, int y, int w, int h)
 }
 
 //Scroll
+void Scroll::CheckCursorButton(SDL_Event e)
+{
+	cursor->OverMouseAction(e);
+	left->OverMouseAction(e);
+	right->OverMouseAction(e);
+}
 void Scroll::SetCursorButtonColor(SDL_Color color)
-{ cursor->SetBackgroundColor(color); }
+{ 
+	cursor->SetBackgroundColor(color);
+	left->SetBackgroundColor(color);
+	right->SetBackgroundColor(color);
+}
 void Scroll::SetCursorButtonColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
-{ cursor->SetBackgroundColor(r, g, b, a); }
+{ 
+	cursor->SetBackgroundColor(r, g, b, a);
+	left->SetBackgroundColor(r, g, b, a);
+	right->SetBackgroundColor(r, g, b, a);
+}
 void Scroll::SetCursorOverColor(SDL_Color color)
-{ cursor->SetOverMouseColor(color); }
+{ 
+	cursor->SetOverMouseColor(color);
+	left->SetOverMouseColor(color);
+	right->SetOverMouseColor(color);
+}
 void Scroll::SetCursorOverColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
-{ cursor->SetOverMouseColor(r, g, b, a); }
+{ 
+	cursor->SetOverMouseColor(r, g, b, a);
+	left->SetOverMouseColor(r, g, b, a);
+	right->SetOverMouseColor(r, g, b, a);
+}
 void Scroll::SetCursorClickedColor(SDL_Color color)
-{ cursor->SetClickColor(color); }
+{ 
+	cursor->SetClickColor(color);
+	left->SetClickColor(color);
+	right->SetClickColor(color);
+}
 void Scroll::SetCursorClickedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
-{ cursor->SetClickColor(r, g, b, a); }
+{
+	cursor->SetClickColor(r, g, b, a);
+	left->SetClickColor(r, g, b, a);
+	right->SetClickColor(r, g, b, a);
+}
 
 void Scroll::DrawUI(int x, int y, int w, int h)
 {
@@ -291,5 +321,7 @@ void Scroll::DrawUI(int x, int y, int w, int h)
 	DrawingUI(drawing);
 
 	//버튼 그리기 양쪽 버튼은 UI길이의 5%
+	left->DrawUI(drawing.x - drawing.h, drawing.y, drawing.h, drawing.h);
+	right->DrawUI(drawing.x + drawing.w, drawing.y, drawing.h, drawing.h);
 	cursor->DrawUI(drawing.x, drawing.y, drawing.w / length, drawing.h);
 }
