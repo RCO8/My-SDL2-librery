@@ -267,13 +267,8 @@ void Bar::DrawUI(int x, int y, int w, int h)
 //Scroll
 void Scroll::CheckCursorButton(SDL_Event e)
 {
-	cursor->CheckMouseAction(e);
-	if (left->CheckMouseAction(e))
-		if(page > 1)
-			page--;
-	if (right->CheckMouseAction(e))
-		if (page < length)
-			page++;
+	if (left->CheckMouseAction(e) && page > 1) page--;
+	if (right->CheckMouseAction(e) && page < length) page++;
 }
 void Scroll::SetCursorButtonColor(SDL_Color color)
 { 
@@ -311,7 +306,6 @@ void Scroll::SetCursorClickedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	left->SetClickColor(r, g, b, a);
 	right->SetClickColor(r, g, b, a);
 }
-
 void Scroll::DrawUI(int x, int y, int w, int h)
 {
 	drawing.x = x;
@@ -319,12 +313,28 @@ void Scroll::DrawUI(int x, int y, int w, int h)
 	drawing.w = w;
 	drawing.h = h;
 
+	cursorBar = drawing;
+
 	//Checking Disable
 	defaultColor = isDisable ? disableColor : backgroundColor;
 	DrawingUI(drawing);
 
+	cursorBar.x = drawing.x + (page - 1) * drawing.w / length;
+	cursorBar.y = drawing.y + (page - 1) * drawing.h / length;
+	cursorBar.w = drawing.w / length;
+	cursorBar.h = drawing.h / length;
+
 	//버튼 그리기 양쪽 버튼은 UI길이의 5%
-	left->DrawUI(drawing.x - drawing.h, drawing.y, drawing.h, drawing.h);
-	right->DrawUI(drawing.x + drawing.w, drawing.y, drawing.h, drawing.h);
-	cursor->DrawUI(drawing.x + (page-1) * drawing.w / length, drawing.y, drawing.w / length, drawing.h);
+	if (direction == BAR_HORIZONTAL)
+	{
+		left->DrawUI(drawing.x - drawing.h, drawing.y, drawing.h, drawing.h);
+		cursor->DrawUI(cursorBar.x, drawing.y, cursorBar.w, drawing.h);
+		right->DrawUI(drawing.x + drawing.w, drawing.y, drawing.h, drawing.h);
+	}
+	else if (direction == BAR_VERTICAL)
+	{
+		left->DrawUI(drawing.x, drawing.y - drawing.w, drawing.w, drawing.w);
+		cursor->DrawUI(drawing.x, cursorBar.y, drawing.w, cursorBar.h);
+		right->DrawUI(drawing.x, drawing.y + drawing.h, drawing.w, drawing.w);
+	}
 }

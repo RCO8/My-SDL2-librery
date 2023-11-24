@@ -85,6 +85,8 @@ public:
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	virtual bool CheckMouseAction(SDL_Event getButtonCheck);
+	bool GetOverMouse() { return isInMouse; }
+	bool GetClickMouse() { return isClick; }
 
 	void DrawUI(int x, int y, int w, int h);
 };
@@ -162,9 +164,13 @@ class Scroll : public UI
 	int page = 1;
 	Button *cursor;
 	Button *left, *right;
+	BAR_DIRECTION direction;
+	SDL_Rect cursorBar;
+	SDL_Rect cursorMove;
 public:
 	Scroll(SDL_Renderer* getRend) : UI(getRend) 
 	{ 
+		direction = BAR_HORIZONTAL;
 		cursor = new Button(getRend);
 		left = new Button(getRend);
 		right = new Button(getRend);
@@ -177,8 +183,7 @@ public:
 		SDL_DestroyRenderer(UIrenderer);
 	}
 
-	static enum Type { Horizontal = 0, Vertical };
-
+	void SetDirection(BAR_DIRECTION dir) { direction = dir; };
 	void CheckCursorButton(SDL_Event e);
 	void SetCursorButtonColor(SDL_Color color);
 	void SetCursorButtonColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
