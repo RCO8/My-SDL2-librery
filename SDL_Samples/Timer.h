@@ -10,6 +10,9 @@ private:
 
     bool isTick = true;
     int hour = 0, minute = 0, second = 0;
+    //알람 설정
+    bool alarm = false;
+    int aHour = 999, aMinute = 59, aSecond = 59;
 public:
     void StartCount()
     {
@@ -32,6 +35,7 @@ public:
                 minute = 0;
             }
             //SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
+            WaitAlarm();
         }
     }
     void StopCount(bool tickOff) { isTick = tickOff; }
@@ -42,6 +46,14 @@ public:
         minute = 0;
         hour = 0;
     }
+
+    void SetAlarm(int h, int m, int s)
+    {
+        aHour = h;
+        aMinute = m;
+        aSecond = s;
+    }
+    bool GetAlarm() { return alarm; }
 
     int GetSecond() { return second; }
     int GetMinute() { return minute; }
@@ -81,4 +93,36 @@ private:
         localtime_s(&pTimeInfo, &nowTime);
         return pTimeInfo;
     }
+    void WaitAlarm()
+    {
+        if (hour >= aHour && minute >= aMinute && second >= aSecond) alarm = true;
+        else alarm = false;
+    }
+};
+
+class Timeline  //스레드 구현 필요
+{
+private:
+    unsigned int count;
+    int ms = 100;
+public:
+    //count가 0이면 무한반복
+    void LoopFrame(int count = 1)  //끝까지 갔으면 처음부터
+    {
+        int tmp = 0;
+        while (tmp <= count)
+        {
+            SDL_Delay(ms);
+            if (count > 0) tmp++;
+        }
+    }
+    void ReverseFrame(int count = 1)   //끝까지 갔으면 거꾸로
+    {
+        SDL_Delay(ms);
+    }
+    void CustomFrame(int count, int* frameIndex)   //배열로 프레임 지정
+    {
+        SDL_Delay(ms);
+    }
+    void SetDelayTime(int ms) { this->ms = ms; }
 };
