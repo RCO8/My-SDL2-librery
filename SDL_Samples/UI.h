@@ -28,11 +28,13 @@ protected:
 	SDL_Texture* fontTexture;
 	int fontSize = 30;	//폰트 크기
 	SDL_Rect fontRct = { 0,0,0,0 };	//폰트 크기 및 위치를 맞출 사각형
+
 public:
 	UI(SDL_Renderer *getRend) : UIrenderer(getRend) 
 	{
 		if (TTF_Init() == -1) this->~UI();
 		font = TTF_OpenFont("HanSantteutDotum-Bold.ttf", fontSize);
+		
 	}
 	~UI()
 	{
@@ -61,6 +63,7 @@ public:
 	void DrawText(int x, int y, int w, int h);
 
 	void SetDisableUI(bool b) { isDisable = b; }
+
 
 protected:
 	void DrawingUI(SDL_Rect rect);	//화면에 그려질 메서드

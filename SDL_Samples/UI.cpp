@@ -59,7 +59,7 @@ void UI::SetUIText(const char* str)
 	int getStrLength = SDL_strlen(str);
 	for(int i=0;i<getStrLength;i++)
 		text[i] = str[i];
-	fontSurface = TTF_RenderText_Blended(font, text, fontColor);
+	fontSurface = TTF_RenderText_Blended(font, str, fontColor);
 	fontTexture = SDL_CreateTextureFromSurface(UIrenderer, fontSurface);
 }
 void UI::DrawUI(int x, int y, int w, int h)
@@ -73,6 +73,7 @@ void UI::DrawUI(int x, int y, int w, int h)
 	defaultColor = isDisable ? disableColor : backgroundColor;
 	DrawingUI(drawing);
 	DrawText(drawing.x, drawing.y, drawing.w, drawing.h);
+
 }
 void UI::DrawText(int x, int y, int w, int h)
 {
@@ -87,16 +88,19 @@ void UI::DrawText(int x, int y, int w, int h)
 	drawing.w -= fontRct.w + fontRct.x;
 	drawing.h -= fontRct.h + fontRct.y;
 	SDL_RenderCopy(UIrenderer, fontTexture, NULL, &drawing);	//폰트를 사각형 안에 그리기
+
 }
 void UI::DrawingUI(SDL_Rect rect)
 {
 	//background color
+	SDL_SetRenderDrawBlendMode(UIrenderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(UIrenderer,
 		defaultColor.r, defaultColor.g,
 		defaultColor.b, defaultColor.a);
 	SDL_RenderFillRect(UIrenderer, &drawing);
 
 	//overline color
+	SDL_SetRenderDrawBlendMode(UIrenderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(UIrenderer,
 		overlineColor.r, overlineColor.g,
 		overlineColor.b, overlineColor.a);
