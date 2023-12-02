@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-
+#include <GL/GL.h>
 class Gradation
 {
 private:
