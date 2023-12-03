@@ -56,6 +56,12 @@ void Sprite::SetColorHide(SDL_Color setColor)
 	SDL_SetColorKey(imageFile, SDL_TRUE, Color);	//파일의 배경색으로 지정
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);	//다시 파일을 Renderer로 갱신
 }
+void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	Color = SDL_MapRGB(imageFile->format, r, g, b);	//파일의 색을 Color에 지정
+	SDL_SetColorKey(imageFile, SDL_TRUE, Color);	//파일의 배경색으로 지정
+	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);	//다시 파일을 Renderer
+}
 //화면에 그리기
 void Sprite::Drawing(int x, int y, int dir, int mirror)
 {
