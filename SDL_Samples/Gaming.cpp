@@ -6,7 +6,6 @@ const int windowHeight = 480;
 bool Gaming::GameInit()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-
     window = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
     if (window == NULL)
@@ -24,20 +23,10 @@ bool Gaming::GameInit()
     //Resouce Setting
     SDL_Color bgImgColor = { 34,177,76 };
 
-    greenRichard = new Sprite(renderer, "green_richard.png");
-    greenRichard->SetSpriteClip(32, 0, 32, 32);
-    greenRichard->SetRotatePoint(greenRichard->GetClipWidth() / 2, greenRichard->GetClipHeight() / 2);
-
-    soundEffect = new Sound("Die.wav");
-
-    soundMusic = new Music("Die.wav");
-
-    barInterface = new Bar(renderer);
-    barInterface->SetBackgroundColor(0, 0, 255);
-    barInterface->SetNowProgressColor(255, 0, 0);
-    barInterface->SetNowProgress(65);
-    barInterface->SetDirection(BAR_VERTICAL);
-
+    Text = new UI(renderer);
+    Text->SetBackgroundColor(0, 0, 0, 64);
+    Text->SetFontColor(255, 0, 0, 128);
+    Text->SetUIText("ABC");
     return true;
 }
 
@@ -70,6 +59,12 @@ void Gaming::CheckKeyPress()
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
+            default:
+                break;
+            }
+        case SDL_KEYMAPCHANGED:
+            switch (event.key.keysym.scancode)
+            {
             case SDL_SCANCODE_UP:       //SDL_Log("Up");
                 break;
             case SDL_SCANCODE_DOWN:     //SDL_Log("Down");
@@ -100,11 +95,15 @@ void Gaming::CheckKeyPress()
                 break;
             case SDL_SCANCODE_ESCAPE:   //SDL_Log("Escape");
                 break;
+            default:
+                break;
             }
         case SDL_KEYUP:
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
-            { }
-            break;
+            { 
+            default:
+                break;
+            }
 
             //Mouse Check
         case SDL_MOUSEBUTTONDOWN:
@@ -157,12 +156,12 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     SDL_RenderClear(renderer);  //Screen Clear   //Fill Color in Screen
     
     //Draw Image
-    greenRichard->Drawing(80, 50, 0);
 
     //Draw UI
-    barInterface->DrawUI(30, 180, 130, 30);
-
+    Text->DrawUI(0, 0, 150, 50);
     SDL_RenderPresent(renderer);    //Redraw at Screen
+
+    //Ä«¸Þ¶ó ºä
 }
 
 void Gaming::GameRun()

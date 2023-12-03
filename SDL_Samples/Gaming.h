@@ -14,13 +14,9 @@ private:
     SDL_Event event;    //입력 이벤트
 
     Timer mTimer;
-    Sprite* greenRichard;
     Bar* barInterface;
-    Sound* soundEffect;
-    Music* soundMusic;
+    UI* Text;
 
-    int x = 30;
-    int y = 50;
     bool isClick = false;
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
