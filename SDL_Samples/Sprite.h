@@ -21,6 +21,7 @@ public:
 	~Sprite();
 
 	void SetSpriteClip(int x, int y, int w, int h);	//이미지 파일의 일부를 나타낼 설정
+	void SetSpriteClip(SDL_Rect rct);
 	void SetSpriteScale(int w, int h);				//크기 설정
 	void SetRotatePoint(int x, int y);				//중심점 지정
 	void SetColorHide(SDL_Color setColor);			//투명색 설정

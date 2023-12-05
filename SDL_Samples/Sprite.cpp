@@ -37,6 +37,8 @@ void Sprite::SetSpriteClip(int x, int y, int w, int h)
 	sprRct.w = w;
 	sprRct.h = h;
 }
+void Sprite::SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
+
 //크기 설정
 void Sprite::SetSpriteScale(int w, int h)
 {
