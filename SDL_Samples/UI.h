@@ -63,8 +63,6 @@ public:
 	void DrawText(int x, int y, int w, int h);
 
 	void SetDisableUI(bool b) { isDisable = b; }
-
-
 protected:
 	void DrawingUI(SDL_Rect rect);	//화면에 그려질 메서드
 private:
@@ -87,7 +85,9 @@ public:
 	void SetClickColor(SDL_Color color);
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
-	virtual bool CheckMouseAction(SDL_Event getButtonCheck);
+	virtual bool CheckMouseAction(SDL_Event getEvent);
+	virtual bool CheckOverAction(bool event);
+	virtual bool CheckClickAction(bool event);
 	bool GetOverMouse() { return isInMouse; }
 	bool GetClickMouse() { return isClick; }
 
@@ -154,7 +154,7 @@ public:
 	int GetNowProgress() { return nowProgress; }
 	int GetMaximun() { return maximum; }
 
-	void SetDirection(BAR_DIRECTION dir) { direction = dir; };
+	void SetDirection(BAR_DIRECTION dir) { direction = dir; };	//BAR_HORIZONTAL or BAR_VERTICAL로 전달 가능
 	void SetNowProgressColor(SDL_Color color);
 	void SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 

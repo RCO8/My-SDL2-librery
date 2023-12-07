@@ -1,7 +1,6 @@
 #include "UI.h"
 
-void UI::SetBackgroundColor(SDL_Color color)
-{ backgroundColor = color; }
+void UI::SetBackgroundColor(SDL_Color color) { backgroundColor = color; }
 void UI::SetBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	backgroundColor.r = r;
@@ -9,8 +8,7 @@ void UI::SetBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	backgroundColor.b = b;
 	backgroundColor.a = a;
 }
-void UI::SetOverlineColor(SDL_Color color)
-{ overlineColor = color; }
+void UI::SetOverlineColor(SDL_Color color) { overlineColor = color; }
 void UI::SetOverlineColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	overlineColor.r = r;
@@ -18,8 +16,7 @@ void UI::SetOverlineColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	overlineColor.b = b;
 	overlineColor.a = a;
 }
-void UI::SetDisableColor(SDL_Color color)
-{ disableColor = color; }
+void UI::SetDisableColor(SDL_Color color) { disableColor = color; }
 void UI::SetDisableColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	disableColor.r = r;
@@ -108,10 +105,7 @@ void UI::DrawingUI(SDL_Rect rect)
 }
 
 //Button
-void Button::SetOverMouseColor(SDL_Color color)
-{
-	overMouseColor = color;
-}
+void Button::SetOverMouseColor(SDL_Color color) { overMouseColor = color; }
 void Button::SetOverMouseColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	overMouseColor.r = r;
@@ -119,10 +113,7 @@ void Button::SetOverMouseColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	overMouseColor.b = b;
 	overMouseColor.a = a;
 }
-void Button::SetClickColor(SDL_Color color)
-{
-	clickColor = color;
-}
+void Button::SetClickColor(SDL_Color color) { clickColor = color; }
 void Button::SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	clickColor.r = r;
@@ -159,10 +150,22 @@ bool Button::CheckMouseAction(SDL_Event getEvent)
 	}
 	return isClick;
 }
+bool Button::CheckOverAction(bool event)
+{
+	isInMouse = event;
+	return isInMouse;
+}
+bool Button::CheckClickAction(bool event)
+{
+	//마우스로 받는 이벤트가 아닌
+	//키를 입력해서 활성을 설정
+	//키보드를 누르거나 인덱스로 묶인 요소를 활성
+	isClick = event;
+	return isClick;
+}
 
 //Toggle
-void Toggle::SetCheckedColor(SDL_Color color)
-{ checkedColor = color; }
+void Toggle::SetCheckedColor(SDL_Color color) { checkedColor = color; }
 void Toggle::SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	checkedColor.r = r;
@@ -219,8 +222,7 @@ void Toggle::DrawUI(int x, int y, int l)
 }
 
 //Bar
-void Bar::SetNowProgressColor(SDL_Color color)
-{ progressingColor = color; }
+void Bar::SetNowProgressColor(SDL_Color color) { progressingColor = color; }
 void Bar::SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	progressingColor.r = r;
