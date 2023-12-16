@@ -19,6 +19,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 		this->~Sprite();
 	}
 	
+	SetSpriteClip(0, 0, GetImageWidth(), GetImageHeight());
 	SetRotatePoint(0, 0);
 }
 //스프라이트 제거
@@ -40,8 +41,10 @@ void Sprite::SetSpriteClip(int x, int y, int w, int h)
 void Sprite::SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
 
 //크기 설정
-void Sprite::SetSpriteScale(int w, int h)
+void Sprite::SetSpriteScale(float w, float h)
 {
+	SDL_SetTextureScaleMode(sprTexture, SDL_ScaleModeNearest);	//축척 모드 실수형으로 정의
+
 	scaleWidth = w;
 	scaleHeight = h;
 }
@@ -60,9 +63,9 @@ void Sprite::SetColorHide(SDL_Color setColor)
 }
 void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	Color = SDL_MapRGB(imageFile->format, r, g, b);	//파일의 색을 Color에 지정
-	SDL_SetColorKey(imageFile, SDL_TRUE, Color);	//파일의 배경색으로 지정
-	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);	//다시 파일을 Renderer
+	Color = SDL_MapRGB(imageFile->format, r, g, b);
+	SDL_SetColorKey(imageFile, SDL_TRUE, Color);
+	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }
 //화면에 그리기
 void Sprite::Drawing(int x, int y, int dir, int mirror)
@@ -74,6 +77,8 @@ void Sprite::Drawing(int x, int y, int dir, int mirror)
 
 	if (dir >= 360) dir -= 360;
 	if (dir <= -360) dir -= 360;
+
+	SDL_RenderSetScale(sprRenderer, scaleWidth, scaleHeight);
 
 	SDL_RenderCopyEx(sprRenderer, sprTexture, &sprRct, &scrnRct,
 		dir, &rotatePoint, mirror ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);

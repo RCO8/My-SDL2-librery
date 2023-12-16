@@ -15,14 +15,14 @@ private:
 	Uint32 Color = 0;			//투명한 배경색으로 설정하기 위한 속성
 	SDL_Point rotatePoint;		//스프라이트 회전중심점
 
-	int scaleWidth = 1, scaleHeight = 1;	//확대 배율
+	float scaleWidth = 1, scaleHeight = 1;	//확대 배율
 public:
 	Sprite(SDL_Renderer* getRenderer, const char* fileName);
 	~Sprite();
 
 	void SetSpriteClip(int x, int y, int w, int h);	//이미지 파일의 일부를 나타낼 설정
 	void SetSpriteClip(SDL_Rect rct);
-	void SetSpriteScale(int w, int h);				//크기 설정
+	void SetSpriteScale(float w, float h);				//크기 설정
 	void SetRotatePoint(int x, int y);				//중심점 지정
 	void SetColorHide(SDL_Color setColor);			//투명색 설정
 	void SetColorHide(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
