@@ -36,12 +36,7 @@ public:
 	int GetClipWidth() const { return sprRct.w * scaleWidth; }
 	int GetClipHeight() const { return sprRct.h * scaleHeight; }
 
-	void SetColorBlend(SDL_Color setColor);	//해당 색상으로 블렌드
+	void SetColorBlend(Uint8 r, Uint8 g, Uint8 b);	//해당 색상으로 블렌드
+	void SetColorBlend(SDL_Color setColor);	
 	void SetImageAlpha(Uint8 a);		//스프라이트 투명도
-											/*여기서 확장 및 필요한 요소*/
-
-	//컬러 팔레트 스왑 (픽셀에 색을 선택하면 다른색으로 변환)
-	//흑백, 반전
-	void SetImageGrey();	//이미지 흑백화
-	void SetImageNegative();	//이미지 색반전
 };
