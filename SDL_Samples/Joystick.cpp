@@ -1,4 +1,5 @@
 #include "Joystick.h"
+#include <cmath>
 
 Joystick::Joystick()
 {
@@ -21,58 +22,36 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 {
 		switch (event.type)
 		{
+		//각 버튼에 인덱스가 눌렀는지 참거짓으로 판별후 GetButton으로 반환
 		case SDL_JOYBUTTONDOWN:
 			for (int i = 0; i < SDL_NumJoysticks(); i++)
 				if (i == event.jbutton.which)
-					switch (event.jbutton.button)
-					{
-					case 0:		//SDL_Log("Play %d Button 0", i + 1);
-						break;
-					case 1:		//SDL_Log("Play %d Button 1", i + 1);
-						break;
-					case 2:		//SDL_Log("Play %d Button 2", i + 1);
-						break;
-					case 3:		//SDL_Log("Play %d Button 3", i + 1);
-						break;
-					case 4:		//SDL_Log("Play %d Button 4", i + 1);
-						break;
-					case 5:		//SDL_Log("Play %d Button 5", i + 1);
-						break;
-					case 6:		//SDL_Log("Play %d Button 6", i + 1);
-						break;
-					case 7:		//SDL_Log("Play %d Button 7", i + 1);
-						break;
-					case 8:		//SDL_Log("Play %d Button 8", i + 1);
-						break;
-					case 9:		//SDL_Log("Play %d Button 9", i + 1);
-						break;
-					case 10:	//SDL_Log("Play %d Button 10", i + 1);
-						break;
-					case 11:	//SDL_Log("Play %d Button 11", i + 1);
-						break;
-					}
+					GetButtons[i][event.jbutton.button] = true;
+			break;
+		case SDL_JOYBUTTONUP:
+			for (int i = 0; i < SDL_NumJoysticks(); i++)
+				if (i == event.jbutton.which)
+					GetButtons[i][event.jbutton.button] = false;
 			break;
 		case SDL_JOYAXISMOTION:
 			for (int i = 0; i < SDL_NumJoysticks(); i++)
 				if (i == event.jbutton.which)
-					switch (event.jaxis.axis)
+					switch (event.jaxis.axis)//Horizontal
 					{
-					case 0:	//Horizontal
+					case 0:
 						switch (event.jaxis.value)
 						{
-						case SDL_JOYSTICK_AXIS_MIN:	//SDL_Log("Play %d Joystick Left", i + 1);
-							break;
-						case SDL_JOYSTICK_AXIS_MAX:	//SDL_Log("Play %d Joystick Right", i + 1);
-							break;
+							case SDL_JOYSTICK_AXIS_MIN: GetAxisX[i] = -1;	break;
+							case SDL_JOYSTICK_AXIS_MAX: GetAxisX[i] = 1;	break;
+							default: GetAxisX[i] = 0;
 						}
 						break;
-					case 1:	//Vertical
+					case 1:
 						switch (event.jaxis.value)
 						{
-						case SDL_JOYSTICK_AXIS_MIN:	//SDL_Log("Play %d Joystick Up", i + 1);
-							break;
-						case SDL_JOYSTICK_AXIS_MAX:	//SDL_Log("Play %d Joystick Down", i + 1);
-							break;
+							case SDL_JOYSTICK_AXIS_MIN: GetAxisY[i] = -1;	break;
+							case SDL_JOYSTICK_AXIS_MAX: GetAxisY[i] = 1;	break;
+							default: GetAxisY[i] = 0;
 						}
 						break;
 					}
@@ -82,38 +61,39 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 				if (i == event.jbutton.which)
 					switch (event.jhat.value)
 					{
-					case SDL_HAT_UP:		//SDL_Log("Play %d Hat ↑", i + 1);
-						break;
-					case SDL_HAT_LEFTUP:	//SDL_Log("Play %d Hat ↖", i + 1);
-						break;
-					case SDL_HAT_LEFT:		//SDL_Log("Play %d Hat ←", i + 1);
-						break;
-					case SDL_HAT_LEFTDOWN:	//SDL_Log("Play %d Hat ↙", i + 1);
-						break;
-					case SDL_HAT_DOWN:		//SDL_Log("Play %d Hat ↓", i + 1);
-						break;
-					case SDL_HAT_RIGHTDOWN:	//SDL_Log("Play %d Hat ↘", i + 1);
-						break;
-					case SDL_HAT_RIGHT:		//SDL_Log("Play %d Hat →", i + 1);
-						break;
-					case SDL_HAT_RIGHTUP:	//SDL_Log("Play %d Hat ↗", i + 1);
-						break;
+					case SDL_HAT_CENTERED:
+						GetHatSwitches[i] = 0; break;
+					case SDL_HAT_UP:
+						GetHatSwitches[i] = 1; break;
+					case SDL_HAT_RIGHTUP:
+						GetHatSwitches[i] = 2; break;
+					case SDL_HAT_RIGHT:
+						GetHatSwitches[i] = 3; break;
+					case SDL_HAT_RIGHTDOWN:
+						GetHatSwitches[i] = 4; break;
+					case SDL_HAT_DOWN:
+						GetHatSwitches[i] = 5; break;
+					case SDL_HAT_LEFTDOWN:
+						GetHatSwitches[i] = 6; break;
+					case SDL_HAT_LEFT:
+						GetHatSwitches[i] = 7; break;
+					case SDL_HAT_LEFTUP:
+						GetHatSwitches[i] = 8; break;
 					}
 			break;
 		case SDL_JOYDEVICEADDED:
 			//조이스틱이 추가 연결될 시 인덱스 증가
 			//maxJoystickIndex보다 초과시 연결 거부
-			myJoystick = SDL_JoystickOpen(SDL_NumJoysticks()-1);
-			SDL_Log("%d", SDL_NumJoysticks());
 		case SDL_JOYDEVICEREMOVED:
 			//인덱스 감소 만약에 중간값이라면 앞으로 당기도록
 			//그리고 인덱스가 하나라면 그대로 소멸자 호출
-			SDL_Log("%d", SDL_NumJoysticks());
-			if (SDL_NumJoysticks() == 1)
-				this->~Joystick();
 			break;
 		//Extention Device
 		case SDL_JOYBATTERYUPDATED:	//Checking Battery If Device has Wiress Connect
+			SDL_Log("Battery");
+			break;
+		case SDL_JOYBALLMOTION:
+			SDL_Log("Track Ball");
 			break;
 		}
 }
@@ -142,6 +122,24 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 	switch (event.type)
 	{
 		case SDL_CONTROLLERDEVICEREMAPPED:
+			switch (event.cdevice.type)
+			{
+			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
+				break;
+			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+				break;
+			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
+				break;
+			case SDL_CONTROLLER_TYPE_PS3:
+			case SDL_CONTROLLER_TYPE_PS4:
+			case SDL_CONTROLLER_TYPE_PS5:
+				break;
+			case SDL_CONTROLLER_TYPE_XBOX360:
+			case SDL_CONTROLLER_TYPE_XBOXONE:
+				break;
+			case SDL_CONTROLLER_TYPE_UNKNOWN:
+				break;
+			}
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
@@ -155,13 +153,17 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 					break;
 				case SDL_CONTROLLER_BUTTON_Y:	SDL_Log("Button Y");
 					break;
-				case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:	SDL_Log("Left Button");
+				case SDL_CONTROLLER_BUTTON_BACK:			SDL_Log("Back");
+					break;
+				case SDL_CONTROLLER_BUTTON_START:			SDL_Log("Start");
 					break;
 				case SDL_CONTROLLER_BUTTON_LEFTSTICK:		SDL_Log("Left Stick");
 					break;
-				case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:	SDL_Log("Right Button");
-					break;
 				case SDL_CONTROLLER_BUTTON_RIGHTSTICK:		SDL_Log("Right Stick");
+					break;
+				case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:	SDL_Log("Left Button");
+					break;
+				case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:	SDL_Log("Right Button");
 					break;
 				case SDL_CONTROLLER_BUTTON_DPAD_UP:			SDL_Log("DPAD UP");
 					break;
@@ -170,10 +172,6 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 				case SDL_CONTROLLER_BUTTON_DPAD_LEFT:		SDL_Log("DPAD LEFT");
 					break;
 				case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:		SDL_Log("DPAD RIGHT");
-					break;
-				case SDL_CONTROLLER_BUTTON_START:			SDL_Log("Start");
-					break;
-				case SDL_CONTROLLER_BUTTON_BACK:			SDL_Log("Back");
 					break;
 
 				//extend device
@@ -200,6 +198,8 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			switch (event.caxis.axis)
 			{
 				case SDL_CONTROLLER_AXIS_LEFTX:		SDL_Log("Left X : %d", event.caxis.value);
+					if (event.caxis.value > stickDead || event.caxis.value < -stickDead)
+						SDL_Log("데드존 활성");
 					break;
 				case SDL_CONTROLLER_AXIS_LEFTY:		SDL_Log("Left Y : %d", event.caxis.value);
 					break;
@@ -222,6 +222,10 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 
 		case SDL_CONTROLLERTOUCHPADMOTION:
 			SDL_Log("Touch Pad : (%d, %d)", event.ctouchpad.x, event.ctouchpad.y);
+			if (event.ctouchpad.finger)
+			{
+				SDL_Log("Touch Pad Touch");
+			}
 			break;
 		case SDL_CONTROLLERSENSORUPDATE:
 			switch (event.csensor.sensor)
@@ -242,7 +246,7 @@ void GamePad::SetAxisDead(int deadzone)
 		return;
 	}
 	else
-		stickDead = deadzone;
+		stickDead = abs(deadzone);
 }
 void GamePad::SetControllerWave(int ms, int level)
 {

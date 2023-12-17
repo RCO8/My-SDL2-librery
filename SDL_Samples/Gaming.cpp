@@ -8,6 +8,7 @@ bool Gaming::GameInit()
     SDL_Init(SDL_INIT_EVERYTHING);
     window = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
+
     if (window == NULL)
     {
         SDL_Log("Failed Init Window : %s \n", SDL_GetError());
@@ -21,12 +22,7 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    SDL_Color bgImgColor = { 34,177,76 };
-
-    Text = new UI(renderer);
-    Text->SetBackgroundColor(0, 0, 0, 64);
-    Text->SetFontColor(255, 0, 0, 128);
-    Text->SetUIText("ABC");
+    gPad = new Joystick();
     return true;
 }
 
@@ -95,8 +91,6 @@ void Gaming::CheckKeyPress()
                 break;
             case SDL_SCANCODE_ESCAPE:   //SDL_Log("Escape");
                 break;
-            default:
-                break;
             }
         case SDL_KEYUP:
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
@@ -142,6 +136,7 @@ void Gaming::CheckKeyPress()
         }
 
         //추가적인 입력 디바이스가 있다면 여기로 메서드 호출
+        gPad->CheckJoystickEvent(event);
     }
 }
 void Gaming::UpdateData()
@@ -149,6 +144,7 @@ void Gaming::UpdateData()
     //게임 내 변형된 데이터를 여기에 갱신
     //만약에 이벤트에 적용을 하지 않는다면
     //mTimer.StartCount();
+    //SDL_Log("JoyStick : %d, %d", gPad->GetAxisX[0], gPad->GetAxisY[0]);
 }
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
@@ -158,7 +154,7 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     //Draw Image
 
     //Draw UI
-    Text->DrawUI(0, 0, 150, 50);
+
     SDL_RenderPresent(renderer);    //Redraw at Screen
 
     //카메라 뷰
