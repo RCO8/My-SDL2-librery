@@ -12,26 +12,21 @@ Joystick::Joystick()
 		this->~Joystick();
 	}
 }
-
-Joystick::~Joystick()
-{
-	SDL_JoystickClose(myJoystick);
-}
-
+Joystick::~Joystick() { SDL_JoystickClose(myJoystick); }
 void Joystick::CheckJoystickEvent(SDL_Event event)
 {
-		switch (event.type)
-		{
+	switch (event.type)
+	{
 		//각 버튼에 인덱스가 눌렀는지 참거짓으로 판별후 GetButton으로 반환
 		case SDL_JOYBUTTONDOWN:
 			for (int i = 0; i < SDL_NumJoysticks(); i++)
 				if (i == event.jbutton.which)
-					GetButtons[i][event.jbutton.button] = true;
+					Buttons[i][event.jbutton.button] = true;
 			break;
 		case SDL_JOYBUTTONUP:
 			for (int i = 0; i < SDL_NumJoysticks(); i++)
 				if (i == event.jbutton.which)
-					GetButtons[i][event.jbutton.button] = false;
+					Buttons[i][event.jbutton.button] = false;
 			break;
 		case SDL_JOYAXISMOTION:
 			for (int i = 0; i < SDL_NumJoysticks(); i++)
@@ -41,17 +36,17 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 					case 0:
 						switch (event.jaxis.value)
 						{
-							case SDL_JOYSTICK_AXIS_MIN: GetAxisX[i] = -1;	break;
-							case SDL_JOYSTICK_AXIS_MAX: GetAxisX[i] = 1;	break;
-							default: GetAxisX[i] = 0;
+							case SDL_JOYSTICK_AXIS_MIN: AxisX[i] = -1;	break;
+							case SDL_JOYSTICK_AXIS_MAX: AxisX[i] = 1;	break;
+							default: AxisX[i] = 0;
 						}
 						break;
 					case 1:
 						switch (event.jaxis.value)
 						{
-							case SDL_JOYSTICK_AXIS_MIN: GetAxisY[i] = -1;	break;
-							case SDL_JOYSTICK_AXIS_MAX: GetAxisY[i] = 1;	break;
-							default: GetAxisY[i] = 0;
+							case SDL_JOYSTICK_AXIS_MIN: AxisY[i] = -1;	break;
+							case SDL_JOYSTICK_AXIS_MAX: AxisY[i] = 1;	break;
+							default: AxisY[i] = 0;
 						}
 						break;
 					}
@@ -62,23 +57,23 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 					switch (event.jhat.value)
 					{
 					case SDL_HAT_CENTERED:
-						GetHatSwitches[i] = 0; break;
+						HatSwitches[i] = 0; break;
 					case SDL_HAT_UP:
-						GetHatSwitches[i] = 1; break;
+						HatSwitches[i] = 1; break;
 					case SDL_HAT_RIGHTUP:
-						GetHatSwitches[i] = 2; break;
+						HatSwitches[i] = 2; break;
 					case SDL_HAT_RIGHT:
-						GetHatSwitches[i] = 3; break;
+						HatSwitches[i] = 3; break;
 					case SDL_HAT_RIGHTDOWN:
-						GetHatSwitches[i] = 4; break;
+						HatSwitches[i] = 4; break;
 					case SDL_HAT_DOWN:
-						GetHatSwitches[i] = 5; break;
+						HatSwitches[i] = 5; break;
 					case SDL_HAT_LEFTDOWN:
-						GetHatSwitches[i] = 6; break;
+						HatSwitches[i] = 6; break;
 					case SDL_HAT_LEFT:
-						GetHatSwitches[i] = 7; break;
+						HatSwitches[i] = 7; break;
 					case SDL_HAT_LEFTUP:
-						GetHatSwitches[i] = 8; break;
+						HatSwitches[i] = 8; break;
 					}
 			break;
 		case SDL_JOYDEVICEADDED:
@@ -95,10 +90,8 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 		case SDL_JOYBALLMOTION:
 			SDL_Log("Track Ball");
 			break;
-		}
+	}
 }
-
-
 
 GamePad::GamePad(int index)
 {
@@ -111,11 +104,7 @@ GamePad::GamePad(int index)
 	}
 	SDL_Log("Controller Connected \nName is %s", SDL_GameControllerName(gameController));
 }
-
-GamePad::~GamePad()
-{
-	SDL_GameControllerClose(gameController);
-}
+GamePad::~GamePad() { SDL_GameControllerClose(gameController); }
 
 void GamePad::CheckGamepadEvent(SDL_Event event)
 {

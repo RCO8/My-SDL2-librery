@@ -13,14 +13,20 @@ private:
 
 	/* Need checking batter what joystick is wiress*/
 	float checkBattery[8];
+
+	//이 속성들은 Gaming같은 클래스에 상호작용을 하기 위해서 값으로 반환
+	int AxisX[8], AxisY[8];
+	int HatSwitches[8];
+	bool Buttons[8][12];
 public:
 	Joystick();
 	~Joystick();
 	void CheckJoystickEvent(SDL_Event event);
-	//이 속성들은 Gaming같은 클래스에 상호작용을 하기 위해서 값으로 반환
-	int GetAxisX[8], GetAxisY[8];
-	int GetHatSwitches[8];
-	bool GetButtons[8][12];
+	//현재 디바이스에서 동작한 값을 매겨 반환
+	int GetAxisX(int idx) { return AxisX[idx]; }
+	int GetAxisY(int idx) { return AxisY[idx]; }
+	int GetHatSwitches(int idx) { return HatSwitches[idx]; }
+	bool GetButtons(int idx, int btn) { return Buttons[idx][btn]; }
 };
 
 //Console ver
