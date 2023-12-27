@@ -38,8 +38,12 @@ private:
 	char* gamePadName;
 
 	const int maxAxis = 32768;    //Controller Max Axis
-	int stickDead;
+	int stickDead = 10000;
 	float checkBattery;
+	
+	//이 축은 스틱을 움직였을 때 데드존이 넘었는지 아님 데드존 이하일 때 동작하는지
+	int StickLeftAxis[2] = { 0,0 };
+	int StickRightAxis[2] = { 0,0 };
 public:
 	GamePad(int index);
 	~GamePad();
