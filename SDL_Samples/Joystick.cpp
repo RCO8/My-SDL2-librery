@@ -189,39 +189,27 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			{
 				case SDL_CONTROLLER_AXIS_LEFTX:		//SDL_Log("Left X : %d", event.caxis.value);
 					StickLeftAxis[0] = 1;
-					if (event.caxis.value > stickDead || event.caxis.value < -stickDead)
-						StickLeftAxis[0] = 2;
-					if (event.caxis.value < 0)
-						StickLeftAxis[0] *= -1;
-					if (event.caxis.value == 0)
-						StickLeftAxis[0] = 0;
+					if (SDL_abs(event.caxis.value) > stickDead) StickLeftAxis[0] = 2;
+					if (event.caxis.value < 0) StickLeftAxis[0] *= -1;
+					if (event.caxis.value == 0) StickLeftAxis[0] = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_LEFTY:		//SDL_Log("Left Y : %d", event.caxis.value);
 					StickLeftAxis[1] = 1;
-					if (event.caxis.value > stickDead || event.caxis.value < -stickDead)
-						StickLeftAxis[1] = 2;
-					if (event.caxis.value > 0)
-						StickLeftAxis[1] *= -1;
-					if (event.caxis.value == -1)
-						StickLeftAxis[1] = 0;
+					if (SDL_abs(event.caxis.value) > stickDead) StickLeftAxis[1] = 2;
+					if (event.caxis.value > 0) StickLeftAxis[1] *= -1;
+					if (event.caxis.value == -1) StickLeftAxis[1] = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTX:	//SDL_Log("Right X : %d", event.caxis.value);
 					StickRightAxis[0] = 1;
-					if (event.caxis.value > stickDead || event.caxis.value < -stickDead)
-						StickRightAxis[0] = 2;
-					if (event.caxis.value < 0)
-						StickRightAxis[0] *= -1;
-					if (event.caxis.value == 0)
-						StickRightAxis[0] = 0;
+					if (SDL_abs(event.caxis.value) > stickDead) StickRightAxis[0] = 2;
+					if (event.caxis.value < 0) StickRightAxis[0] *= -1;
+					if (event.caxis.value == 0) StickRightAxis[0] = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTY:	//SDL_Log("Right Y : %d", event.caxis.value);
 					StickRightAxis[1] = 1;
-					if (event.caxis.value > stickDead || event.caxis.value < -stickDead)
-						StickRightAxis[1] = 2;
-					if (event.caxis.value < 0)
-						StickRightAxis[1] *= -1;
-					if (event.caxis.value == -1)
-						StickRightAxis[1] = 0;
+					if (SDL_abs(event.caxis.value) > stickDead) StickRightAxis[1] = 2;
+					if (event.caxis.value < 0) StickRightAxis[1] *= -1;
+					if (event.caxis.value == -1) StickRightAxis[1] = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:	SDL_Log("Left Trigger : %d", event.caxis.value);
 					break;
@@ -235,7 +223,6 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 					break;
 			}
 			break;
-
 		case SDL_CONTROLLERTOUCHPADMOTION:
 			SDL_Log("Touch Pad : (%d, %d)", event.ctouchpad.x, event.ctouchpad.y);
 			if (event.ctouchpad.finger)
