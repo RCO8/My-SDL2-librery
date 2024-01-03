@@ -167,14 +167,14 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 				//extend device
 				case SDL_CONTROLLER_BUTTON_TOUCHPAD:	SDL_Log("Touch Pad");
 					break;
-				case SDL_CONTROLLER_BUTTON_GUIDE:
 				case SDL_CONTROLLER_BUTTON_INVALID:
-				case SDL_CONTROLLER_BUTTON_MAX:
+				case SDL_CONTROLLER_BUTTON_GUIDE:
 				case SDL_CONTROLLER_BUTTON_MISC1:
 				case SDL_CONTROLLER_BUTTON_PADDLE1:
 				case SDL_CONTROLLER_BUTTON_PADDLE2:
 				case SDL_CONTROLLER_BUTTON_PADDLE3:
 				case SDL_CONTROLLER_BUTTON_PADDLE4:
+				case SDL_CONTROLLER_BUTTON_MAX:
 					break;
 			}
 			break;
@@ -188,32 +188,41 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			switch (event.caxis.axis)
 			{
 				case SDL_CONTROLLER_AXIS_LEFTX:		//SDL_Log("Left X : %d", event.caxis.value);
-					StickLeftAxis[0] = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) StickLeftAxis[0] = 2;
-					if (event.caxis.value < 0) StickLeftAxis[0] *= -1;
-					if (event.caxis.value == 0) StickLeftAxis[0] = 0;
+					LeftStick.x = event.caxis.value;
+					//데드존 체크
+					LeftStick.deadx = 1;
+					if (SDL_abs(event.caxis.value) > stickDead) LeftStick.deadx = 2;
+					if (event.caxis.value < 0) LeftStick.deadx *= -1;
+					if (event.caxis.value == 0) LeftStick.deadx = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_LEFTY:		//SDL_Log("Left Y : %d", event.caxis.value);
-					StickLeftAxis[1] = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) StickLeftAxis[1] = 2;
-					if (event.caxis.value > 0) StickLeftAxis[1] *= -1;
-					if (event.caxis.value == -1) StickLeftAxis[1] = 0;
+					LeftStick.y = event.caxis.value;
+					LeftStick.deady = 1;
+					if (SDL_abs(event.caxis.value) > stickDead) LeftStick.deady = 2;
+					if (event.caxis.value > 0) LeftStick.deady *= -1;
+					if (event.caxis.value == -1) LeftStick.deady = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTX:	//SDL_Log("Right X : %d", event.caxis.value);
-					StickRightAxis[0] = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) StickRightAxis[0] = 2;
-					if (event.caxis.value < 0) StickRightAxis[0] *= -1;
-					if (event.caxis.value == 0) StickRightAxis[0] = 0;
+					RightStick.x = event.caxis.value;
+					RightStick.deadx = 1;
+					if (SDL_abs(event.caxis.value) > stickDead) RightStick.deadx = 2;
+					if (event.caxis.value < 0) RightStick.deadx *= -1;
+					if (event.caxis.value == 0) RightStick.deadx = 0;
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTY:	//SDL_Log("Right Y : %d", event.caxis.value);
-					StickRightAxis[1] = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) StickRightAxis[1] = 2;
-					if (event.caxis.value < 0) StickRightAxis[1] *= -1;
-					if (event.caxis.value == -1) StickRightAxis[1] = 0;
+					RightStick.y = event.caxis.value;
+					RightStick.deady = 1;
+					if (SDL_abs(event.caxis.value) > stickDead) RightStick.deady = 2;
+					if (event.caxis.value < 0) RightStick.deady *= -1;
+					if (event.caxis.value == -1) RightStick.deady = 0;
 					break;
-				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:	SDL_Log("Left Trigger : %d", event.caxis.value);
+				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:	//SDL_Log("Left Trigger : %d", event.caxis.value);
+					PadTrigger.l = event.caxis.value;
+					PadTrigger.deadl = event.caxis.value > triggerDead ? true : false;
 					break;
-				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:	SDL_Log("Right Trigger : %d", event.caxis.value);
+				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:	//SDL_Log("Right Trigger : %d", event.caxis.value);
+					PadTrigger.r = event.caxis.value;
+					PadTrigger.deadr = event.caxis.value > triggerDead ? true : false;
 					break;
 
 				//extend device
@@ -250,6 +259,16 @@ void GamePad::SetAxisDead(int deadzone)
 	}
 	else
 		stickDead = abs(deadzone);
+}
+void GamePad::SetTriggerDead(int deadzone)
+{
+	if (deadzone > maxAxis)
+	{
+		SDL_Log("Dead Zone overflow!!");
+		return;
+	}
+	else
+		triggerDead = abs(deadzone);
 }
 void GamePad::SetControllerWave(int ms, int level)
 {
