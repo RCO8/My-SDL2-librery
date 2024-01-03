@@ -22,7 +22,7 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    gPad = new Joystick();
+    gPad = new GamePad(0);
     return true;
 }
 
@@ -136,15 +136,17 @@ void Gaming::CheckKeyPress()
         }
 
         //추가적인 입력 디바이스가 있다면 여기로 메서드 호출
-        gPad->CheckJoystickEvent(event);
+        gPad->CheckGamepadEvent(event);
     }
+
 }
 void Gaming::UpdateData()
 {
     //게임 내 변형된 데이터를 여기에 갱신
     //만약에 이벤트에 적용을 하지 않는다면
     //mTimer.StartCount();
-    //SDL_Log("JoyStick : %d, %d", gPad->GetAxisX[0], gPad->GetAxisY[0]);
+
+    SDL_Delay(100);
 }
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
@@ -155,8 +157,8 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 
     //Draw UI
 
-    SDL_RenderPresent(renderer);    //Redraw at Screen
 
+    SDL_RenderPresent(renderer);    //Redraw at Screen
     //카메라 뷰
 }
 

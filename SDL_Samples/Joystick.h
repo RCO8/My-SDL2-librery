@@ -32,7 +32,6 @@ public:
 //Console ver
 //Single Device in class
 
-enum ControllerMap {};
 class GamePad
 {
 private:
@@ -43,9 +42,9 @@ private:
 	int stickDead = 10000;
 	int triggerDead = 10000;
 	float checkBattery;
-	
+
 	//반환될 축이나 입력값을 저장할 속성들
-	struct StickAxis 
+	struct StickAxis
 	{
 		int x, y;	//일반적인 입력값
 		int deadx, deady;	//데드존 통과한 값 (넘으면 2, 넘지않은 입력은 1, 미동작은 0)
@@ -60,19 +59,22 @@ private:
 	};
 	TriggerAxis PadTrigger = { 0,0,0,0 };
 
+	bool ButtonCheck[15];
 public:
 	GamePad(int index);
 	~GamePad();
 
 	char getControllerName() { return *gamePadName; }
 	void CheckGamepadEvent(SDL_Event event);
-	void SetControllerWave(int ms,int level = 1);	//Game Controller Wave Level while ms
+	void SetControllerWave(int ms, int level = 1);	//Game Controller Wave Level while ms
 	void SetAxisDead(int deadzone);	//스틱 데드존 설정
 	void SetTriggerDead(int deadzone);	//트리거 데드존 설정
-	
+
 	//아날로그 스틱 받을 값
 	StickAxis GetLeftAxis() const { return LeftStick; }
 	StickAxis GetRightAxis() const { return RightStick; }
 	//트리거 입력받을 값
 	TriggerAxis GetTriggerAxis() const { return PadTrigger; }
+	//버튼 동작을 받을 메서드 (단 파라미터를 SDL_CONTROLLER_BUTTON_...이런식으로 넣어야 함)
+	bool GetButtonCheck(SDL_GameControllerButton btn) { return ButtonCheck[btn]; }
 };

@@ -1,5 +1,4 @@
 #include "Joystick.h"
-#include <cmath>
 
 Joystick::Joystick()
 {
@@ -133,37 +132,9 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
+			ButtonCheck[event.cbutton.button] = true;
 			switch (event.cbutton.button)
 			{
-				case SDL_CONTROLLER_BUTTON_A:	SDL_Log("Button A");
-					break;
-				case SDL_CONTROLLER_BUTTON_B:	SDL_Log("Button B");
-					break;
-				case SDL_CONTROLLER_BUTTON_X:	SDL_Log("Button X");
-					break;
-				case SDL_CONTROLLER_BUTTON_Y:	SDL_Log("Button Y");
-					break;
-				case SDL_CONTROLLER_BUTTON_BACK:			SDL_Log("Back");
-					break;
-				case SDL_CONTROLLER_BUTTON_START:			SDL_Log("Start");
-					break;
-				case SDL_CONTROLLER_BUTTON_LEFTSTICK:		SDL_Log("Left Stick");
-					break;
-				case SDL_CONTROLLER_BUTTON_RIGHTSTICK:		SDL_Log("Right Stick");
-					break;
-				case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:	SDL_Log("Left Button");
-					break;
-				case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:	SDL_Log("Right Button");
-					break;
-				case SDL_CONTROLLER_BUTTON_DPAD_UP:			SDL_Log("DPAD UP");
-					break;
-				case SDL_CONTROLLER_BUTTON_DPAD_DOWN:		SDL_Log("DPAD DOWN");
-					break;
-				case SDL_CONTROLLER_BUTTON_DPAD_LEFT:		SDL_Log("DPAD LEFT");
-					break;
-				case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:		SDL_Log("DPAD RIGHT");
-					break;
-
 				//extend device
 				case SDL_CONTROLLER_BUTTON_TOUCHPAD:	SDL_Log("Touch Pad");
 					break;
@@ -179,10 +150,7 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			}
 			break;
 		case SDL_CONTROLLERBUTTONUP:
-			switch (event.cbutton.button)
-			{
-				//same to button down
-			}
+			ButtonCheck[event.cbutton.button] = false;
 			break;
 		case SDL_CONTROLLERAXISMOTION:
 			switch (event.caxis.axis)
