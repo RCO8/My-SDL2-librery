@@ -12,7 +12,10 @@ private:
     int hour = 0, minute = 0, second = 0;
     //알람 설정
     bool alarm = false;
-    int aHour = 999, aMinute = 59, aSecond = 59;
+    struct alarmInfo
+    {
+        int aHour = 999, aMinute = 59, aSecond = 59;
+    } nowAlarm;
 public:
     void StartCount()
     {
@@ -49,10 +52,21 @@ public:
 
     void SetAlarm(int h, int m, int s)
     {
-        aHour = h;
-        aMinute = m;
-        aSecond = s;
+        nowAlarm.aHour = h;
+        try
+        {
+            if (nowAlarm.aMinute > 59) throw m;
+            nowAlarm.aMinute = m;
+
+            if (nowAlarm.aSecond > 59) throw s;
+            nowAlarm.aSecond = s;
+        }
+        catch(int e)
+        {
+            SDL_Log("Set Alarm Error : %d", e);
+        }
     }
+    alarmInfo CheckAlarm() const { return nowAlarm; }
     bool GetAlarm() { return alarm; }
 
     int GetSecond() { return second; }
@@ -122,7 +136,15 @@ public:
     }
     void CustomFrame(int count, int* frameIndex)   //배열로 프레임 지정
     {
+        
         SDL_Delay(ms);
     }
-    void SetDelayTime(int ms) { this->ms = ms; }
+    void SetDelayTime(int ms) 
+    {
+        if(ms > 0)
+            this->ms = ms; 
+    }
+    
+private:
+    void StartTimeline();
 };
