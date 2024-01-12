@@ -43,11 +43,11 @@ public:
 	}
 	
 	//Setting properties color
-	void SetBackgroundColor(SDL_Color color);
+	void SetBackgroundColor(SDL_Color color) { backgroundColor = color; }
+	void SetOverlineColor(SDL_Color color) { overlineColor = color; }
+	void SetDisableColor(SDL_Color color) { disableColor = color; }
 	void SetBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
-	void SetOverlineColor(SDL_Color color);
 	void SetOverlineColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
-	void SetDisableColor(SDL_Color color);
 	void SetDisableColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	//initialize Image
@@ -80,9 +80,9 @@ protected:
 public:
 	Button(SDL_Renderer* getRend) : UI(getRend) {}
 	~Button() { SDL_DestroyRenderer(UIrenderer); }
-	void SetOverMouseColor(SDL_Color color);
+	void SetOverMouseColor(SDL_Color color) { overMouseColor = color; }
+	void SetClickColor(SDL_Color color) { clickColor = color; }
 	void SetOverMouseColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
-	void SetClickColor(SDL_Color color);
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	virtual bool CheckMouseAction(SDL_Event getEvent);
@@ -112,7 +112,7 @@ public:
 	bool GetToggleState() { return isToggle; }	//현재 토글 상태
 
 	//눌렀을 때 활성 또는 비활성으로 변환
-	void SetCheckedColor(SDL_Color color);
+	void SetCheckedColor(SDL_Color color) { checkedColor = color; }
 	void SetCheckedColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	bool CheckMouseAction(SDL_Event getEvent);
@@ -155,7 +155,7 @@ public:
 	int GetMaximun() { return maximum; }
 
 	void SetDirection(BAR_DIRECTION dir) { direction = dir; };	//BAR_HORIZONTAL or BAR_VERTICAL로 전달 가능
-	void SetNowProgressColor(SDL_Color color);
+	void SetNowProgressColor(SDL_Color color) { progressingColor = color; }
 	void SetNowProgressColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
 	void DrawUI(int x, int y, int w, int h);

@@ -109,7 +109,7 @@ private:
     }
     void WaitAlarm()
     {
-        if (hour >= aHour && minute >= aMinute && second >= aSecond) alarm = true;
+        if (hour >= nowAlarm.aHour && minute >= nowAlarm.aMinute && second >= nowAlarm.aSecond) alarm = true;
         else alarm = false;
     }
 };

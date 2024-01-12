@@ -22,7 +22,8 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    gPad = new GamePad(0);
+    jStick = new Joystick();
+    grad = new Gradation(renderer);
     return true;
 }
 
@@ -136,7 +137,8 @@ void Gaming::CheckKeyPress()
         }
 
         //추가적인 입력 디바이스가 있다면 여기로 메서드 호출
-        gPad->CheckGamepadEvent(event);
+        jStick->CheckJoystickEvent(event);
+        SDL_Log("%d", jStick->GetButtons(0, 1));
     }
 
 }
@@ -145,7 +147,6 @@ void Gaming::UpdateData()
     //게임 내 변형된 데이터를 여기에 갱신
     //만약에 이벤트에 적용을 하지 않는다면
     //mTimer.StartCount();
-
     SDL_Delay(100);
 }
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
@@ -156,7 +157,7 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     //Draw Image
 
     //Draw UI
-
+    grad->DrawGradation(0, 0, 100, 100);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
     //카메라 뷰

@@ -43,7 +43,7 @@ void Sprite::SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
 //크기 설정
 void Sprite::SetSpriteScale(float w, float h)
 {
-	//SDL_ScaleModeLinear
+	//SDL_ScaleModeLinear	흐리게
 	//SDL_ScaleModeNearest	픽셀 선명화
 	SDL_SetTextureScaleMode(sprTexture, SDL_ScaleModeNearest);	//축척 모드 실수형으로 정의
 	SDL_SetTextureBlendMode(sprTexture, SDL_BLENDMODE_BLEND);	//칼라 모드 알파와 같이
@@ -71,7 +71,7 @@ void Sprite::SetColorHide(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }
 //화면에 그리기
-void Sprite::Drawing(int x, int y, int dir, int mirror)
+void Sprite::Drawing(int x, int y, int dir, bool mirror)
 {
 	scrnRct.x = x;
 	scrnRct.y = y;

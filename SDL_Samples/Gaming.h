@@ -16,7 +16,8 @@ private:
     SDL_Renderer* renderer; //창에 그릴 렌더
     SDL_Event event;    //입력 이벤트
 
-    GamePad* gPad;
+    Joystick* jStick;
+    Gradation* grad;
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
     void GameRun();     //게임 진행중
