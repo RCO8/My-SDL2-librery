@@ -81,24 +81,6 @@ public:
     int GetCalenderMonth() { return GetNowDateTime().tm_mon + 1; }
     int GetCalenderDay() { return GetNowDateTime().tm_mday; }
     int GetCalenderWeek() { return GetNowDateTime().tm_wday; }  //0 is Sunday to 6 is Saturday
-    char* GetCalenderWeek(int ver)
-    {
-        char defaulting[7][10] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-        char eng[7][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-        char kor[7][3] = { "ÀÏ", "¿ù", "È­", "¼ö", "¸ñ", "±Ý", "Åä" };
-        char chi[7][3] = { "ìí", "êÅ", "ûý", "â©", "ÙÊ", "ÑÑ", "÷Ï" };
-        switch (ver)
-        {
-            case 0:
-                return defaulting[GetNowDateTime().tm_wday];
-            case 1:
-                return eng[GetNowDateTime().tm_wday];
-            case 2:
-                return kor[GetNowDateTime().tm_wday];
-            case 3:
-                return chi[GetNowDateTime().tm_wday];
-        }
-    }
 private:
     tm GetNowDateTime()
     {

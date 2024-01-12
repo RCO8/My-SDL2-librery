@@ -15,19 +15,18 @@ private:
 	float checkBattery[8];
 
 	//이 속성들은 Gaming같은 클래스에 상호작용을 하기 위해서 값으로 반환
-	int AxisX[8], AxisY[8];
-	int HatSwitches[8];
-	bool Buttons[8][12];	//조이스틱 버튼 눌렀는지
-	float PressedBtnTime[8][12];	//조이스틱 버튼을 눌렀던 시간
+	struct CheckInput
+	{
+		int AxisX, AxisY;
+		int HatSwitches;
+		bool Buttons[12];	//조이스틱 버튼 눌렀는지
+	} PlayerIndex[8];
 public:
 	Joystick();
 	~Joystick();
 	void CheckJoystickEvent(SDL_Event event);
 	//현재 디바이스에서 동작한 값을 매겨 반환
-	int GetAxisX(int idx) const { return AxisX[idx]; }
-	int GetAxisY(int idx) const { return AxisY[idx]; }
-	int GetHatSwitches(int idx) const { return HatSwitches[idx]; }
-	bool GetButtons(int idx, int btn) const { return Buttons[idx][btn]; }
+	CheckInput GetInput(int idx) const { return PlayerIndex[idx]; }
 };
 
 //Console ver
@@ -49,16 +48,13 @@ private:
 	{
 		int x, y;	//일반적인 입력값
 		int deadx, deady;	//데드존 통과한 값 (넘으면 2, 넘지않은 입력은 1, 미동작은 0)
-	};
-	StickAxis LeftStick = { 0,0,0,0 };
-	StickAxis RightStick = { 0,0,0,0 };
+	}LeftStick, RightStick;
 
 	struct TriggerAxis
 	{
 		int l, r;
 		bool deadl, deadr;
-	};
-	TriggerAxis PadTrigger = { 0,0,0,0 };
+	}PadTrigger;
 
 	bool ButtonCheck[15];
 public:
