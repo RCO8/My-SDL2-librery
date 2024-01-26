@@ -12,12 +12,12 @@ class Gaming
 {
 private:
     bool quit = false;
+    bool isFull = false;    //전체화면
     SDL_Window* window; //SDL 창
     SDL_Renderer* renderer; //창에 그릴 렌더
     SDL_Event event;    //입력 이벤트
 
-    Joystick* jStick;
-    Gradation* grad;
+    Mask* mask;
 public:
     bool GameInit();    //게임 시작시 기본사항 정의
     void GameRun();     //게임 진행중

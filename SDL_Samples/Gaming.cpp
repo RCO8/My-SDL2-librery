@@ -8,7 +8,7 @@ bool Gaming::GameInit()
     SDL_Init(SDL_INIT_EVERYTHING);
     window = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
-
+    
     if (window == NULL)
     {
         SDL_Log("Failed Init Window : %s \n", SDL_GetError());
@@ -22,8 +22,10 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    jStick = new Joystick();
-    grad = new Gradation(renderer);
+    mask = new Mask(renderer);
+    mask->SetMaskMode(SDL_BLENDMODE_BLEND);
+    mask->SetMaskColor(255, 0, 0, 255);
+    mask->DrawFillMask();
     return true;
 }
 
@@ -56,6 +58,11 @@ void Gaming::CheckKeyPress()
         case SDL_KEYDOWN:
             switch (event.key.keysym.scancode)
             {
+            case SDL_SCANCODE_F4:
+                isFull = isFull ? false : true;
+                if (isFull) SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                else SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
+                break;
             default:
                 break;
             }
@@ -137,8 +144,6 @@ void Gaming::CheckKeyPress()
         }
 
         //추가적인 입력 디바이스가 있다면 여기로 메서드 호출
-        jStick->CheckJoystickEvent(event);
-        SDL_Log("%d", jStick->GetButtons(0, 1));
     }
 
 }
@@ -151,13 +156,12 @@ void Gaming::UpdateData()
 }
 void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
 {
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x64, 0x00, 255);
+    SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0xff, 255);
     SDL_RenderClear(renderer);  //Screen Clear   //Fill Color in Screen
     
     //Draw Image
 
     //Draw UI
-    grad->DrawGradation(0, 0, 100, 100);
 
     SDL_RenderPresent(renderer);    //Redraw at Screen
     //카메라 뷰
