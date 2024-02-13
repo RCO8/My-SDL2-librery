@@ -145,17 +145,29 @@ bool Button::CheckMouseAction(SDL_Event getEvent)
 	}
 	return isClick;
 }
-bool Button::CheckOverAction(bool event)
+bool Button::CheckMouseOverAction(bool event)
 {
 	isInMouse = event;
 	return isInMouse;
 }
-bool Button::CheckClickAction(bool event)
+bool Button::CheckMouseClickAction(bool event)
 {
 	//마우스로 받는 이벤트가 아닌
 	//키를 입력해서 활성을 설정
 	//키보드를 누르거나 인덱스로 묶인 요소를 활성
 	isClick = event;
+	return isClick;
+}
+
+bool Button::CheckKeyAction(bool check)
+{
+	isInMouse = check;
+	return isInMouse;
+}
+bool Button::CheckKeyPress(bool check)
+{
+	if (isInMouse)
+		isClick = check;
 	return isClick;
 }
 

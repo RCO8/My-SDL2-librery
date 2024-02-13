@@ -1,8 +1,10 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <cstring>
 #include "Sprite.h"
+#include <iostream>
+#include <string>
+using namespace std;
 
 class UI
 {
@@ -34,7 +36,6 @@ public:
 	{
 		if (TTF_Init() == -1) this->~UI();
 		font = TTF_OpenFont("HanSantteutDotum-Bold.ttf", fontSize);
-		
 	}
 	~UI()
 	{
@@ -85,11 +86,16 @@ public:
 	void SetOverMouseColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 	void SetClickColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
 
+	//마우스 액션
 	virtual bool CheckMouseAction(SDL_Event getEvent);
-	virtual bool CheckOverAction(bool event);
-	virtual bool CheckClickAction(bool event);
+	virtual bool CheckMouseOverAction(bool event);
+	virtual bool CheckMouseClickAction(bool event);
 	bool GetOverMouse() { return isInMouse; }
 	bool GetClickMouse() { return isClick; }
+
+	//키 액션
+	virtual bool CheckKeyAction(bool check);
+	virtual bool CheckKeyPress(bool check);
 
 	void DrawUI(int x, int y, int w, int h);
 };
