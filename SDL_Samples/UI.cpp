@@ -185,16 +185,8 @@ bool Toggle::CheckMouseAction(SDL_Event getEvent)
 		&& (drawing.y <= getEvent.motion.y && drawing.y + drawing.h >= getEvent.motion.y)) ? true : false;
 	isClick = getEvent.button.state;
 	if (isInMouse)
-		if (!isToggle)
-		{
-			isToggle = true;
-			SDL_Log("Toggle Checked");
-		}
-		else
-		{
-			isToggle = false;
-			SDL_Log("Toggle Unchecked");
-		}
+		if (!isToggle) isToggle = true;
+		else isToggle = false;
 
 	return isToggle;
 }

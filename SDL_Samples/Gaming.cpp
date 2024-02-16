@@ -22,10 +22,6 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
-    mask = new Mask(renderer);
-    mask->SetMaskMode(SDL_BLENDMODE_BLEND);
-    mask->SetMaskColor(255, 0, 0, 255);
-    mask->DrawFillMask();
     return true;
 }
 
@@ -56,6 +52,7 @@ void Gaming::CheckKeyPress()
 
             //Keyboard Check
         case SDL_KEYDOWN:
+            SDL_Log("´©¸§");
             switch (event.key.keysym.scancode)
             {
             case SDL_SCANCODE_F4:
@@ -63,12 +60,6 @@ void Gaming::CheckKeyPress()
                 if (isFull) SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
                 else SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
                 break;
-            default:
-                break;
-            }
-        case SDL_KEYMAPCHANGED:
-            switch (event.key.keysym.scancode)
-            {
             case SDL_SCANCODE_UP:       //SDL_Log("Up");
                 break;
             case SDL_SCANCODE_DOWN:     //SDL_Log("Down");
@@ -100,12 +91,13 @@ void Gaming::CheckKeyPress()
             case SDL_SCANCODE_ESCAPE:   //SDL_Log("Escape");
                 break;
             }
+            break;
         case SDL_KEYUP:
+            SDL_Log("¶À");
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
-            { 
-            default:
-                break;
+            {
             }
+            break;
 
             //Mouse Check
         case SDL_MOUSEBUTTONDOWN:
