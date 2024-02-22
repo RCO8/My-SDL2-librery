@@ -18,7 +18,7 @@ private:
 	struct CheckInput
 	{
 		int AxisX, AxisY;
-		int HatSwitches;
+		int HatX, HatY;
 		bool Buttons[12];	//조이스틱 버튼 눌렀는지
 	} PlayerIndex[8];
 public:
@@ -41,7 +41,6 @@ private:
 	const int maxAxis = 32768;    //Controller Max Axis
 	int stickDead = 10000;
 	int triggerDead = 10000;
-	float checkBattery;
 
 	//반환될 축이나 입력값을 저장할 속성들
 	struct StickAxis
@@ -63,7 +62,7 @@ public:
 
 	char getControllerName() { return *gamePadName; }
 	void CheckGamepadEvent(SDL_Event event);
-	void SetControllerWave(int ms, int level = 1);	//Game Controller Wave Level while ms
+	void SetControllerWave(unsigned int ms, int level = 1);	//Game Controller Wave Level while ms
 	void SetAxisDead(int deadzone);	//스틱 데드존 설정
 	void SetTriggerDead(int deadzone);	//트리거 데드존 설정
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <SDL_thread.h>
 #include <ctime>
 #include <iostream>
 class Timer
@@ -12,10 +13,7 @@ private:
     int hour = 0, minute = 0, second = 0;
     //알람 설정
     bool alarm = false;
-    struct alarmInfo
-    {
-        int aHour = 999, aMinute = 59, aSecond = 59;
-    } nowAlarm;
+    struct alarmInfo { int aHour = 999, aMinute = 59, aSecond = 59; } nowAlarm;
 public:
     void StartCount()
     {
@@ -24,18 +22,15 @@ public:
             curTick = SDL_GetTicks();
             if (curTick - lastTick >= 1000)
             {
-                second++;
-                lastTick = curTick;
+                second++; lastTick = curTick;
             }
             if (second >= 60)
             {
-                minute++;
-                second = 0;
+                minute++; second = 0;
             }
             if (minute >= 60)
             {
-                hour++;
-                minute = 0;
+                hour++; minute = 0;
             }
             //SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
             WaitAlarm();
@@ -61,10 +56,7 @@ public:
             if (nowAlarm.aSecond > 59) throw s;
             nowAlarm.aSecond = s;
         }
-        catch(int e)
-        {
-            SDL_Log("Set Alarm Error : %d", e);
-        }
+        catch(int e) { SDL_Log("Set Alarm Error : %d", e); }
     }
     alarmInfo CheckAlarm() const { return nowAlarm; }
     bool GetAlarm() { return alarm; }
@@ -91,42 +83,33 @@ private:
     }
     void WaitAlarm()
     {
-        if (hour >= nowAlarm.aHour && minute >= nowAlarm.aMinute && second >= nowAlarm.aSecond) alarm = true;
-        else alarm = false;
+        alarm = (hour >= nowAlarm.aHour &&
+            minute >= nowAlarm.aMinute &&
+            second >= nowAlarm.aSecond);
     }
 };
 
 class Timeline  //스레드 구현 필요
 {
 private:
-    unsigned int count;
+    unsigned int count = 0;
     int ms = 100;
+    unsigned int maxFrame = 10;
+    SDL_Thread* thread;
 public:
     //count가 0이면 무한반복
-    void LoopFrame(int count = 1)  //끝까지 갔으면 처음부터
+
+    void SetMaxFrame(int f) { maxFrame = f; }
+    void SetDelayTime(int ms) { if(ms > 0) this->ms = ms;  }
+    void StartTimeLine()
     {
-        int tmp = 0;
-        while (tmp <= count)
-        {
-            SDL_Delay(ms);
-            if (count > 0) tmp++;
-        }
+        count = 0;
     }
-    void ReverseFrame(int count = 1)   //끝까지 갔으면 거꾸로
-    {
-        SDL_Delay(ms);
-    }
-    void CustomFrame(int count, int* frameIndex)   //배열로 프레임 지정
-    {
-        
-        SDL_Delay(ms);
-    }
-    void SetDelayTime(int ms) 
-    {
-        if(ms > 0)
-            this->ms = ms; 
-    }
-    
 private:
-    void StartTimeline();
+    int SendKeyFrame()
+    {
+        SDL_Delay(ms);
+        count++;
+        return count;
+    }
 };

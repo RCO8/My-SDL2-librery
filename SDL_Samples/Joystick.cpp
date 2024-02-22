@@ -61,24 +61,43 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 			if (i == event.jbutton.which)
 				switch (event.jhat.value)
 				{
+					// 중앙, 상, 좌상, 좌, 좌하, 하, 우하, 우, 우상
 				case SDL_HAT_CENTERED:
-					PlayerIndex[i].HatSwitches = 0; break;
+					PlayerIndex[i].HatX = 0;
+					PlayerIndex[i].HatY = 0;
+					break;
 				case SDL_HAT_UP:
-					PlayerIndex[i].HatSwitches = 1; break;
-				case SDL_HAT_RIGHTUP:
-					PlayerIndex[i].HatSwitches = 2; break;
-				case SDL_HAT_RIGHT:
-					PlayerIndex[i].HatSwitches = 3; break;
-				case SDL_HAT_RIGHTDOWN:
-					PlayerIndex[i].HatSwitches = 4; break;
-				case SDL_HAT_DOWN:
-					PlayerIndex[i].HatSwitches = 5; break;
-				case SDL_HAT_LEFTDOWN:
-					PlayerIndex[i].HatSwitches = 6; break;
-				case SDL_HAT_LEFT:
-					PlayerIndex[i].HatSwitches = 7; break;
+					PlayerIndex[i].HatX =  0;
+					PlayerIndex[i].HatY = -1;
+					break;
 				case SDL_HAT_LEFTUP:
-					PlayerIndex[i].HatSwitches = 8; break;
+					PlayerIndex[i].HatX = -1;
+					PlayerIndex[i].HatY = -1;
+					break;
+				case SDL_HAT_LEFT:
+					PlayerIndex[i].HatX = -1;
+					PlayerIndex[i].HatY =  0; 
+					break;
+				case SDL_HAT_LEFTDOWN:
+					PlayerIndex[i].HatX = -1;
+					PlayerIndex[i].HatY =  1; 
+					break;
+				case SDL_HAT_DOWN:
+					PlayerIndex[i].HatX = 0;
+					PlayerIndex[i].HatY = 1; 
+					break;
+				case SDL_HAT_RIGHTDOWN:
+					PlayerIndex[i].HatX = 1;
+					PlayerIndex[i].HatY = 1; 
+					break;
+				case SDL_HAT_RIGHT:
+					PlayerIndex[i].HatX = 1;
+					PlayerIndex[i].HatY = 0; 
+					break;
+				case SDL_HAT_RIGHTUP:
+					PlayerIndex[i].HatX =  1;
+					PlayerIndex[i].HatY = -1; 
+					break;
 				}
 		break;
 	case SDL_JOYDEVICEADDED:
@@ -119,28 +138,6 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 {
 	switch (event.type)
 	{
-		case SDL_CONTROLLERDEVICEREMAPPED:
-			switch (event.cdevice.type)
-			{
-			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO:
-				SDL_Log("Nintendo Switch Pro");
-				break;
-			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
-				break;
-			case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
-				break;
-			case SDL_CONTROLLER_TYPE_PS3:
-			case SDL_CONTROLLER_TYPE_PS4:
-			case SDL_CONTROLLER_TYPE_PS5:
-				break;
-			case SDL_CONTROLLER_TYPE_XBOX360:
-			case SDL_CONTROLLER_TYPE_XBOXONE:
-				break;
-			case SDL_CONTROLLER_TYPE_UNKNOWN:
-				break;
-			}
-			break;
-
 		case SDL_CONTROLLERBUTTONDOWN:
 			ButtonCheck[event.cbutton.button] = true;
 			switch (event.cbutton.button)
@@ -217,6 +214,9 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 				SDL_Log("Touch Pad Touch");
 			}
 			break;
+		case SDL_CONTROLLERTOUCHPADDOWN:
+		case SDL_CONTROLLERTOUCHPADUP:
+			break;
 		case SDL_CONTROLLERSENSORUPDATE:
 			switch (event.csensor.sensor)
 			{ 
@@ -248,34 +248,29 @@ void GamePad::SetTriggerDead(int deadzone)
 	else
 		triggerDead = abs(deadzone);
 }
-void GamePad::SetControllerWave(int ms, int level)
+void GamePad::SetControllerWave(unsigned int ms, int level)
 {
 	int minWave, maxWave;
 	switch (level)
 	{
 	case 1:	//Weakest
-		minWave = 1000;
-		maxWave = 3000;
+		minWave = 1000;		maxWave = 3000;
 		break;
 	case 2:	//Weak
-		minWave = 5000;
-		maxWave = 10000;
+		minWave = 5000;		maxWave = 10000;
 		break;
 	case 3:	//Middle
-		minWave = 15000;
-		maxWave = 30000;
+		minWave = 15000;	maxWave = 30000;
 		break;
 	case 4:	//Strong
-		minWave = 50000;
-		maxWave = 75000;
+		minWave = 50000;	maxWave = 75000;
 		break;
 	case 5:	//Strongest
-		minWave = 50000;
-		maxWave = 100000;
+		minWave = 50000;	maxWave = 100000;
 		break;
 	default:
-		SDL_Log("Wave Level Unlimited!!");
+		SDL_Log("Wave Level limited!!");
 		return;
 	}
-	SDL_GameControllerRumble(this->gameController, minWave, maxWave, ms);
+	SDL_GameControllerRumble(this->gameController, minWave, maxWave, ms);	//진동을 울려라
 }
