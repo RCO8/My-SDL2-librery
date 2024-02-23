@@ -18,6 +18,29 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 		SDL_Log("SDL Texture Error : %s\n", SDL_GetError());
 		this->~Sprite();
 	}
+
+	//팔레트 생성
+	pixels = imageFile->format;
+	palette = SDL_AllocPalette(256);
+
+	if (!(palette))
+	{
+		SDL_Log("SDL Palette Error!! %s", SDL_GetError());
+		SDL_FreePalette(palette);
+	}
+
+	SDL_LockSurface(imageFile);
+	for (int y = 0; y < GetImageHeight(); y++)
+		for (int x = 0; x < GetImageWidth(); x++)
+		{
+			Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
+			SDL_Color color;
+			SDL_GetRGBA(pixel, pixels, &color.r, &color.g, &color.b, &color.a);
+			//만약 같은색이 있다면 스킵
+			FindPaletteColor(color);
+			//SDL_Log("팔레트 : %d, %d, %d, %d", color.r, color.g, color.b, color.a);
+		}
+	SDL_UnlockSurface(imageFile);
 	
 	SetSpriteClip(0, 0, GetImageWidth(), GetImageHeight());
 	SetRotatePoint(0, 0);
@@ -26,10 +49,30 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 Sprite::~Sprite()
 {
 	IMG_Quit();
+	SDL_FreePalette(palette);
 	SDL_FreeSurface(imageFile);
 	SDL_DestroyTexture(sprTexture);
 	SDL_DestroyRenderer(sprRenderer);
 }
+
+void Sprite::FindPaletteColor(SDL_Color c)
+{
+	for (int i = 0; i < paletteCount; i++)
+	{
+		if (palette->colors[i].r == c.r && palette->colors[i].g == c.g
+		 && palette->colors[i].b == c.b && palette->colors[i].a == c.a)
+		{
+			//넘어감
+			return;
+		}
+	}
+	palette->colors[paletteCount - 1] = c;
+	SDL_Log("Palette : %d, %d, %d, %d",
+		palette->colors[paletteCount - 1].r,palette->colors[paletteCount-1].g,
+		palette->colors[paletteCount - 1].b, palette->colors[paletteCount - 1].a);
+	paletteCount++;
+}
+
 //이미지 파일의 일부를 나타낼 설정
 void Sprite::SetSpriteClip(int x, int y, int w, int h)
 {
@@ -38,8 +81,6 @@ void Sprite::SetSpriteClip(int x, int y, int w, int h)
 	sprRct.w = w;
 	sprRct.h = h;
 }
-void Sprite::SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
-
 //크기 설정
 void Sprite::SetSpriteScale(float w, float h)
 {

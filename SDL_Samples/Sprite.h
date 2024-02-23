@@ -9,6 +9,10 @@ private:
 	SDL_Texture* sprTexture;	//스프라이트 텍스쳐
 	SDL_Surface* imageFile;		//이미지 리소스
 
+	SDL_Palette *palette;	//팔레트
+	SDL_PixelFormat *pixels;	//픽셀
+	int paletteCount = 1;
+
 	SDL_Rect sprRct;	//파일 내에서 출력될 Rect
 	SDL_Rect scrnRct;	//실제 화면에 출력될 Rect
 
@@ -16,12 +20,14 @@ private:
 	SDL_Point rotatePoint;		//스프라이트 회전중심점
 
 	float scaleWidth = 1, scaleHeight = 1;	//확대 배율
+
+	void FindPaletteColor(SDL_Color c);	//팔레트 중복 검사용
 public:
 	Sprite(SDL_Renderer* getRenderer, const char* fileName);
 	~Sprite();
 
 	void SetSpriteClip(int x, int y, int w, int h);	//이미지 파일의 일부를 나타낼 설정
-	void SetSpriteClip(SDL_Rect rct);
+	void SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
 	void SetSpriteScale(float w, float h);				//크기 설정
 	void SetRotatePoint(int x, int y);				//중심점 지정
 	void SetColorHide(SDL_Color setColor);			//투명색 설정

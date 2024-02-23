@@ -22,6 +22,7 @@ bool Gaming::GameInit()
     }
 
     //Resouce Setting
+
     return true;
 }
 
@@ -52,7 +53,6 @@ void Gaming::CheckKeyPress()
 
             //Keyboard Check
         case SDL_KEYDOWN:
-            SDL_Log("´©¸§");
             switch (event.key.keysym.scancode)
             {
             case SDL_SCANCODE_F4:
@@ -93,7 +93,6 @@ void Gaming::CheckKeyPress()
             }
             break;
         case SDL_KEYUP:
-            SDL_Log("¶À");
             switch (event.key.keysym.scancode)  //Same to SDL_KEYDOWN
             {
             }
