@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL.h>
-#include <SDL_thread.h>
 #include <SDL_image.h>
 #include "Joystick.h"
 #include "Sprite.h"

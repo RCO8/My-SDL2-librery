@@ -153,7 +153,6 @@ void Gaming::DrawScreen()   //Drawing Sprite or UI in this Screen
     //Draw Image
 
     //Draw UI
-
     SDL_RenderPresent(renderer);    //Redraw at Screen
     //Ä«¸Þ¶ó ºä
 }

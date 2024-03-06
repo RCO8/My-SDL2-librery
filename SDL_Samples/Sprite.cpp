@@ -20,8 +20,8 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 	}
 
 	//팔레트 생성
-	pixels = imageFile->format;
-	palette = SDL_AllocPalette(256);	//최대 팔레트의 용량
+	SDL_PixelFormat* pixels = imageFile->format;
+	palette = SDL_AllocPalette(this->GetImageWidth() * this->GetImageHeight());	//최대 팔레트의 용량
 	if (!(palette))
 	{
 		SDL_Log("SDL Palette Error!! %s", SDL_GetError());
@@ -39,7 +39,7 @@ Sprite::Sprite(SDL_Renderer* getRenderer, const char* fileName) : sprRenderer(ge
 			FindPaletteColor(color);
 		}
 	SDL_UnlockSurface(imageFile);
-	
+
 	SetSpriteClip(0, 0, GetImageWidth(), GetImageHeight());
 	SetRotatePoint(0, 0);
 }
@@ -62,9 +62,6 @@ void Sprite::FindPaletteColor(SDL_Color c)
 			return;//넘어감
 	}
 	palette->colors[paletteCount - 1] = c;
-	SDL_Log("Palette : %d, %d, %d, %d",
-		palette->colors[paletteCount - 1].r,palette->colors[paletteCount-1].g,
-		palette->colors[paletteCount - 1].b, palette->colors[paletteCount - 1].a);
 	paletteCount++;
 }
 
@@ -129,23 +126,22 @@ void Sprite::SetColorBlend(Uint8 r, Uint8 g, Uint8 b)	{ SDL_SetTextureColorMod(s
 void Sprite::SetColorBlend(SDL_Color setColor)	{ SDL_SetTextureColorMod(sprTexture, setColor.r, setColor.g, setColor.b); }
 //스프라이트 투명화
 void Sprite::SetImageAlpha(Uint8 a)	{ SDL_SetTextureAlphaMod(sprTexture, a); }
-
+//팔레트 속성
 void Sprite::SetPaletteColor(int idx, SDL_Color c)
 {
 	//받은 색상을 픽셀에 적용
 	SDL_LockSurface(imageFile);
-	for (int y = 0; y < GetImageHeight(); ++y) {
+	for (int y = 0; y < GetImageHeight(); ++y)
 		for (int x = 0; x < GetImageWidth(); ++x) {
 			Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
 			// 예시로 RGB(0,255,255)인 픽셀을 RGB(0,255,0)으로 변경Uint8 r, g, b;
-			Uint8 R, G, B;
-			SDL_GetRGB(pixel, imageFile->format, &B, &G, &R);
-			if (R == palette->colors[idx].r && G == palette->colors[idx].g && B == palette->colors[idx].b) {
+			Uint8 R, G, B, A;
+			SDL_GetRGBA(pixel, imageFile->format, &B, &G, &R, &A);
+			if (R == palette->colors[idx].r && G == palette->colors[idx].g &&
+				B == palette->colors[idx].b && A == palette->colors[idx].a)
 				pixel = SDL_MapRGB(imageFile->format, c.r, c.g, c.b);
-			}
 			*(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32)) = pixel;
 		}
-	}
 	SDL_UnlockSurface(imageFile);
 
 	palette->colors[idx] = c;
@@ -153,31 +149,49 @@ void Sprite::SetPaletteColor(int idx, SDL_Color c)
 	SDL_SetSurfacePalette(imageFile, palette);
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }
-void Sprite::SetPaletteColor(int idx, Uint8 r, Uint8 g, Uint8 b)
+void Sprite::SetPaletteColor(int idx, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
 	//받은 색상을 픽셀에 적용
 	SDL_LockSurface(imageFile);
-	for (int y = 0; y < GetImageHeight(); ++y) {
+	for (int y = 0; y < GetImageHeight(); ++y)
 		for (int x = 0; x < GetImageWidth(); ++x) {
 			Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
 			// 예시로 RGB(0,255,255)인 픽셀을 RGB(0,255,0)으로 변경Uint8 r, g, b;
-			Uint8 R, G, B;
-			SDL_GetRGB(pixel, imageFile->format, &B, &G, &R);
-			if (R == palette->colors[idx].r && G == palette->colors[idx].g && B == palette->colors[idx].b) {
+			Uint8 R, G, B, A;
+			SDL_GetRGBA(pixel, imageFile->format, &B, &G, &R, &A);
+			if (R == palette->colors[idx].r && G == palette->colors[idx].g &&
+				B == palette->colors[idx].b && A == palette->colors[idx].a)
 				pixel = SDL_MapRGB(imageFile->format, r, g, b);
-			}
 			*(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32)) = pixel;
 		}
-	}
 	SDL_UnlockSurface(imageFile);
 
-	palette->colors[idx] = { r,g,b,a };
+	palette->colors[idx] = { r,g,b,0xff };
 	SDL_SetPaletteColors(palette, &palette->colors[idx], idx, idx + 1);
 	SDL_SetSurfacePalette(imageFile, palette);
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }
-void Sprite::SetPaletteDirect(SDL_Palette pal)
+void Sprite::SetPaletteDirect(SDL_Palette *pal)
 {
-	SDL_Log("보수중...");
+	if (pal->ncolors > paletteCount)
+	{
+		SDL_Log("Palette Colors Overflow!!");
+		return;
+	}
+	SDL_LockSurface(imageFile);
+	for (int z = 0; z < pal->ncolors; z++)
+		for (int y = 0; y < GetImageHeight(); ++y)
+			for (int x = 0; x < GetImageWidth(); ++x) {
+				Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
+				// 예시로 RGB(0,255,255)인 픽셀을 RGB(0,255,0)으로 변경Uint8 r, g, b;
+				Uint8 R, G, B, A;
+				SDL_GetRGBA(pixel, imageFile->format, &B, &G, &R, &A);
+				if (R == palette->colors[z].r && G == palette->colors[z].g &&
+					B == palette->colors[z].b && A == palette->colors[z].a)
+					pixel = SDL_MapRGBA(imageFile->format, pal->colors[z].r, pal->colors[z].g, pal->colors[z].b, pal->colors[z].a);
+				*(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32)) = pixel;
+			}
+	SDL_UnlockSurface(imageFile);
 	SDL_SetSurfacePalette(imageFile, palette);
+	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }

@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+
 class Sprite
 {
 private:
@@ -10,7 +11,6 @@ private:
 	SDL_Surface* imageFile;		//이미지 리소스
 
 	SDL_Palette *palette;	//팔레트
-	SDL_PixelFormat *pixels;	//픽셀
 	int paletteCount = 1;
 
 	SDL_Rect sprRct;	//파일 내에서 출력될 Rect
@@ -46,9 +46,10 @@ public:
 	void SetColorBlend(SDL_Color setColor);	
 	void SetImageAlpha(Uint8 a);		//스프라이트 투명도
 
+	//팔레트 옵션
 	void SetPaletteColor(int idx, SDL_Color c);
-	void SetPaletteColor(int idx, Uint8 r, Uint8 g, Uint8 b);
-	void SetPaletteDirect(SDL_Palette pal);
+	void SetPaletteColor(int idx, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+	void SetPaletteDirect(SDL_Palette *pal);
 	SDL_Color GetPaletteColor(int idx) { if(idx < paletteCount-1) return palette->colors[idx]; };
 	int GetPaletteLength() { return paletteCount-1; }
 };
