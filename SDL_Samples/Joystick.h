@@ -10,10 +10,10 @@ class Joystick
 private:
 	SDL_Joystick* myJoystick;           //연결된 조이스틱과 통신
 	char* joystickName;					//현재 조이스틱 디바이스 이름
+	int nowJoystickIndex = 0;	//현재 조이스틱 인덱스 개수
 
 	/* Need checking batter what joystick is wiress*/
 	float checkBattery[8];
-
 	//이 속성들은 Gaming같은 클래스에 상호작용을 하기 위해서 값으로 반환
 	struct CheckInput
 	{
@@ -27,6 +27,8 @@ public:
 	void CheckJoystickEvent(SDL_Event event);
 	//현재 디바이스에서 동작한 값을 매겨 반환
 	CheckInput GetInput(int idx) const { return PlayerIndex[idx]; }
+
+	void CheckJoystickConnted();	//조이스틱 연결 여부
 };
 
 //Console ver

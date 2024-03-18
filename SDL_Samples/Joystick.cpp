@@ -2,16 +2,20 @@
 
 Joystick::Joystick()
 {
+	SDL_JoystickEventState(SDL_ENABLE);
 	for (int i = 0; i < SDL_NumJoysticks(); i++)
 		myJoystick = SDL_JoystickOpen(i);
 
 	if (myJoystick == NULL)
 	{
 		SDL_Log("Set Joystick Error!! %s\n", SDL_GetError());
-		this->~Joystick();
+		//this->~Joystick();
 	}
 }
-Joystick::~Joystick() { SDL_JoystickClose(myJoystick); }
+Joystick::~Joystick()
+{
+	SDL_JoystickClose(myJoystick);
+}
 void Joystick::CheckJoystickEvent(SDL_Event event)
 {
 	switch (event.type)
@@ -62,50 +66,43 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 				switch (event.jhat.value)
 				{
 					// 중앙, 상, 좌상, 좌, 좌하, 하, 우하, 우, 우상
-				case SDL_HAT_CENTERED:
-					PlayerIndex[i].HatX = 0;
-					PlayerIndex[i].HatY = 0;
-					break;
-				case SDL_HAT_UP:
-					PlayerIndex[i].HatX =  0;
-					PlayerIndex[i].HatY = -1;
-					break;
-				case SDL_HAT_LEFTUP:
-					PlayerIndex[i].HatX = -1;
-					PlayerIndex[i].HatY = -1;
-					break;
-				case SDL_HAT_LEFT:
-					PlayerIndex[i].HatX = -1;
-					PlayerIndex[i].HatY =  0; 
-					break;
-				case SDL_HAT_LEFTDOWN:
-					PlayerIndex[i].HatX = -1;
-					PlayerIndex[i].HatY =  1; 
-					break;
-				case SDL_HAT_DOWN:
-					PlayerIndex[i].HatX = 0;
-					PlayerIndex[i].HatY = 1; 
-					break;
-				case SDL_HAT_RIGHTDOWN:
-					PlayerIndex[i].HatX = 1;
-					PlayerIndex[i].HatY = 1; 
-					break;
-				case SDL_HAT_RIGHT:
-					PlayerIndex[i].HatX = 1;
-					PlayerIndex[i].HatY = 0; 
-					break;
-				case SDL_HAT_RIGHTUP:
-					PlayerIndex[i].HatX =  1;
-					PlayerIndex[i].HatY = -1; 
-					break;
+					case SDL_HAT_CENTERED:
+						PlayerIndex[i].HatX = 0;
+						PlayerIndex[i].HatY = 0;
+						break;
+					case SDL_HAT_UP:
+						PlayerIndex[i].HatX =  0;
+						PlayerIndex[i].HatY = -1;
+						break;
+					case SDL_HAT_LEFTUP:
+						PlayerIndex[i].HatX = -1;
+						PlayerIndex[i].HatY = -1;
+						break;
+					case SDL_HAT_LEFT:
+						PlayerIndex[i].HatX = -1;
+						PlayerIndex[i].HatY =  0; 
+						break;
+					case SDL_HAT_LEFTDOWN:
+						PlayerIndex[i].HatX = -1;
+						PlayerIndex[i].HatY =  1; 
+						break;
+					case SDL_HAT_DOWN:
+						PlayerIndex[i].HatX = 0;
+						PlayerIndex[i].HatY = 1; 
+						break;
+					case SDL_HAT_RIGHTDOWN:
+						PlayerIndex[i].HatX = 1;
+						PlayerIndex[i].HatY = 1; 
+						break;
+					case SDL_HAT_RIGHT:
+						PlayerIndex[i].HatX = 1;
+						PlayerIndex[i].HatY = 0; 
+						break;
+					case SDL_HAT_RIGHTUP:
+						PlayerIndex[i].HatX =  1;
+						PlayerIndex[i].HatY = -1; 
+						break;
 				}
-		break;
-	case SDL_JOYDEVICEADDED:
-		//조이스틱이 추가 연결될 시 인덱스 증가
-		//maxJoystickIndex보다 초과시 연결 거부
-	case SDL_JOYDEVICEREMOVED:
-		//인덱스 감소 만약에 중간값이라면 앞으로 당기도록
-		//그리고 인덱스가 하나라면 그대로 소멸자 호출
 		break;
 		//Extention Device
 	case SDL_JOYBATTERYUPDATED:	//Checking Battery If Device has Wiress Connect
@@ -114,7 +111,17 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 	case SDL_JOYBALLMOTION:
 		SDL_Log("Track Ball");
 		break;
+	case SDL_JOYDEVICEADDED:
+		SDL_Log("디바이스 추가");
+		CheckJoystickConnted();
+		break;
 	}
+}
+void Joystick::CheckJoystickConnted()
+{
+	SDL_JoystickEventState(SDL_ENABLE);
+	for (int i = 0; i < SDL_NumJoysticks(); i++)
+		myJoystick = SDL_JoystickOpen(i);
 }
 
 GamePad::GamePad(int index)
@@ -132,7 +139,11 @@ GamePad::GamePad(int index)
 	RightStick = { 0,0,0,0 };
 	PadTrigger = { 0,0,0,0 };
 }
-GamePad::~GamePad() { SDL_GameControllerClose(gameController); }
+GamePad::~GamePad() 
+{ 
+	SDL_Log("%s 컨트롤러 제거", SDL_GameControllerName(gameController));
+	SDL_GameControllerClose(gameController);
+}
 
 void GamePad::CheckGamepadEvent(SDL_Event event)
 {
