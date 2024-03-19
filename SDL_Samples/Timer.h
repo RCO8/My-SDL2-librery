@@ -14,24 +14,16 @@ private:
     //알람 설정
     bool alarm = false;
     struct alarmInfo { int aHour = 999, aMinute = 59, aSecond = 59; } nowAlarm;
+
 public:
     void StartCount()
     {
         if (isTick)
         {
             curTick = SDL_GetTicks();
-            if (curTick - lastTick >= 1000)
-            {
-                second++; lastTick = curTick;
-            }
-            if (second >= 60)
-            {
-                minute++; second = 0;
-            }
-            if (minute >= 60)
-            {
-                hour++; minute = 0;
-            }
+            if (curTick - lastTick >= 1000) second++; lastTick = curTick;
+            if (second >= 60) minute++; second = 0;
+            if (minute >= 60) hour++; minute = 0;
             //SDL_Log("Timer %d:%02d:%02d", hour, minute, second);
             WaitAlarm();
         }
@@ -66,15 +58,15 @@ public:
     int GetHour() { return hour; }
     
     //현재시간 반환
-    int GetClockHour() { return GetNowDateTime().tm_hour; }
-    int GetClockMinute() { return GetNowDateTime().tm_min; }
-    int GetClockSecond() { return GetNowDateTime().tm_sec; }
+    static int GetClockHour() { return GetNowDateTime().tm_hour; }
+    static int GetClockMinute() { return GetNowDateTime().tm_min; }
+    static int GetClockSecond() { return GetNowDateTime().tm_sec; }
     //현재날짜 반환
-    int GetCalenderMonth() { return GetNowDateTime().tm_mon + 1; }
-    int GetCalenderDay() { return GetNowDateTime().tm_mday; }
-    int GetCalenderWeek() { return GetNowDateTime().tm_wday; }  //0 is Sunday to 6 is Saturday
+    static int GetCalenderMonth() { return GetNowDateTime().tm_mon + 1; }
+    static int GetCalenderDay() { return GetNowDateTime().tm_mday; }
+    static int GetCalenderWeek() { return GetNowDateTime().tm_wday; }  //0 is Sunday to 6 is Saturday
 private:
-    tm GetNowDateTime()
+    static tm GetNowDateTime()
     {
         time_t nowTime = time(NULL);
         struct tm pTimeInfo;
@@ -86,30 +78,5 @@ private:
         alarm = (hour >= nowAlarm.aHour &&
             minute >= nowAlarm.aMinute &&
             second >= nowAlarm.aSecond);
-    }
-};
-
-class Timeline  //스레드 구현 필요
-{
-private:
-    unsigned int count = 0;
-    int ms = 100;
-    unsigned int maxFrame = 10;
-    SDL_Thread* thread;
-public:
-    //count가 0이면 무한반복
-
-    void SetMaxFrame(int f) { maxFrame = f; }
-    void SetDelayTime(int ms) { if(ms > 0) this->ms = ms;  }
-    void StartTimeLine()
-    {
-        count = 0;
-    }
-private:
-    int SendKeyFrame()
-    {
-        SDL_Delay(ms);
-        count++;
-        return count;
     }
 };

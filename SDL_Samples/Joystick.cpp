@@ -4,7 +4,9 @@ Joystick::Joystick()
 {
 	SDL_JoystickEventState(SDL_ENABLE);
 	for (int i = 0; i < SDL_NumJoysticks(); i++)
+	{
 		myJoystick = SDL_JoystickOpen(i);
+	}
 
 	if (myJoystick == NULL)
 	{
@@ -33,7 +35,7 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 		break;
 	case SDL_JOYAXISMOTION:
 		for (int i = 0; i < SDL_NumJoysticks(); i++)
-			if (i == event.jbutton.which)
+			if (i == event.jaxis.which)
 				switch (event.jaxis.axis)//Horizontal
 				{
 				case 0:
@@ -62,7 +64,7 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 		break;
 	case SDL_JOYHATMOTION:
 		for (int i = 0; i < SDL_NumJoysticks(); i++)
-			if (i == event.jbutton.which)
+			if (i == event.jhat.which)
 				switch (event.jhat.value)
 				{
 					// 중앙, 상, 좌상, 좌, 좌하, 하, 우하, 우, 우상
@@ -111,9 +113,12 @@ void Joystick::CheckJoystickEvent(SDL_Event event)
 	case SDL_JOYBALLMOTION:
 		SDL_Log("Track Ball");
 		break;
+
 	case SDL_JOYDEVICEADDED:
-		SDL_Log("디바이스 추가");
-		CheckJoystickConnted();
+		SDL_Log("Joystick connected at index: %d", event.jdevice.which);
+		break;
+	case SDL_JOYDEVICEREMOVED:
+		SDL_Log("Joystick disconnected at index: %d", event.jdevice.which);
 		break;
 	}
 }
@@ -124,13 +129,13 @@ void Joystick::CheckJoystickConnted()
 		myJoystick = SDL_JoystickOpen(i);
 }
 
-GamePad::GamePad(int index)
+GamePad::GamePad(int index) : yourIndex(index)
 {
 	gameController = SDL_GameControllerOpen(index);
+	isConnect = true;
 	if (gameController == NULL)
 	{
 		SDL_Log("Set Gamepad Error!! %s\n", SDL_GetError());
-		this->~GamePad();
 		return;
 	}
 	SDL_Log("Controller Connected \nName is %s", SDL_GameControllerName(gameController));
@@ -144,28 +149,12 @@ GamePad::~GamePad()
 	SDL_Log("%s 컨트롤러 제거", SDL_GameControllerName(gameController));
 	SDL_GameControllerClose(gameController);
 }
-
 void GamePad::CheckGamepadEvent(SDL_Event event)
 {
 	switch (event.type)
 	{
 		case SDL_CONTROLLERBUTTONDOWN:
 			ButtonCheck[event.cbutton.button] = true;
-			switch (event.cbutton.button)
-			{
-				//extend device
-				case SDL_CONTROLLER_BUTTON_TOUCHPAD:	SDL_Log("Touch Pad");
-					break;
-				case SDL_CONTROLLER_BUTTON_INVALID:
-				case SDL_CONTROLLER_BUTTON_GUIDE:
-				case SDL_CONTROLLER_BUTTON_MISC1:
-				case SDL_CONTROLLER_BUTTON_PADDLE1:
-				case SDL_CONTROLLER_BUTTON_PADDLE2:
-				case SDL_CONTROLLER_BUTTON_PADDLE3:
-				case SDL_CONTROLLER_BUTTON_PADDLE4:
-				case SDL_CONTROLLER_BUTTON_MAX:
-					break;
-			}
 			break;
 		case SDL_CONTROLLERBUTTONUP:
 			ButtonCheck[event.cbutton.button] = false;
@@ -174,33 +163,16 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 			switch (event.caxis.axis)
 			{
 				case SDL_CONTROLLER_AXIS_LEFTX:		//SDL_Log("Left X : %d", event.caxis.value);
-					LeftStick.x = event.caxis.value;
-					//데드존 체크
-					LeftStick.deadx = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) LeftStick.deadx = 2;
-					if (event.caxis.value < 0) LeftStick.deadx *= -1;
-					if (event.caxis.value == 0) LeftStick.deadx = 0;
+					LeftStick.xAxis = StickUpdate(LeftStick.xAxis, event.caxis.value);
 					break;
 				case SDL_CONTROLLER_AXIS_LEFTY:		//SDL_Log("Left Y : %d", event.caxis.value);
-					LeftStick.y = event.caxis.value;
-					LeftStick.deady = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) LeftStick.deady = 2;
-					if (event.caxis.value > 0) LeftStick.deady *= -1;
-					if (event.caxis.value == -1) LeftStick.deady = 0;
+					LeftStick.yAxis = StickUpdate(LeftStick.yAxis, event.caxis.value, true);
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTX:	//SDL_Log("Right X : %d", event.caxis.value);
-					RightStick.x = event.caxis.value;
-					RightStick.deadx = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) RightStick.deadx = 2;
-					if (event.caxis.value < 0) RightStick.deadx *= -1;
-					if (event.caxis.value == 0) RightStick.deadx = 0;
+					RightStick.xAxis = StickUpdate(RightStick.xAxis, event.caxis.value);
 					break;
 				case SDL_CONTROLLER_AXIS_RIGHTY:	//SDL_Log("Right Y : %d", event.caxis.value);
-					RightStick.y = event.caxis.value;
-					RightStick.deady = 1;
-					if (SDL_abs(event.caxis.value) > stickDead) RightStick.deady = 2;
-					if (event.caxis.value < 0) RightStick.deady *= -1;
-					if (event.caxis.value == -1) RightStick.deady = 0;
+					RightStick.yAxis = StickUpdate(RightStick.yAxis, event.caxis.value, true);
 					break;
 				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:	//SDL_Log("Left Trigger : %d", event.caxis.value);
 					PadTrigger.l = event.caxis.value;
@@ -234,7 +206,14 @@ void GamePad::CheckGamepadEvent(SDL_Event event)
 				SDL_Log("Sensor");
 			}
 			break;
+		case SDL_CONTROLLERDEVICEADDED:
+			if(yourIndex == event.cdevice.which)
+				SetDeviceConnect();
+			break;
 		case SDL_CONTROLLERDEVICEREMOVED:
+			isConnect = false;
+			break;
+		case SDL_QUIT:
 			this->~GamePad();
 			break;
 	}
