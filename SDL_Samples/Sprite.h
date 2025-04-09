@@ -22,16 +22,21 @@ private:
 	float scaleWidth = 1, scaleHeight = 1;	//확대 배율
 
 	void FindPaletteColor(SDL_Color c);	//팔레트 중복 검사용
+	void ApplyPaletteColor(int idx, SDL_Color c);
 public:
 	Sprite(SDL_Renderer* getRenderer, const char* fileName);
 	~Sprite();
 
+	//스프라이트 클립
 	void SetSpriteClip(int x, int y, int w, int h);	//이미지 파일의 일부를 나타낼 설정
 	void SetSpriteClip(SDL_Rect rct) { sprRct = rct; }
+	//스프라이트 비율설정
 	void SetSpriteScale(float w, float h);				//크기 설정
 	void SetRotatePoint(int x, int y);				//중심점 지정
-	void SetColorHide(SDL_Color setColor);			//투명색 설정
+	//스프라이트 투명색 설정
+	void SetColorHide(SDL_Color setColor);
 	void SetColorHide(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 0xff);
+	//스프라이트 그리기
 	void Drawing(int x, int y, int dir, bool mirror = 0);	//화면에 그리기
 	void DrawFill() const;	//전체화면으로 채우기
 

@@ -127,7 +127,7 @@ void Sprite::SetColorBlend(SDL_Color setColor)	{ SDL_SetTextureColorMod(sprTextu
 //스프라이트 투명화
 void Sprite::SetImageAlpha(Uint8 a)	{ SDL_SetTextureAlphaMod(sprTexture, a); }
 //팔레트 속성
-void Sprite::SetPaletteColor(int idx, SDL_Color c)
+void Sprite::ApplyPaletteColor(int idx, SDL_Color c)
 {
 	//받은 색상을 픽셀에 적용
 	SDL_LockSurface(imageFile);
@@ -149,27 +149,14 @@ void Sprite::SetPaletteColor(int idx, SDL_Color c)
 	SDL_SetSurfacePalette(imageFile, palette);
 	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
 }
+void Sprite::SetPaletteColor(int idx, SDL_Color c)
+{
+	ApplyPaletteColor(idx, c);
+}
 void Sprite::SetPaletteColor(int idx, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-	//받은 색상을 픽셀에 적용
-	SDL_LockSurface(imageFile);
-	for (int y = 0; y < GetImageHeight(); ++y)
-		for (int x = 0; x < GetImageWidth(); ++x) {
-			Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
-			// 예시로 RGB(0,255,255)인 픽셀을 RGB(0,255,0)으로 변경Uint8 r, g, b;
-			Uint8 R, G, B, A;
-			SDL_GetRGBA(pixel, imageFile->format, &B, &G, &R, &A);
-			if (R == palette->colors[idx].r && G == palette->colors[idx].g &&
-				B == palette->colors[idx].b && A == palette->colors[idx].a)
-				pixel = SDL_MapRGB(imageFile->format, r, g, b);
-			*(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32)) = pixel;
-		}
-	SDL_UnlockSurface(imageFile);
-
-	palette->colors[idx] = { r,g,b,0xff };
-	SDL_SetPaletteColors(palette, &palette->colors[idx], idx, idx + 1);
-	SDL_SetSurfacePalette(imageFile, palette);
-	sprTexture = SDL_CreateTextureFromSurface(sprRenderer, imageFile);
+	SDL_Color col = { r,g,b,a };
+	ApplyPaletteColor(idx, col);
 }
 void Sprite::SetPaletteDirect(SDL_Palette *pal)
 {
@@ -181,7 +168,8 @@ void Sprite::SetPaletteDirect(SDL_Palette *pal)
 	SDL_LockSurface(imageFile);
 	for (int z = 0; z < pal->ncolors; z++)
 		for (int y = 0; y < GetImageHeight(); ++y)
-			for (int x = 0; x < GetImageWidth(); ++x) {
+			for (int x = 0; x < GetImageWidth(); ++x) 
+			{
 				Uint32 pixel = *(Uint32*)((Uint8*)imageFile->pixels + y * imageFile->pitch + x * sizeof(Uint32));
 				// 예시로 RGB(0,255,255)인 픽셀을 RGB(0,255,0)으로 변경Uint8 r, g, b;
 				Uint8 R, G, B, A;
